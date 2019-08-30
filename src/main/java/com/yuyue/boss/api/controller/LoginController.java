@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 @RestController
 @RequestMapping(value="/login", produces = "application/json; charset=UTF-8")
 public class LoginController {
-    private static Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
+    private static Logger log = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
     private LoginService loginService;
@@ -60,7 +60,7 @@ public class LoginController {
         } catch (Exception e) {
             e.printStackTrace();
             result.setMessage("版本号查询失败！");
-            LOGGER.info("版本号查询失败！");
+            log.info("版本号查询失败！");
         }
         return ResultJSONUtils.getJSONObjectBean(result);
     }
@@ -100,7 +100,7 @@ public class LoginController {
         } catch (Exception e) {
             e.printStackTrace();
             result.setMessage("账号密码登录失败！");
-            LOGGER.info("账号密码登录失败！");
+            log.info("账号密码登录失败！");
         }
         return ResultJSONUtils.getJSONObjectBean(result);
     }
@@ -137,7 +137,7 @@ public class LoginController {
         } catch (Exception e) {
             e.printStackTrace();
             result.setMessage("修改密码失败！");
-            LOGGER.info("修改密码失败！");
+            log.info("修改密码失败！");
         }
         return ResultJSONUtils.getJSONObjectBean(result);
     }
@@ -172,7 +172,7 @@ public class LoginController {
         } catch (Exception e) {
             e.printStackTrace();
             result.setMessage("手机号及验证码登录失败！");
-            LOGGER.info("手机号及验证码登录失败！");
+            log.info("手机号及验证码登录失败！");
         }
         return ResultJSONUtils.getJSONObjectBean(result);
     }
@@ -220,7 +220,7 @@ public class LoginController {
         } catch (Exception e) {
             e.printStackTrace();
             result.setMessage("用户注册失败！");
-            LOGGER.info("用户注册失败！");
+            log.info("用户注册失败！");
         }
         return ResultJSONUtils.getJSONObjectBean(result);
     }
@@ -252,7 +252,7 @@ public class LoginController {
      * @param user
      * @return
      */
-    @RequestMapping(value = "/updateAppUser", produces = "application/json; charset=UTF-8")
+    @RequestMapping("/updateAppUser")
     @ResponseBody
     public JSONObject updateAppUser(AppUser user, String nickName, String realName, String idCard, String phone,
                                     String sex, String headpUrl, String userStatus, String addrDetail, String education, String wechat,
@@ -282,7 +282,7 @@ public class LoginController {
             result.setMessage("修改失败！该用户不存在！");
             return ResultJSONUtils.getJSONObjectBean(result);
         }
-        LOGGER.info("============" + user.toString());
+        log.info("============" + user.toString());
         loginService.updateAppUser(user.getId(),nickName,realName,idCard,phone,sex,headpUrl, userStatus,
                             addrDetail, education,wechat,signature,userUrl,cardZUrl,cardFUrl,ciphertextPwd,"","");
         result.setMessage("修改成功！");
