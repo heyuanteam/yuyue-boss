@@ -4,33 +4,7 @@
     <!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！-->
     <resultMap id="BaseResultMap" type="com.yuyue.boss.api.domain.SystemUser">
         <id column="ID" property="id" jdbcType="VARCHAR"/>
-        <result column="USER_NO" property="userNo" jdbcType="VARCHAR"/>
-        <result column="USER_NICK_NAME" property="nickName" jdbcType="VARCHAR"/>
-        <result column="USER_REAL_NAME" property="realName" jdbcType="VARCHAR"/>
-        <result column="ID_TYPE" property="idType" jdbcType="VARCHAR"/>
-        <result column="ID_CARD" property="idCard" jdbcType="VARCHAR"/>
-        <result column="PHONE" property="phone" jdbcType="VARCHAR"/>
-        <result column="SEX" property="sex" jdbcType="VARCHAR"/>
-        <result column="city" property="city" jdbcType="VARCHAR"/>
-        <result column="jpushName" property="jpushName" jdbcType="VARCHAR"/>
-        <result column="PASSWORD" property="password" jdbcType="VARCHAR"/>
-        <result column="SALT" property="salt" jdbcType="VARCHAR"/>
-        <result column="USER_STATUS" property="userStatus" jdbcType="VARCHAR"/>
-        <result column="TOTAL" property="total" jdbcType="VARCHAR"/>
-        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
-        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
-        <result column="ADDR_DETAIL" property="addrDetail" jdbcType="VARCHAR"/>
-        <result column="HEADP_URL" property="headpUrl" jdbcType="VARCHAR"/>
-        <result column="USER_TYPE" property="userType" jdbcType="VARCHAR"/>
-        <result column="ATTENTION_TOTAL" property="attentionTotal" jdbcType="BIGINT"/>
-        <result column="LIKE_TOTAL" property="likeTotal" jdbcType="BIGINT"/>
-        <result column="COMMENT_TOTAL" property="commentTotal" jdbcType="BIGINT"/>
-        <result column="education" property="education" jdbcType="VARCHAR"/>
-        <result column="wechat" property="wechat" jdbcType="VARCHAR"/>
-        <result column="signature" property="signature" jdbcType="VARCHAR"/>
-        <result column="cardFUrl" property="cardFUrl" jdbcType="VARCHAR"/>
-        <result column="cardZUrl" property="cardZUrl" jdbcType="VARCHAR"/>
-        <result column="userUrl" property="userUrl" jdbcType="VARCHAR"/>
+
     </resultMap>
 
     <select id="getAppUserMsg" resultType="com.yuyue.boss.api.domain.SystemUser" parameterType="String">

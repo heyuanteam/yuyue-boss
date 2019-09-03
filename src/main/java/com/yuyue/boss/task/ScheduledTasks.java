@@ -17,7 +17,7 @@ public class ScheduledTasks {
     @Autowired
 //    private SendSmsController sendSmsController;
 
-    @Scheduled(cron = "0 0/5 * * * *")
+    @Scheduled(cron = "0 5 * * * *")
     public void work() {
         System.out.println(dateFormat.format(new Date())+"我被执行了------------------");
     }
