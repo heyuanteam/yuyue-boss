@@ -1,18 +1,13 @@
 package com.yuyue.boss.api.service.impl;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.yuyue.boss.api.domain.AppUser;
-import com.yuyue.boss.api.domain.AppVersion;
-import com.yuyue.boss.api.mapper.AppVersionMapper;
+import com.yuyue.boss.api.domain.SystemUser;
 import com.yuyue.boss.api.mapper.LoginMapper;
 import com.yuyue.boss.api.service.LoginService;
+import com.yuyue.boss.enums.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.UnsupportedEncodingException;
 
 
 /**
@@ -20,50 +15,18 @@ import java.io.UnsupportedEncodingException;
  */
 @Service(value = "LoginService")
 public class LoginServiceImpl implements LoginService {
-    private Logger LOGGER = LoggerFactory.getLogger(LoginServiceImpl.class);
+    private Logger log = LoggerFactory.getLogger(LoginServiceImpl.class);
 
-    @Autowired
-    private AppVersionMapper appVersionMapper;
     @Autowired
     private LoginMapper loginMapper;
 
+    @Override
+    public SystemUser getAppUserMsg(String password, String phone, String id) { return loginMapper.getAppUserMsg(password,phone,id); }
 
-    public AppVersion getAppVersion(String systemType) {
-        return appVersionMapper.getAppVersion(systemType);
+    @Override
+    public UserVO getUser(String loginName, String password) {
+        return null;
     }
 
-    @Override
-    public AppUser getAppUserMsg(String password, String phone, String id) { return loginMapper.getAppUserMsg(password,phone,id); }
-
-    @Override
-    public void addUser(AppUser appUser) {
-        loginMapper.addUser(appUser);
-    }
-
-    @Override
-    public void editPassword(String phone,String password) { loginMapper.editPassword(phone,password); }
-
-    @Override
-    public String getToken(AppUser appUser) {
-        String token = "";
-        try {
-            token = JWT.create()
-                    .withAudience(appUser.getId().toString())          // 将 user id 保存到 token 里面
-                    .sign(Algorithm.HMAC256(appUser.getPassword()));   // 以 password 作为 token 的密钥
-        } catch (UnsupportedEncodingException ignore) {
-            ignore.printStackTrace();
-            LOGGER.info("token生成错误！" );
-        }
-        return token;
-    }
-
-    @Override
-    public void updateAppUser(String id, String nickName, String realName, String idCard, String phone, String sex,
-                              String headpUrl, String userStatus, String addrDetail, String education, String wechat,
-                              String signature, String userUrl, String cardZUrl, String cardFUrl, String ciphertextPwd,
-                              String city,String jpushName) {
-        loginMapper.updateAppUser(id,nickName,realName,idCard,phone,sex,headpUrl, userStatus,
-                addrDetail, education,wechat,signature,userUrl,cardZUrl,cardFUrl,ciphertextPwd,city,jpushName);
-    }
 
 }

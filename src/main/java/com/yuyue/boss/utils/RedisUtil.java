@@ -39,7 +39,7 @@ public class RedisUtil {
         if (time > 0) {
             redisTemplate.expire(key, time, TimeUnit.SECONDS);
         } else {
-            throw MyExceptionUtils.mxe("设置的时间不能为0或者小于0！！");
+            throw new RuntimeException("设置的时间不能为0或者小于0！！");
         }
     }
 
@@ -74,7 +74,7 @@ public class RedisUtil {
             redisTemplate.delete(key);
             return true;
         } catch (Exception ex) {
-            throw MyExceptionUtils.mxe("删除失败！", ex);
+            throw new RuntimeException("删除失败！", ex);
         }
     }
 
@@ -89,7 +89,7 @@ public class RedisUtil {
             redisTemplate.delete(keys);
             return true;
         } catch (Exception ex) {
-            throw MyExceptionUtils.mxe("删除失败！", ex);
+            throw new RuntimeException("删除失败！", ex);
         }
     }
 
@@ -107,7 +107,7 @@ public class RedisUtil {
             redisTemplate.opsForValue().set(key, value);
             return true;
         } catch (Exception ex) {
-            throw MyExceptionUtils.mxe("插入缓存失败！", ex);
+            throw new RuntimeException("插入缓存失败！", ex);
         }
     }
 
@@ -134,7 +134,7 @@ public class RedisUtil {
             redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
             return true;
         } catch (Exception ex) {
-            throw MyExceptionUtils.mxe("插入缓存失败！", ex);
+            throw new RuntimeException("插入缓存失败！", ex);
         }
     }
 
@@ -195,7 +195,7 @@ public class RedisUtil {
             redisTemplate.opsForList().rightPush(key, value);
             return true;
         } catch (Exception ex) {
-            throw MyExceptionUtils.mxe("插入List缓存失败！", ex);
+            throw new RuntimeException("插入List缓存失败！", ex);
         }
     }
 
@@ -216,7 +216,7 @@ public class RedisUtil {
             }
             return false;
         } catch (Exception ex) {
-            throw MyExceptionUtils.mxe("插入List缓存失败！", ex);
+            throw new RuntimeException("插入List缓存失败！", ex);
         }
     }
 
@@ -237,7 +237,7 @@ public class RedisUtil {
             }
             return false;
         } catch (Exception ex) {
-            throw MyExceptionUtils.mxe("插入List缓存失败！", ex);
+            throw new RuntimeException("插入List缓存失败！", ex);
         }
     }
 
@@ -253,7 +253,7 @@ public class RedisUtil {
         try {
             return redisTemplate.opsForList().range(key, start, end);
         } catch (Exception ex) {
-            throw MyExceptionUtils.mxe("获取缓存List中的内容失败了！", ex);
+            throw new RuntimeException("获取缓存List中的内容失败了！", ex);
         }
     }
 
@@ -269,7 +269,7 @@ public class RedisUtil {
         try {
             return redisTemplate.opsForList().remove(key, count, value);
         } catch (Exception ex) {
-            throw MyExceptionUtils.mxe("删除List中的内容失败了！", ex);
+            throw new RuntimeException("删除List中的内容失败了！", ex);
         }
 
     }
@@ -284,7 +284,7 @@ public class RedisUtil {
         try {
             return redisTemplate.opsForList().size(key);
         } catch (Exception ex) {
-            throw MyExceptionUtils.mxe("获取List长度失败", ex);
+            throw new RuntimeException("获取List长度失败", ex);
         }
     }
 

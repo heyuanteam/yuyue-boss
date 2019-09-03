@@ -4,7 +4,7 @@ import com.github.tobato.fastdfs.conn.ConnectionManager;
 import com.github.tobato.fastdfs.conn.FdfsConnectionPool;
 import com.github.tobato.fastdfs.conn.PooledConnectionFactory;
 import com.github.tobato.fastdfs.proto.FdfsCommand;
-import com.yuyue.boss.api.domain.Variables;
+import com.yuyue.boss.enums.Variables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

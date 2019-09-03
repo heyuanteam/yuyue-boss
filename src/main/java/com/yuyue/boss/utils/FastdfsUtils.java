@@ -5,7 +5,7 @@ import com.github.tobato.fastdfs.domain.MateData;
 import com.github.tobato.fastdfs.domain.StorePath;
 import com.github.tobato.fastdfs.domain.ThumbImageConfig;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
-import com.yuyue.boss.api.domain.Variables;
+import com.yuyue.boss.enums.Variables;
 import com.yuyue.boss.config.CommandTestBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

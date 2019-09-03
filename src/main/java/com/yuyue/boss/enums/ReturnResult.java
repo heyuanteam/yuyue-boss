@@ -1,4 +1,4 @@
-package com.yuyue.boss.api.domain;
+package com.yuyue.boss.enums;
 
 import lombok.Getter;
 import lombok.Setter;

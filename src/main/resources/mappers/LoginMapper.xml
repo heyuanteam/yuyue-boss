@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yuyue.boss.api.mapper.LoginMapper" >
     <!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！-->
-    <resultMap id="BaseResultMap" type="com.yuyue.boss.api.domain.AppUser">
+    <resultMap id="BaseResultMap" type="com.yuyue.boss.api.domain.SystemUser">
         <id column="ID" property="id" jdbcType="VARCHAR"/>
         <result column="USER_NO" property="userNo" jdbcType="VARCHAR"/>
         <result column="USER_NICK_NAME" property="nickName" jdbcType="VARCHAR"/>
@@ -33,69 +33,7 @@
         <result column="userUrl" property="userUrl" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <update id="updateAppUser" parameterType="com.yuyue.boss.api.domain.AppUser">
-        UPDATE yuyue_merchant b
-        <set>
-            <if test="nickName!=null and nickName!=''">
-                b.`USER_NICK_NAME` = #{nickName},
-            </if>
-            <if test="sex!=null and sex!=''">
-                b.`SEX` = #{sex},
-            </if>
-            <if test="wechat!=null and wechat!=''">
-                b.`wechat` = #{wechat},
-            </if>
-            <if test="education!=null and education!=''">
-                b.`education` = #{education},
-            </if>
-            <if test="signature!=null and signature!=''">
-                b.`signature` = #{signature},
-            </if>
-            <if test="headpUrl!=null and headpUrl!=''">
-                b.`HEADP_URL` = #{headpUrl},
-            </if>
-            <if test="realName!=null and realName!=''">
-                b.`USER_REAL_NAME` = #{realName},
-            </if>
-            <if test="idCard!=null and idCard!=''">
-                b.`ID_CARD` = #{idCard},
-            </if>
-            <if test="phone!=null and phone!=''">
-                b.`PHONE` = #{phone},
-            </if>
-            <if test="userStatus!=null and userStatus!=''">
-                b.`USER_STATUS` = #{userStatus},
-            </if>
-            <if test="addrDetail!=null and addrDetail!=''">
-                b.`ADDR_DETAIL` = #{addrDetail},
-            </if>
-            <if test="userUrl!=null and userUrl!=''">
-                b.`userUrl` = #{userUrl},
-            </if>
-            <if test="cardZUrl!=null and cardZUrl!=''">
-                b.`cardZUrl` = #{cardZUrl},
-            </if>
-            <if test="cardFUrl!=null and cardFUrl!=''">
-                b.`cardFUrl` = #{cardFUrl},
-            </if>
-            <if test="password!=null and password!=''">
-                b.`PASSWORD` = #{password},
-            </if>
-            <if test="city!=null and city!=''">
-                b.`city` = #{city},
-            </if>
-            <if test="jpushName!=null and jpushName!=''">
-                b.`jpushName` = #{jpushName},
-            </if>
-        </set>
-        WHERE 1=1
-        <if test="id!=null and id!=''">
-            and b.id = #{id}
-        </if>
-
-    </update>
-
-    <select id="getAppUserMsg" resultType="com.yuyue.boss.api.domain.AppUser" parameterType="String">
+    <select id="getAppUserMsg" resultType="com.yuyue.boss.api.domain.SystemUser" parameterType="String">
         SELECT id,user_no userNo,user_nick_name nickName,user_real_name realName,id_type idType,id_card idCard,phone,sex,city,jpushName,password,salt,
             user_status userStatus,total ,ADDR_DETAIL addrDetail,HEADP_URL headpUrl,USER_TYPE userType,cardFUrl,cardZUrl,userUrl,
         ATTENTION_TOTAL attentionTotal,LIKE_TOTAL likeTotal,COMMENT_TOTAL commentTotal,education ,wechat ,signature ,

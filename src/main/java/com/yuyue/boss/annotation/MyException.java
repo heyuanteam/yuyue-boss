@@ -1,26 +1,37 @@
 package com.yuyue.boss.annotation;
 
+import com.yuyue.boss.enums.CodeEnum;
+
 /**
- * CreateTime: 2018-12-18 22:31
- * ClassName: MyException
- * Package: com.ywh.common.exception
- * Describe:
- * 自定义异常，可以throws的时候用自己的异常类
- *
- * @author YWH
+ * Create by lujun.chen on 2018/09/29
  */
 public class MyException extends RuntimeException {
+    private int code;
+    private String message;
 
-    public MyException(String msg) {
-        super(msg);
+    public MyException(CodeEnum codeEnum) {
+        this.code = codeEnum.getCode();
+        this.message = codeEnum.getMessage();
     }
 
-    public MyException(String message, Throwable throwable) {
-        super(message, throwable);
+    public MyException(int code, String message) {
+        super(message);
+        this.code = code;
+        this.message = message;
     }
 
-    public MyException(Throwable throwable) {
-        super(throwable);
+    public MyException(int code, String message, Throwable cause) {
+        super(message, cause);
+        this.code = code;
+        this.message = message;
     }
 
+    public int getCode() {
+        return code;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
 }
