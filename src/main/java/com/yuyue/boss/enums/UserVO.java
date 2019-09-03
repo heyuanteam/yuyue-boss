@@ -1,11 +1,13 @@
 package com.yuyue.boss.enums;
 
+import com.yuyue.boss.api.domain.SystemUser;
+
 import java.util.List;
 
 /**
  * Create by lujun.chen on 2018/09/29
  */
-public class UserVO extends SysUser {
+public class UserVO extends SystemUser {
 
     //令牌
     private String token;
