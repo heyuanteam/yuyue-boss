@@ -1,11 +1,12 @@
 package com.yuyue.boss.api.mapper;
 
 import com.yuyue.boss.api.domain.SystemUser;
-import org.apache.ibatis.annotations.Insert;
+import com.yuyue.boss.api.domain.SystemUserVO;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author ly
@@ -13,6 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface LoginMapper extends MyBaseMapper<SystemUser> {
 
-    SystemUser getAppUserMsg(@Param("password") String password, @Param("phone") String phone, @Param("id") String id);
+    @Select("SELECT b.id,b.loginName,b.realName,DATE_FORMAT(b.lastLoginTime ,'%Y-%m-%d %H:%i:%s') lastLoginTime,b.phone,b.`status`," +
+            "b.`password` from yuyue_system_user where 1=1 and b.loginName = #{loginName} and b.`password` = #{password}")
+    SystemUser getSystemUserMsg(@Param("loginName") String loginName, @Param("password") String password);
+
+    @Select("SELECT h.permissionKey FROM yuyue_system_user b,yuyue_system_role c,yuyue_system_menu d,yuyue_system_permission h" +
+            "WHERE b.id = #{systemUserId} AND b.`status` = '10B' AND d.id = c.menuId AND d.`status` = '10B'" +
+            "   AND h.id = c.permissionId AND h.`status` = '10B' AND c.`status` = '10B' ORDER BY h.permissionCode")
+    List<String> getSystemUserVO(@Param("systemUserId") String systemUserId);
 
 }

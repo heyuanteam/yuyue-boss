@@ -12,8 +12,8 @@ spring:
   #跳转页面路径
   mvc:
     view:
-      prefix: /
-      suffix: .jsp
+      prefix: /webapp/
+      suffix: .html
 
   #上传视频的大小限制
   http:

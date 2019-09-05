@@ -2,6 +2,7 @@ package com.yuyue.boss.api.controller;
 
 import com.yuyue.boss.api.domain.SystemUser;
 import com.yuyue.boss.api.service.LoginService;
+import com.yuyue.boss.utils.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -19,22 +20,19 @@ import org.springframework.web.bind.annotation.*;
  * 登录模块
  */
 @RestController
-//@RequestMapping(value="/login", produces = "application/json; charset=UTF-8")
+@RequestMapping(value="/homePage", produces = "application/json; charset=UTF-8")
 public class LoginController {
     private static Logger log = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
     private LoginService loginService;
-    @Autowired
-    private RedisTemplate redisTemplate;
 
-    @GetMapping("/login")
-    public String login(){
-        return "login";
-    }
-
-    @PostMapping("/login")
+    @ResponseBody
+    @RequestMapping("/login")
     public String login(String username, String password, Model model){
+        if(StringUtils.isEmpty(username) || StringUtils.isEmpty(password)){
+            return "登录名和密码不能为空！";
+        }
         UsernamePasswordToken token = new UsernamePasswordToken(username,password);
         Subject currentUser = SecurityUtils.getSubject();
         try {

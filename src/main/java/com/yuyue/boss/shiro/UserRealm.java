@@ -3,7 +3,7 @@ package com.yuyue.boss.shiro;
 import com.alibaba.fastjson.JSON;
 import com.yuyue.boss.api.service.LoginService;
 import com.yuyue.boss.enums.Constants;
-import com.yuyue.boss.enums.UserVO;
+import com.yuyue.boss.api.domain.UserVO;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -14,6 +14,8 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 /**
  * Create by lujun.chen on 2018/09/29
@@ -57,7 +59,7 @@ public class UserRealm extends AuthorizingRealm {
                 //ByteSource.Util.bytes("salt"), salt=username+salt,采用明文访问时，不需要此句
                 getName());
         //session中不需要保存密码
-        userVO.setPassword("");
+//        userVO.setPassword("");
         //将用户信息放入session中
         SecurityUtils.getSubject().getSession().setAttribute(Constants.SESSION_USER_INFO, userVO);
         return authenticationInfo;
