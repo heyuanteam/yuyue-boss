@@ -1,67 +1,59 @@
 package com.yuyue.boss.api.controller;
 
-import com.yuyue.boss.api.domain.SystemUser;
-import com.yuyue.boss.api.service.LoginService;
-import com.yuyue.boss.utils.StringUtils;
+import com.yuyue.boss.api.domain.UserVO;
+import com.yuyue.boss.enums.Constants;
+import com.yuyue.boss.enums.ResponseData;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.concurrent.TimeUnit;
 
 /**
- * 登录模块
+ * Create by lujun.chen on 2018/09/29
  */
 @RestController
-@RequestMapping(value="/homePage", produces = "application/json; charset=UTF-8")
 public class LoginController {
     private static Logger log = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
-    private LoginService loginService;
-
-    @ResponseBody
-    @RequestMapping("/login")
-    public String login(String username, String password, Model model){
-        if(StringUtils.isEmpty(username) || StringUtils.isEmpty(password)){
-            return "登录名和密码不能为空！";
-        }
-        UsernamePasswordToken token = new UsernamePasswordToken(username,password);
-        Subject currentUser = SecurityUtils.getSubject();
-        try {
-            //主体提交登录请求到SecurityManager
-            currentUser.login(token);
-        }catch (IncorrectCredentialsException ice){
-            model.addAttribute("msg","密码不正确");
-        }catch(UnknownAccountException uae){
-            model.addAttribute("msg","账号不存在");
-        }catch(AuthenticationException ae){
-            model.addAttribute("msg","状态不正常");
-        }
-        if(currentUser.isAuthenticated()){
-            System.out.println("认证成功");
-            model.addAttribute("currentUser",currentUser());
-            return "success";
-        }else{
-            token.clear();
-            return "login";
-        }
-    }
+    private RedisTemplate redisTemplate;
 
     /**
-     * shiro获取当前用户
+     * 登录
+     *
+     * shiro登录，shiro采用Facade模式（门面模式），所有与shiro的交互都通过Subject对象API。
+     * 调用Subject.login后会触发UserRealm的doGetAuthenticationInfo方法，进行具体的登录验证处理。
+     *
+     * @param username 用户名
+     * @param password 密码
      * @return
      */
-    private SystemUser currentUser(){
-        SystemUser currentUser = (SystemUser) SecurityUtils.getSubject().getPrincipal();
-        return  currentUser;
+    @RequestMapping(value = "/login", produces = "application/json; charset=UTF-8")
+    public ResponseData login(String username, String password) {
+        Subject currentUser = SecurityUtils.getSubject();
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+        try {
+            //会触发com.itclj.common.shiro.UserRealm的doGetAuthenticationInfo方法
+            currentUser.login(token);
+//            Session session = SecurityUtils.getSubject().getSession();
+//            UserVO userVO = (UserVO) session.getAttribute(Constants.SESSION_USER_INFO);
+//            Constants.REDIS_KEY_PREFIX_SHIRO_TOKEN + userVO.getToken()
+            UserVO userVO = (UserVO) SecurityUtils.getSubject().getPrincipal();
+            redisTemplate.opsForValue().set(userVO.getId(),
+                    userVO.getPermissions(),
+                    Constants.REDIS_SHIRO_TOKEN_EXPIRES, TimeUnit.SECONDS);
+            return new ResponseData(userVO);
+        } catch (AuthenticationException e) {
+            return new ResponseData("登录失败");
+        }
     }
 }
-

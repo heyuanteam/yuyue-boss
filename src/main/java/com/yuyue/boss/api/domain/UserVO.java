@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserVO extends SystemUserVO implements Serializable {
+public class UserVO extends SystemUser implements Serializable {
     private static final long serialVersionUID = 1L;
 //    令牌
     private String token;

@@ -1,9 +1,9 @@
 package com.yuyue.boss.shiro;
 
 import com.alibaba.fastjson.JSON;
+import com.yuyue.boss.api.domain.UserVO;
 import com.yuyue.boss.api.service.LoginService;
 import com.yuyue.boss.enums.Constants;
-import com.yuyue.boss.api.domain.UserVO;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -14,8 +14,6 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 /**
  * Create by lujun.chen on 2018/09/29
@@ -51,13 +49,15 @@ public class UserRealm extends AuthorizingRealm {
         UserVO userVO = loginService.getUser(loginName, password);
         if (userVO == null) {
             //没找到帐号
-            return null;
+            throw new UnknownAccountException();
         }
         //交给AuthenticatingRealm使用CredentialsMatcher进行密码匹配，如果觉得人家的不好可以自定义实现
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
-                userVO.getLoginName(), userVO.getPassword(),
+                userVO,
+                userVO.getPassword(),
                 //ByteSource.Util.bytes("salt"), salt=username+salt,采用明文访问时，不需要此句
-                getName());
+                getName()
+        );
         //session中不需要保存密码
 //        userVO.setPassword("");
         //将用户信息放入session中
