@@ -43,7 +43,7 @@ public class UserController extends BaseController{
     @LoginRequired
     public ResponseData getMenuList(@CurrentUser SystemUser systemUser, HttpServletRequest request) {
         getParameterMap(request);
-        Subject subject = SecurityUtils.getSubject();
+//        Subject subject = SecurityUtils.getSubject();
 //        if(subject.isPermitted("video:menu3")){
 //            return "video:menu";
 //        }else{
@@ -52,17 +52,18 @@ public class UserController extends BaseController{
         List<SystemMenu> menuList = loginService.getMenuList(systemUser.getLoginName(), systemUser.getPassword());
         List<Map<String,Object>> list = new ArrayList<>();
         for (SystemMenu systemMenu: menuList) {
-            if(StringUtils.isNotEmpty(systemMenu.getId())){
+            if(StringUtils.isNotEmpty(systemMenu.getId()) && !"0".equals(systemMenu.getId())){
                 Map<String,Object> map = new HashMap<>();
-                List<SystemMenu> menus = loginService.getMenu("", systemMenu.getId());
+                List<SystemMenu> menus = loginService.getMenu(systemMenu.getId());
+                map.put("menuName",systemMenu.getMenuName());
                 if(CollectionUtils.isNotEmpty(menus)){
-                    map.put("menuName",systemMenu.getMenuName());
                     map.put("menuLsits",menus);
-                    list.add(map);
+                } else {
+                    map.put("menuLsits",menus);
                 }
+                list.add(map);
             }
         }
-
         return new ResponseData(list);
     }
 }

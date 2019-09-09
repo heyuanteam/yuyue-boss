@@ -40,9 +40,8 @@
     <select id="getMenu" resultType="java.lang.String" parameterType="String">
         SELECT d.menuName
         FROM yuyue_system_menu d
-        WHERE 1=1 AND d.`status` = '10B' and d.id != '0'
-        <if test=" type !=null and type!='' ">  and d.parentId = #{type}  </if>
-        <if test="id!=null and id!='' ">  and d.id = #{id} </if>
+        WHERE 1=1 AND d.`status` = '10B'
+        <if test=" id !=null and id!='' ">  and d.parentId = #{id}  </if>
         ORDER BY d.menuCode
     </select>
 
