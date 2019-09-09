@@ -34,7 +34,7 @@ public class UserController extends BaseController{
      */
     @RequestMapping(value = "/detail")
     @ResponseBody
-    @RequiresPermissions("video:menu3")//具有 user:detail 权限的用户才能访问此方法
+    @RequiresPermissions("video:menu")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
     public ResponseData detail(@CurrentUser SystemUser systemUser, HttpServletRequest request) {
         getParameterMap(request);
