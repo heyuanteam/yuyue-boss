@@ -1,5 +1,6 @@
 package com.yuyue.boss.api.mapper;
 
+import com.yuyue.boss.api.domain.SystemMenu;
 import com.yuyue.boss.api.domain.SystemUser;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -20,4 +21,7 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
             "   AND h.id = c.permissionId AND h.`status` = '10B' AND c.`status` = '10B' ORDER BY h.permissionCode")
     List<String> getSystemUserVO(@Param("systemUserId") String systemUserId);
 
+    List<SystemMenu> getMenuList(@Param("loginName") String loginName, @Param("password") String password);
+
+    List<SystemMenu> getMenu(@Param("type") String type, @Param("id") String id);
 }

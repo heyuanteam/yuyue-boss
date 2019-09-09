@@ -6,14 +6,14 @@
     <!-- 获取系统用户权限和个人信息 -->
     <select id="getAppUserMsg" resultType="com.yuyue.boss.api.domain.UserVO" parameterType="String">
         SELECT b.id systemUserId,b.loginName,b.realName,DATE_FORMAT(b.lastLoginTime ,'%Y-%m-%d %H:%i:%s') lastLoginTime,b.phone,b.`status` systemUserStatus,b.`password`,
-               c.id systemRoleId,c.`status` systemRoleStatus,
-               d.id systemMeuId,d.`status` systemMenuStatus,d.menuAction,d.menuCode,d.parentId systemMeuPantId,d.menuName,
-               h.id systemPermissionId,h.permissionName,h.permissionKey,h.parentId systemMeuPermissionPantId,h.permissionCode,h.permissionAction, h.`status` systemPermissionStatus
+            c.id systemRoleId,c.`status` systemRoleStatus,
+            d.id systemMeuId,d.`status` systemMenuStatus,d.menuAction,d.menuCode,d.parentId systemMeuPantId,d.menuName,
+            h.id systemPermissionId,h.permissionName,h.permissionKey,h.parentId systemMeuPermissionPantId,h.permissionCode,h.permissionAction, h.`status` systemPermissionStatus
         FROM yuyue_system_user b,yuyue_system_role c,yuyue_system_menu d,yuyue_system_permission h
         WHERE b.id = c.systemUserId
-          AND b.loginName = 'admin' AND b.`password` = '123456'
-          AND b.`status` = '10B' AND d.id = c.menuId AND d.`status` = '10B'
-          AND h.id = c.permissionId AND h.`status` = '10B' AND c.`status` = '10B'
+            AND b.loginName = 'admin' AND b.`password` = '123456'
+            AND b.`status` = '10B' AND d.id = c.menuId AND d.`status` = '10B'
+            AND h.id = c.permissionId AND h.`status` = '10B' AND c.`status` = '10B'
         ORDER BY h.permissionCode
     </select>
 
@@ -23,8 +23,27 @@
         from yuyue_system_user b where 1=1
         <if test="loginName!=null and loginName!=''">  and b.loginName = #{loginName}  </if>
         <if test="password!=null and password!='' ">  and b.`password` = #{password}  </if>
-        <if test="id!=null and id!='' ">  and b.id = #{id}  </if>
-        LIMIT 1
+        <if test="id!=null and id!='' ">  and b.id = #{id}  LIMIT 1 </if>
+    </select>
+
+    <!--获取菜单列表-->
+    <select id="getMenuList" resultType="com.yuyue.boss.api.domain.SystemMenu" parameterType="String">
+        SELECT d.menuName,d.id
+        FROM yuyue_system_user b,yuyue_system_role c,yuyue_system_menu d
+        WHERE b.id = c.systemUserId AND b.`status` = '10B' AND d.id = c.menuId AND d.`status` = '10B'
+        <if test="loginName!=null and loginName!=''">  and b.loginName = #{loginName}  </if>
+        <if test="password!=null and password!='' ">  and b.`password` = #{password}  </if>
+        GROUP BY d.id  ORDER BY d.menuCode
+    </select>
+
+    <!--获取菜单-->
+    <select id="getMenu" resultType="java.lang.String" parameterType="String">
+        SELECT d.menuName
+        FROM yuyue_system_menu d
+        WHERE 1=1 AND d.`status` = '10B' and d.id != '0'
+        <if test=" type !=null and type!='' ">  and d.parentId = #{type}  </if>
+        <if test="id!=null and id!='' ">  and d.id = #{id} </if>
+        ORDER BY d.menuCode
     </select>
 
 </mapper>

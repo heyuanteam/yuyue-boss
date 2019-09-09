@@ -2,6 +2,7 @@ package com.yuyue.boss.api.service.impl;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.yuyue.boss.api.domain.SystemMenu;
 import com.yuyue.boss.api.domain.SystemUser;
 import com.yuyue.boss.api.domain.UserVO;
 import com.yuyue.boss.api.mapper.LoginMapper;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 /**
  * @author ly
@@ -31,7 +33,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public UserVO getUser(String loginName, String password) {
-        SystemUser systemUser = loginMapper.getSystemUserMsg(loginName, password,"");
+        SystemUser systemUser = getSystemUserMsg(loginName, password,"");
         UserVO userVO = BeanUtil.copyProperties(systemUser, UserVO.class);
         userVO.setPermissions(loginMapper.getSystemUserVO(systemUser.getId()));
         userVO.setToken(getToken(userVO));
@@ -50,5 +52,15 @@ public class LoginServiceImpl implements LoginService {
             log.info("token生成错误！" );
         }
         return token;
+    }
+
+    @Override
+    public List<SystemMenu> getMenuList(String loginName, String password){
+        return loginMapper.getMenuList(loginName,password);
+    }
+
+    @Override
+    public List<SystemMenu> getMenu(String type, String id){
+        return loginMapper.getMenu(type,id);
     }
 }
