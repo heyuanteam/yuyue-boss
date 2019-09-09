@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * @author ly
  */
@@ -24,15 +26,29 @@ public class LoginServiceImpl implements LoginService {
     private LoginMapper loginMapper;
 
     @Override
+    public SystemUser getSystemUserMsg(String password, String phone, String id) { return loginMapper.getSystemUserMsg(password,phone,id); }
+
+
+    @Override
     public UserVO getUser(String loginName, String password) {
-        SystemUser systemUser = loginMapper.getSystemUserMsg(loginName, password);
+        SystemUser systemUser = loginMapper.getSystemUserMsg(loginName, password,"");
         UserVO userVO = BeanUtil.copyProperties(systemUser, UserVO.class);
         userVO.setPermissions(loginMapper.getSystemUserVO(systemUser.getId()));
-        userVO.setToken(getToken(loginName));
+        userVO.setToken(getToken(userVO));
         return userVO;
     }
 
-    private String getToken(String loginName) {
-        return DigestUtils.md5DigestAsHex((loginName + System.currentTimeMillis()).getBytes());
+    @Override
+    public String getToken(UserVO systemUser) {
+        String token = "";
+        try {
+            token = JWT.create()
+                    .withAudience(systemUser.getId())          // 将 user id 保存到 token 里面
+                    .sign(Algorithm.HMAC256(systemUser.getPassword()));   // 以 password 作为 token 的密钥
+        } catch (UnsupportedEncodingException ignore) {
+            ignore.printStackTrace();
+            log.info("token生成错误！" );
+        }
+        return token;
     }
 }

@@ -13,9 +13,7 @@ import java.util.List;
 @Repository
 public interface LoginMapper extends MyBaseMapper<SystemUser> {
 
-    @Select("SELECT b.id,b.loginName,b.realName,DATE_FORMAT(b.lastLoginTime ,'%Y-%m-%d %H:%i:%s') lastLoginTime,b.phone,b.`status`," +
-            "b.`password` from yuyue_system_user b where 1=1 and b.loginName = #{loginName} and b.`password` = #{password}")
-    SystemUser getSystemUserMsg(@Param("loginName") String loginName, @Param("password") String password);
+    SystemUser getSystemUserMsg(@Param("loginName") String loginName, @Param("password") String password,@Param("id") String id);
 
     @Select("SELECT h.permissionKey FROM yuyue_system_user b,yuyue_system_role c,yuyue_system_menu d,yuyue_system_permission h" +
             " WHERE b.id = #{systemUserId} AND b.`status` = '10B' AND d.id = c.menuId AND d.`status` = '10B'" +

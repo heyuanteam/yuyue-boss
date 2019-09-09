@@ -12,9 +12,9 @@ import java.text.DecimalFormat;
 public class ResultJSONUtils {
     private static Logger log = LoggerFactory.getLogger(ResultJSONUtils.class);
 
-    public static JSONObject getJSONObjectBean(ReturnResult returnResult){
-        return JSONObject.parseObject(JSONObject.toJSON(returnResult).toString());
-    }
+//    public static JSONObject getJSONObjectBean(ReturnResult returnResult){
+//        return JSONObject.parseObject(JSONObject.toJSON(returnResult).toString());
+//    }
 
     /**
      * 获取hash值分表，物理分表

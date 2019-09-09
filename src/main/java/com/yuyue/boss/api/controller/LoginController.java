@@ -1,6 +1,7 @@
 package com.yuyue.boss.api.controller;
 
 import com.yuyue.boss.api.domain.UserVO;
+import com.yuyue.boss.api.service.LoginService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.Constants;
 import com.yuyue.boss.enums.ResponseData;
@@ -30,6 +31,8 @@ public class LoginController extends BaseController{
 
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private LoginService loginService;
 
     /**
      * 登录
@@ -37,18 +40,17 @@ public class LoginController extends BaseController{
      * shiro登录，shiro采用Facade模式（门面模式），所有与shiro的交互都通过Subject对象API。
      * 调用Subject.login后会触发UserRealm的doGetAuthenticationInfo方法，进行具体的登录验证处理。
      *
-     * @param username 用户名
      * @param password 密码
      * @return
      */
     @RequestMapping("/userLogin")
     @ResponseBody
-    public ResponseData userLogin(String username, String password, HttpServletRequest request) {
+    public ResponseData userLogin(String loginName, String password, HttpServletRequest request) {
         /*打印参数=======================*/
         getParameterMap(request);
 
         Subject currentUser = SecurityUtils.getSubject();
-        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+        UsernamePasswordToken token = new UsernamePasswordToken(loginName, password);
         try {
             //会触发com.itclj.common.shiro.UserRealm的doGetAuthenticationInfo方法
             currentUser.login(token);
@@ -59,6 +61,7 @@ public class LoginController extends BaseController{
             redisTemplate.opsForValue().set(userVO.getId(),
                     userVO.getPermissions(),
                     Constants.REDIS_SHIRO_TOKEN_EXPIRES, TimeUnit.SECONDS);
+            userVO.setToken(loginService.getToken(userVO));
             return new ResponseData(userVO);
         } catch (AuthenticationException e) {
             return new ResponseData("登录失败");

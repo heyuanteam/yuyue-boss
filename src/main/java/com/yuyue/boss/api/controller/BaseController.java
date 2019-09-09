@@ -1,6 +1,7 @@
 package com.yuyue.boss.api.controller;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.yuyue.boss.enums.CodeEnum;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
@@ -44,8 +45,8 @@ public class BaseController {
     public void authenticationException(HttpServletRequest request, HttpServletResponse response){
         Map<String,Object> map = new HashMap<>();
         log.info("登陆已过期,请重新登陆=======================>>>");
-        map.put("code","20011");
-        map.put("message","登陆已过期,请重新登陆");
+        map.put("code",CodeEnum.E_20011.getMessage());
+        map.put("message", CodeEnum.E_20011.getMessage());
         writeJson(map,request, response);
     }
 
@@ -56,8 +57,8 @@ public class BaseController {
     public void authorizationException(HttpServletRequest request, HttpServletResponse response){
         Map<String,Object> map = new HashMap<>();
         log.info("权限不足=======================>>>");
-        map.put("code","502");
-        map.put("message","权限不足");
+        map.put("code",CodeEnum.E_502.getCode());
+        map.put("message",CodeEnum.E_502.getMessage());
         writeJson(map,request, response);
     }
 

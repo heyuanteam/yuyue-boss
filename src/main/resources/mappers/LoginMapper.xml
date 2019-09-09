@@ -3,6 +3,7 @@
 <mapper namespace="com.yuyue.boss.api.mapper.LoginMapper" >
 
     <!--b.id = 'F9946CAE0D574FB1BDFDAE922F7821E9'-->
+    <!-- 获取系统用户权限和个人信息 -->
     <select id="getAppUserMsg" resultType="com.yuyue.boss.api.domain.UserVO" parameterType="String">
         SELECT b.id systemUserId,b.loginName,b.realName,DATE_FORMAT(b.lastLoginTime ,'%Y-%m-%d %H:%i:%s') lastLoginTime,b.phone,b.`status` systemUserStatus,b.`password`,
                c.id systemRoleId,c.`status` systemRoleStatus,
@@ -16,5 +17,14 @@
         ORDER BY h.permissionCode
     </select>
 
+    <!-- 获取个人信息 -->
+    <select id="getSystemUserMsg" resultType="com.yuyue.boss.api.domain.SystemUser" parameterType="String">
+        SELECT b.id,b.loginName,b.realName,DATE_FORMAT(b.lastLoginTime ,'%Y-%m-%d %H:%i:%s') lastLoginTime,b.phone,b.`status`,b.`password`
+        from yuyue_system_user b where 1=1
+        <if test="loginName!=null and loginName!=''">  and b.loginName = #{loginName}  </if>
+        <if test="password!=null and password!='' ">  and b.`password` = #{password}  </if>
+        <if test="id!=null and id!='' ">  and b.id = #{id}  </if>
+        LIMIT 1
+    </select>
 
 </mapper>
