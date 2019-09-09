@@ -54,13 +54,10 @@ public class UserController extends BaseController{
         for (SystemMenu systemMenu: menuList) {
             if(StringUtils.isNotEmpty(systemMenu.getId()) && !"0".equals(systemMenu.getId())){
                 Map<String,Object> map = new HashMap<>();
-                List<SystemMenu> menus = loginService.getMenu(systemMenu.getId());
+                List<String> menus = loginService.getMenu(systemMenu.getId());
                 map.put("menuName",systemMenu.getMenuName());
-                if(CollectionUtils.isNotEmpty(menus)){
-                    map.put("menuLsits",menus);
-                } else {
-                    map.put("menuLsits",menus);
-                }
+//                if(CollectionUtils.isNotEmpty(menus)){
+                map.put("menuLsits",menus);
                 list.add(map);
             }
         }

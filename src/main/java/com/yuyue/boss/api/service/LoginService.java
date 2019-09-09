@@ -22,6 +22,6 @@ public interface LoginService {
     List<SystemMenu> getMenuList(String loginName, String password);
 
     //获取菜单
-    List<SystemMenu> getMenu(String id);
+    List<String> getMenu(String id);
 
 }
