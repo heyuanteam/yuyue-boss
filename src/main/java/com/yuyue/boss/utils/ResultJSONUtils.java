@@ -1,7 +1,6 @@
 package com.yuyue.boss.utils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.yuyue.boss.enums.ReturnResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

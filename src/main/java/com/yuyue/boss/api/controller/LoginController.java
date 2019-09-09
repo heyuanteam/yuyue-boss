@@ -1,6 +1,7 @@
 package com.yuyue.boss.api.controller;
 
 import com.yuyue.boss.api.domain.UserVO;
+import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.Constants;
 import com.yuyue.boss.enums.ResponseData;
 import org.apache.shiro.SecurityUtils;
@@ -13,15 +14,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Create by lujun.chen on 2018/09/29
  */
 @RestController
-public class LoginController {
+@RequestMapping(value = "/login", produces = "application/json; charset=UTF-8")
+public class LoginController extends BaseController{
     private static Logger log = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
@@ -37,8 +41,12 @@ public class LoginController {
      * @param password 密码
      * @return
      */
-    @RequestMapping(value = "/login", produces = "application/json; charset=UTF-8")
-    public ResponseData login(String username, String password) {
+    @RequestMapping("/userLogin")
+    @ResponseBody
+    public ResponseData userLogin(String username, String password, HttpServletRequest request) {
+        /*打印参数=======================*/
+        getParameterMap(request);
+
         Subject currentUser = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         try {
@@ -52,6 +60,23 @@ public class LoginController {
                     userVO.getPermissions(),
                     Constants.REDIS_SHIRO_TOKEN_EXPIRES, TimeUnit.SECONDS);
             return new ResponseData(userVO);
+        } catch (AuthenticationException e) {
+            return new ResponseData("登录失败");
+        }
+    }
+
+    /**
+     * 没有权限，会跳到这里
+     * @return
+     */
+    @RequestMapping("/returnLogin")
+    @ResponseBody
+    public ResponseData returnLogin(HttpServletRequest request) {
+        /*打印参数=======================*/
+        getParameterMap(request);
+        log.info("没有权限，会跳到这里=======================>>>");
+        try {
+            return new ResponseData(CodeEnum.E_502);
         } catch (AuthenticationException e) {
             return new ResponseData("登录失败");
         }

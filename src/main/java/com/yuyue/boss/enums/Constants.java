@@ -17,7 +17,7 @@ public class Constants {
     public static final String REDIS_KEY_PREFIX_SHIRO_TOKEN = "yuyue:shiro:sessionid:token:";
 
     //TOKEN 与shiro sessionid 映射关系过期时间
-    public static final Integer REDIS_SHIRO_TOKEN_EXPIRES = 4 * 8600;
+    public static final Integer REDIS_SHIRO_TOKEN_EXPIRES = 40 * 8600;
 
     //http请求头TOKEN key
     public static final String HTTP_REQUEST_HEADER_TOKEN_KEY = "Access-Token";

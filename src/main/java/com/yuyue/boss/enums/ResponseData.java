@@ -7,38 +7,38 @@ package com.yuyue.boss.enums;
 public class ResponseData<T> {
     private Integer code;
 
-    private String msg;
+    private String message;
 
     private T data;
 
     public ResponseData() {
         this.code = CodeEnum.SUCCESS.getCode();
-        this.msg = CodeEnum.SUCCESS.getMessage();
+        this.message = CodeEnum.SUCCESS.getMessage();
     }
 
     public ResponseData(T obj) {
         this.code = CodeEnum.SUCCESS.getCode();
-        this.msg = CodeEnum.SUCCESS.getMessage();
+        this.message = CodeEnum.SUCCESS.getMessage();
         this.data = obj;
     }
 
     public ResponseData(Integer code, String msg) {
         this.code = code;
-        this.msg = msg;
+        this.message = msg;
     }
 
     public ResponseData(Integer code, String msg, T data) {
         this.code = code;
-        this.msg = msg;
+        this.message = msg;
         this.data = data;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getMessage() {
+        return message;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setMessage(String msg) {
+        this.message = msg;
     }
 
     public Object getData() {
