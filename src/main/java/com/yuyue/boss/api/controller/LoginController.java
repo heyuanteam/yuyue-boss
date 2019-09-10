@@ -67,21 +67,4 @@ public class LoginController extends BaseController{
             return new ResponseData("登录失败");
         }
     }
-
-    /**
-     * 没有权限，会跳到这里
-     * @return
-     */
-    @RequestMapping("/returnLogin")
-    @ResponseBody
-    public ResponseData returnLogin(HttpServletRequest request) {
-        /*打印参数=======================*/
-        getParameterMap(request);
-        log.info("没有权限，会跳到这里=======================>>>");
-        try {
-            return new ResponseData(CodeEnum.E_502);
-        } catch (AuthenticationException e) {
-            return new ResponseData("登录失败");
-        }
-    }
 }
