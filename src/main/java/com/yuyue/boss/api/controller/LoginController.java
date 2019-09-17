@@ -1,10 +1,15 @@
 package com.yuyue.boss.api.controller;
 
+import com.yuyue.boss.annotation.CurrentUser;
+import com.yuyue.boss.annotation.LoginRequired;
+import com.yuyue.boss.api.domain.SystemMenu;
+import com.yuyue.boss.api.domain.SystemUser;
 import com.yuyue.boss.api.domain.UserVO;
 import com.yuyue.boss.api.service.LoginService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.Constants;
 import com.yuyue.boss.enums.ResponseData;
+import com.yuyue.boss.utils.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -19,6 +24,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -66,5 +75,37 @@ public class LoginController extends BaseController{
         } catch (AuthenticationException e) {
             return new ResponseData("登录失败");
         }
+    }
+
+    /**
+     * 获取菜单
+     *
+     * @return
+     */
+    @RequestMapping(value = "/getMenuList")
+    @ResponseBody
+//    @RequiresPermissions("video:menu")//具有 user:detail 权限的用户才能访问此方法
+    @LoginRequired
+    public ResponseData getMenuList(@CurrentUser SystemUser systemUser, HttpServletRequest request) {
+        getParameterMap(request);
+//        Subject subject = SecurityUtils.getSubject();
+//        if(subject.isPermitted("video:menu3")){
+//            return "video:menu";
+//        }else{
+//            return "没权限你Rap个锤子啊!";
+//        }
+        List<SystemMenu> menuList = loginService.getMenuList(systemUser.getLoginName(), systemUser.getPassword());
+        List<Map<String,Object>> list = new ArrayList<>();
+        for (SystemMenu systemMenu: menuList) {
+            if(StringUtils.isNotEmpty(systemMenu.getId()) && !"0".equals(systemMenu.getId())){
+                Map<String,Object> map = new HashMap<>();
+                List<String> menus = loginService.getMenu(systemMenu.getId());
+                map.put("menuName",systemMenu.getMenuName());
+//                if(CollectionUtils.isNotEmpty(menus)){
+                map.put("menuLsits",menus);
+                list.add(map);
+            }
+        }
+        return new ResponseData(list);
     }
 }
