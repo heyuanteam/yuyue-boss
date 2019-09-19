@@ -2,6 +2,7 @@ package com.yuyue.boss.config;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.yuyue.boss.enums.CodeEnum;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,8 @@ public class GlobalExceptionHandler {
             msg = "服务器出错";
         }
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("error", msg);
+        jsonObject.put("code", CodeEnum.SYSTEM_BUSY.getCode());
+        jsonObject.put("message", CodeEnum.SYSTEM_BUSY.getMessage());
         return jsonObject;
     }
 }
