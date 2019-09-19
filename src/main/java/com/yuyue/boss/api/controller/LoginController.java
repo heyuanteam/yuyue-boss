@@ -57,6 +57,7 @@ public class LoginController extends BaseController{
     public ResponseData userLogin(String loginName, String password, HttpServletRequest request) {
         /*打印参数=======================*/
         getParameterMap(request);
+        log.info("登录------------>>/login/userLogin");
 
         Subject currentUser = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(loginName, password);
@@ -87,6 +88,7 @@ public class LoginController extends BaseController{
 //    @RequiresPermissions("video:menu")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
     public ResponseData getMenuList(@CurrentUser SystemUser systemUser, HttpServletRequest request) {
+        log.info("获取菜单------------>>/login/getMenuList");
         getParameterMap(request);
 //        Subject subject = SecurityUtils.getSubject();
 //        if(subject.isPermitted("video:menu3")){
