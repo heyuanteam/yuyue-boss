@@ -23,18 +23,23 @@ public class QRCodeController extends BaseController{
      */
     @RequestMapping("/getQRCodeWithLogo")
     @ResponseBody
-    public void getMenuList(HttpServletRequest request) {
+    public ResponseData getMenuList(HttpServletRequest request) {
         getParameterMap(request);
         log.info("生成二维码------------>>/qrCode/getQRCodeWithLogo");
         String content=request.getParameter("id");
         String qrCodeName = request.getParameter("siteTitle")+request.getParameter("startTime").split(":")[0]+"点";
         int size=Integer.parseInt(request.getParameter("size"));
+        String url=System.getProperty("user.dir");
+        log.info("---------------------"+url);
+        System.out.println(url);
         String logoPath=System.getProperty("user.dir")+"/src/main/resources/logo/logo.png";
         System.out.println(content);
         System.out.println(qrCodeName);
         System.out.println(size);
         System.out.println(logoPath);
-        QRCodeUtil.zxingCodeCreate(content, qrCodeName, size, logoPath);
+        String s = QRCodeUtil.zxingCodeCreate(content, qrCodeName, size, logoPath);
+        System.out.println("二维码路径："+s);
+        return new ResponseData(s);
     }
 
 }

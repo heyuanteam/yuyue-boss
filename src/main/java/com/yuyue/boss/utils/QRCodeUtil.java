@@ -49,7 +49,7 @@ public class QRCodeUtil {
      * @param size     生成的二维码图片尺寸 可以自定义或者默认（250）
      * @param logoPath logo的存放位置
      */
-    public static boolean zxingCodeCreate(String content, String qrCodeName, Integer size, String logoPath) {
+    public static String zxingCodeCreate(String content, String qrCodeName, Integer size, String logoPath) {
         try {
             //图片类型
             String imageType = "jpg";
@@ -89,10 +89,10 @@ public class QRCodeUtil {
                 file.mkdirs();
             }
             ImageIO.write(image, imageType, file);
-            return true;
+            return file.getPath();
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+            return "生成二维码失败！！";
         }
     }
 
