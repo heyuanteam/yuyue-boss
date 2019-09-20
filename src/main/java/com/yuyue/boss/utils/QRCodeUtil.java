@@ -5,11 +5,14 @@ import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ResourceUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.*;
@@ -52,12 +55,36 @@ public class QRCodeUtil {
             String imageType = "jpg";
             //获取二维码流的形式，写入到目录文件中
             BufferedImage image = getBufferedImage(content, size, logoPath);
+     /* 将生成的二维码放置本地
+
             File folder = new File("C:\\qrcode");
             //生成二维码存放文件
             if(!folder.exists()){//如果文件夹不存在
                 folder.mkdir();//创建文件夹
             }
             File file = new File(folder+"/"+qrCodeName+"."+imageType);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+             ImageIO.write(image, imageType, file);
+     * */
+            //项目放入服务器，将生成的二维码存入服务器中
+           /* String path = ResourceUtils.getURL("classpath:").getPath();
+            File qrCodeFolder = new File(path,"static/qrCode_image");
+            if(!qrCodeFolder.exists()){
+                qrCodeFolder.mkdirs();
+            }*/
+            //生成存储二维码的文件夹
+            String path = ClassUtils.getDefaultClassLoader().getResource("").getPath();
+            File upload= new File(path,"static/images");
+            if(!upload.exists()){
+                upload.mkdirs();
+                System.out.println("----------");
+            }
+            System.out.println("upload getAbsolutePath:"+upload.getAbsolutePath());
+
+            //生成二维码
+            File file = new File(upload+"/"+qrCodeName+"."+imageType);
             if (!file.exists()) {
                 file.mkdirs();
             }
