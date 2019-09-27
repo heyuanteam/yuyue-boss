@@ -52,9 +52,7 @@ public class LoginController extends BaseController{
     @ResponseBody
     public ResponseData userLogin(String loginName, String password, HttpServletRequest request, HttpServletResponse response){
         log.info("登录------------>>/login/userPasswordLogin");
-        //允许跨域
-        response.setHeader("Access-Control-Allow-Origin","*");
-        getParameterMap(request);
+        getParameterMap(request,response);
         if(StringUtils.isEmpty(loginName)){
             return new ResponseData("用户名为空！");
         } else if(StringUtils.isEmpty(password)){
@@ -95,9 +93,7 @@ public class LoginController extends BaseController{
     @ResponseBody
     public ResponseData userPhoneLogin(String phone, String code, HttpServletRequest request, HttpServletResponse response){
         log.info("登录------------>>/login/userPhoneLogin");
-        //允许跨域
-        response.setHeader("Access-Control-Allow-Origin","*");
-        getParameterMap(request);
+        getParameterMap(request,response);
         if(StringUtils.isEmpty(phone)){
             return new ResponseData("用户名为空！");
         } else if(StringUtils.isEmpty(code) || code.length() != 6 || !code.equals(redisUtil.getString(phone))){
@@ -127,37 +123,4 @@ public class LoginController extends BaseController{
         }
     }
 
-    /**
-     * 获取菜单
-     *
-     * @return
-     */
-//    @RequestMapping(value = "/getMenuList")
-//    @ResponseBody
-//    @RequiresPermissions("video:menu")//具有 user:detail 权限的用户才能访问此方法
-//    @LoginRequired
-//    public ResponseData getMenuList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response){
-//        log.info("获取菜单------------>>/login/getMenuList");
-//        //允许跨域
-//        response.setHeader("Access-Control-Allow-Origin","*");
-//        getParameterMap(request);
-//        Subject subject = SecurityUtils.getSubject();
-//        if(subject.isPermitted("video:menu3")){
-//            return "video:menu";
-//        }else{
-//            return "没权限你Rap个锤子啊!";
-//        }
-//        List<String> menuList = loginService.getMenuList(systemUser.getLoginName(), systemUser.getPassword());
-//        List<Map<String,Object>> list = new ArrayList<>();
-//        for (SystemMenu systemMenu: menuList) {
-//            if(StringUtils.isNotEmpty(systemMenu.getId()) && !"0".equals(systemMenu.getId())){
-//                Map<String,Object> map = new HashMap<>();
-//                List<String> menus = loginService.getMenu(systemMenu.getId());
-//                map.put("menuName",systemMenu.getMenuName());
-//                map.put("menuLsits",menus);
-//                list.add(map);
-//            }
-//        }
-//        return new ResponseData("menuList");
-//    }
 }

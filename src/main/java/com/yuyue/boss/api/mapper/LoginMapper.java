@@ -24,5 +24,5 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
 
     List<SystemMenu> getMenuList(@Param("loginName") String loginName, @Param("password") String password);
 
-    List<String> getMenu(@Param("id") String id);
+    List<SystemMenu> getMenu(@Param("id") String id);
 }
