@@ -76,6 +76,7 @@ public class LoginController extends BaseController{
             redisUtil.setString(user.getId(), user.getPermissions(), Constants.REDIS_SHIRO_TOKEN_EXPIRES);
             user.setToken(loginService.getToken(user));
 
+//            获取菜单
             List<SystemMenu> menuList = loginService.getMenuList(userVO.getLoginName(), userVO.getPassword());
             Map<String,Object> map = Maps.newHashMap();
             map.put("menu",menuList);
@@ -115,6 +116,7 @@ public class LoginController extends BaseController{
             redisUtil.setString(user.getId(), user.getPermissions(), Constants.REDIS_SHIRO_TOKEN_EXPIRES);
             user.setToken(loginService.getToken(user));
 
+//            获取菜单
             List<SystemMenu> menuList = loginService.getMenuList(user.getLoginName(), user.getPassword());
             Map<String,Object> map = Maps.newHashMap();
             map.put("menu",menuList);
