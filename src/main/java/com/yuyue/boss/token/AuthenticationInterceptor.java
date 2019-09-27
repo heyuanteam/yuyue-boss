@@ -67,7 +67,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 //                throw new RuntimeException("信息已失效，请重新登录");
                 return false;
             }
-            SystemUser user = loginService.getSystemUserMsg("","",userId);
+            SystemUser user = loginService.getSystemUserMsg("","",userId,"");
             if (user == null) {
                 returnResult.setMessage(CodeEnum.E_20011.getMessage());
                 returnResult.setCode(CodeEnum.E_20011.getCode());

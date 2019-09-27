@@ -37,7 +37,7 @@ spring:
         #最小空闲连接
         min-idle: 0
     timeout: 0
-    database: 1
+    database: 0
 
 #druid相关配置
   druid:

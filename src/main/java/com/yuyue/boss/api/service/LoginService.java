@@ -13,13 +13,13 @@ public interface LoginService {
     UserVO getUser(String loginName, String password);
 
     //获取系统用户个人信息
-    SystemUser getSystemUserMsg(String password,String phone,String id);
+    SystemUser getSystemUserMsg(String loginName,String password,String id,String phone);
 
     //获取token
     String getToken(UserVO systemUser);
 
     //获取菜单列表
-    List<SystemMenu> getMenuList(String loginName, String password);
+    List<String> getMenuList(String loginName, String password);
 
     //获取菜单
     List<String> getMenu(String id);
