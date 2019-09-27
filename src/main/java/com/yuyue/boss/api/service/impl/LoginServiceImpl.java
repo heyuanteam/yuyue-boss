@@ -55,7 +55,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public List<String> getMenuList(String loginName, String password){
+    public List<SystemMenu> getMenuList(String loginName, String password){
         return loginMapper.getMenuList(loginName,password);
     }
 

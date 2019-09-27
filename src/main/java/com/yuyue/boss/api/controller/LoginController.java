@@ -1,5 +1,6 @@
 package com.yuyue.boss.api.controller;
 
+import com.google.common.collect.Maps;
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.SystemMenu;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Create by lujun.chen on 2018/09/29
@@ -72,8 +74,13 @@ public class LoginController extends BaseController{
 //            Constants.REDIS_KEY_PREFIX_SHIRO_TOKEN + userVO.getToken()
             UserVO user = (UserVO) SecurityUtils.getSubject().getPrincipal();
             redisUtil.setString(user.getId(), user.getPermissions(), Constants.REDIS_SHIRO_TOKEN_EXPIRES);
-            userVO.setToken(loginService.getToken(user));
-            return new ResponseData(user);
+            user.setToken(loginService.getToken(user));
+
+            List<SystemMenu> menuList = loginService.getMenuList(userVO.getLoginName(), userVO.getPassword());
+            Map<String,Object> map = Maps.newHashMap();
+            map.put("menu",menuList);
+            map.put("user",user);
+            return new ResponseData(map);
         } catch (AuthenticationException e) {
             return new ResponseData("登录失败");
         }
@@ -107,7 +114,12 @@ public class LoginController extends BaseController{
             UserVO user = (UserVO) SecurityUtils.getSubject().getPrincipal();
             redisUtil.setString(user.getId(), user.getPermissions(), Constants.REDIS_SHIRO_TOKEN_EXPIRES);
             user.setToken(loginService.getToken(user));
-            return new ResponseData(user);
+
+            List<SystemMenu> menuList = loginService.getMenuList(user.getLoginName(), user.getPassword());
+            Map<String,Object> map = Maps.newHashMap();
+            map.put("menu",menuList);
+            map.put("user",user);
+            return new ResponseData(map);
         } catch (AuthenticationException e) {
             return new ResponseData("登录失败");
         }
@@ -118,22 +130,22 @@ public class LoginController extends BaseController{
      *
      * @return
      */
-    @RequestMapping(value = "/getMenuList")
-    @ResponseBody
+//    @RequestMapping(value = "/getMenuList")
+//    @ResponseBody
 //    @RequiresPermissions("video:menu")//具有 user:detail 权限的用户才能访问此方法
-    @LoginRequired
-    public ResponseData getMenuList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response){
-        log.info("获取菜单------------>>/login/getMenuList");
-        //允许跨域
-        response.setHeader("Access-Control-Allow-Origin","*");
-        getParameterMap(request);
+//    @LoginRequired
+//    public ResponseData getMenuList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response){
+//        log.info("获取菜单------------>>/login/getMenuList");
+//        //允许跨域
+//        response.setHeader("Access-Control-Allow-Origin","*");
+//        getParameterMap(request);
 //        Subject subject = SecurityUtils.getSubject();
 //        if(subject.isPermitted("video:menu3")){
 //            return "video:menu";
 //        }else{
 //            return "没权限你Rap个锤子啊!";
 //        }
-        List<String> menuList = loginService.getMenuList(systemUser.getLoginName(), systemUser.getPassword());
+//        List<String> menuList = loginService.getMenuList(systemUser.getLoginName(), systemUser.getPassword());
 //        List<Map<String,Object>> list = new ArrayList<>();
 //        for (SystemMenu systemMenu: menuList) {
 //            if(StringUtils.isNotEmpty(systemMenu.getId()) && !"0".equals(systemMenu.getId())){
@@ -144,6 +156,6 @@ public class LoginController extends BaseController{
 //                list.add(map);
 //            }
 //        }
-        return new ResponseData(menuList);
-    }
+//        return new ResponseData("menuList");
+//    }
 }

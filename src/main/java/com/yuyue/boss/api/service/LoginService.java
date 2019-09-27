@@ -19,7 +19,7 @@ public interface LoginService {
     String getToken(UserVO systemUser);
 
     //获取菜单列表
-    List<String> getMenuList(String loginName, String password);
+    List<SystemMenu> getMenuList(String loginName, String password);
 
     //获取菜单
     List<String> getMenu(String id);
