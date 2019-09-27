@@ -7,6 +7,7 @@ import com.yuyue.boss.api.domain.SystemMenu;
 import com.yuyue.boss.api.domain.SystemUser;
 import com.yuyue.boss.api.domain.UserVO;
 import com.yuyue.boss.api.service.LoginService;
+import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.Constants;
 import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.RedisUtil;
@@ -54,13 +55,13 @@ public class LoginController extends BaseController{
         log.info("登录------------>>/login/userPasswordLogin");
         getParameterMap(request,response);
         if(StringUtils.isEmpty(loginName)){
-            return new ResponseData("用户名为空！");
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"用户名为空！");
         } else if(StringUtils.isEmpty(password)){
-            return new ResponseData("密码为空！");
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"密码为空！");
         }
         UserVO userVO = loginService.getUser(loginName, password);
         if(StringUtils.isNull(userVO)){
-            return new ResponseData("用户名或密码不正确！");
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"用户名或密码不正确！");
         }
         Subject currentUser = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(loginName, password);
@@ -81,7 +82,7 @@ public class LoginController extends BaseController{
             map.put("user",user);
             return new ResponseData(map);
         } catch (AuthenticationException e) {
-            return new ResponseData("登录失败");
+            return new ResponseData(CodeEnum.E_400.getCode(),"登录失败");
         }
     }
 
@@ -95,13 +96,13 @@ public class LoginController extends BaseController{
         log.info("登录------------>>/login/userPhoneLogin");
         getParameterMap(request,response);
         if(StringUtils.isEmpty(phone)){
-            return new ResponseData("用户名为空！");
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"用户名为空！");
         } else if(StringUtils.isEmpty(code) || code.length() != 6 || !code.equals(redisUtil.getString(phone))){
-            return new ResponseData("验证码错误！");
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"验证码错误！");
         }
         SystemUser systemUser = loginService.getSystemUserMsg("","","",phone);
         if(StringUtils.isNull(systemUser)){
-            return new ResponseData("用户名或密码不正确！");
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"用户名或密码不正确！");
         }
 
         Subject currentUser = SecurityUtils.getSubject();
@@ -119,7 +120,7 @@ public class LoginController extends BaseController{
             map.put("user",user);
             return new ResponseData(map);
         } catch (AuthenticationException e) {
-            return new ResponseData("登录失败");
+            return new ResponseData(CodeEnum.E_400.getCode(),"登录失败");
         }
     }
 

@@ -14,6 +14,7 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,14 @@ public class UserRealm extends AuthorizingRealm {
     @Autowired
     private LoginService loginService;
 
+    /**
+     * 授权
+     * @param principals
+     * @return
+     */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+        logger.info("调用了授权方法=======>>>>>>");
 //        //查询用户的权限
 //        Session session = SecurityUtils.getSubject().getSession();
 //        UserVO userVO = (UserVO) session.getAttribute(Constants.SESSION_USER_INFO);
@@ -40,7 +47,6 @@ public class UserRealm extends AuthorizingRealm {
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         authorizationInfo.addStringPermissions(userVO.getPermissions());
         return authorizationInfo;
-//        return null;
     }
 
     /**
@@ -69,5 +75,15 @@ public class UserRealm extends AuthorizingRealm {
         //将用户信息放入session中
         SecurityUtils.getSubject().getSession().setAttribute(Constants.SESSION_USER_INFO, userVO);
         return authenticationInfo;
+    }
+
+    /**
+     * 每次登陆清空权限
+     * @param username
+     */
+    public void removeUserAuthorizationInfoCache(String username) {
+        SimplePrincipalCollection pc = new SimplePrincipalCollection();
+        pc.add(username, super.getName());
+        super.clearCachedAuthorizationInfo(pc);
     }
 }

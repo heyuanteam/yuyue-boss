@@ -47,7 +47,7 @@ public class BaseController {
     public void authenticationException(HttpServletRequest request, HttpServletResponse response){
         Map<String,Object> map = new HashMap<>();
         log.info("登陆已过期,请重新登陆=======================>>>");
-        map.put("code",CodeEnum.E_20011.getMessage());
+        map.put("code",CodeEnum.E_20011.getCode());
         map.put("message", CodeEnum.E_20011.getMessage());
         writeJson(map,request, response);
     }

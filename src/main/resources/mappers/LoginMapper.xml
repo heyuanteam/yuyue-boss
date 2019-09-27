@@ -32,7 +32,7 @@
     <select id="getMenuList" resultType="com.yuyue.boss.api.domain.SystemMenu" parameterType="String">
         SELECT d.menuName,d.id,d.menuAction
         FROM yuyue_system_user b,yuyue_system_role c,yuyue_system_menu d
-        WHERE b.id = c.systemUserId AND b.`status` = '10B' AND d.id = c.menuId AND d.`status` = '10B'  AND d.id !='0'
+        WHERE b.id = c.systemUserId AND b.`status` = '10B' AND d.id = c.menuId AND d.`status` = '10B'
         <if test="loginName!=null and loginName!=''">  and b.loginName = #{loginName}  </if>
         <if test="password!=null and password!='' ">  and b.`password` = #{password}  </if>
         GROUP BY d.id  ORDER BY d.menuCode

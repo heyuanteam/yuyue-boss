@@ -72,6 +72,11 @@
         </dependency>
         <!-- 权限 -->
         <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-spring</artifactId>
             <version>${shiro-spring.version}</version>
@@ -189,7 +194,7 @@
 
         <dependency>
             <groupId>org.apache.commons</groupId>
-            <artifactId> commons-pool2</artifactId>
+            <artifactId>commons-pool2</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
