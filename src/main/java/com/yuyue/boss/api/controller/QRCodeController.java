@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping(value = "/qrCode", produces = "application/json; charset=UTF-8")
@@ -24,8 +25,8 @@ public class QRCodeController extends BaseController{
      */
     @RequestMapping("/getQRCodeWithLogo")
     @ResponseBody
-    public ResponseData getMenuList(HttpServletRequest request) {
-        getParameterMap(request);
+    public ResponseData getMenuList(HttpServletRequest request, HttpServletResponse response){
+        getParameterMap(request,response);
         log.info("生成二维码------------>>/qrCode/getQRCodeWithLogo");
         String content=request.getParameter("id");
         String qrCodeName = request.getParameter("siteTitle")+request.getParameter("startTime").split(" ")[0];

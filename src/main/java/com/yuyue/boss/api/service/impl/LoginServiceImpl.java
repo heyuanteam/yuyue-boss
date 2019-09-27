@@ -28,12 +28,12 @@ public class LoginServiceImpl implements LoginService {
     private LoginMapper loginMapper;
 
     @Override
-    public SystemUser getSystemUserMsg(String password, String phone, String id) { return loginMapper.getSystemUserMsg(password,phone,id); }
+    public SystemUser getSystemUserMsg(String loginName,String password,String id,String phone) { return loginMapper.getSystemUserMsg(loginName,password,id,phone); }
 
 
     @Override
     public UserVO getUser(String loginName, String password) {
-        SystemUser systemUser = getSystemUserMsg(loginName, password,"");
+        SystemUser systemUser = getSystemUserMsg(loginName, password,"","");
         UserVO userVO = BeanUtil.copyProperties(systemUser, UserVO.class);
         userVO.setPermissions(loginMapper.getSystemUserVO(systemUser.getId()));
         userVO.setToken(getToken(userVO));
@@ -60,7 +60,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public List<String> getMenu(String id){
+    public List<SystemMenu> getMenu(String id){
         return loginMapper.getMenu(id);
     }
 }

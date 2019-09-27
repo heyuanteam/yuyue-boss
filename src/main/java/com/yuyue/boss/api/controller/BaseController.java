@@ -24,7 +24,9 @@ import java.util.Map;
 public class BaseController {
     protected static Logger log = LoggerFactory.getLogger(BaseController.class);
 
-    protected Map<String,String> getParameterMap(HttpServletRequest request) {
+    protected Map<String,String> getParameterMap(HttpServletRequest request, HttpServletResponse response){
+        //允许跨域
+        response.setHeader("Access-Control-Allow-Origin","*");
         Map<String,String> map = new HashMap<>();
         Enumeration<String> enumeration = request.getParameterNames();
         while (enumeration.hasMoreElements()) {
@@ -45,7 +47,7 @@ public class BaseController {
     public void authenticationException(HttpServletRequest request, HttpServletResponse response){
         Map<String,Object> map = new HashMap<>();
         log.info("登陆已过期,请重新登陆=======================>>>");
-        map.put("code",CodeEnum.E_20011.getMessage());
+        map.put("code",CodeEnum.E_20011.getCode());
         map.put("message", CodeEnum.E_20011.getMessage());
         writeJson(map,request, response);
     }

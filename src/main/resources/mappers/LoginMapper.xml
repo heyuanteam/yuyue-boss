@@ -23,12 +23,14 @@
         from yuyue_system_user b where 1=1
         <if test="loginName!=null and loginName!=''">  and b.loginName = #{loginName}  </if>
         <if test="password!=null and password!='' ">  and b.`password` = #{password}  </if>
-        <if test="id!=null and id!='' ">  and b.id = #{id}  LIMIT 1 </if>
+        <if test="id!=null and id!='' ">  and b.id = #{id} </if>
+        <if test="phone!=null and phone!='' ">  and b.phone = #{phone} </if>
+        LIMIT 1
     </select>
 
-    <!--获取菜单列表-->
+    <!--获取权限关联菜单列表-->
     <select id="getMenuList" resultType="com.yuyue.boss.api.domain.SystemMenu" parameterType="String">
-        SELECT d.menuName,d.id
+        SELECT d.menuName,d.id,d.menuAction
         FROM yuyue_system_user b,yuyue_system_role c,yuyue_system_menu d
         WHERE b.id = c.systemUserId AND b.`status` = '10B' AND d.id = c.menuId AND d.`status` = '10B'
         <if test="loginName!=null and loginName!=''">  and b.loginName = #{loginName}  </if>
@@ -37,10 +39,10 @@
     </select>
 
     <!--获取菜单-->
-    <select id="getMenu" resultType="java.lang.String" parameterType="String">
-        SELECT d.menuName
+    <select id="getMenu" resultType="com.yuyue.boss.api.domain.SystemMenu" parameterType="String">
+        SELECT *,DATE_FORMAT(d.CREATE_TIME ,'%Y-%m-%d %H:%i:%s') createTime
         FROM yuyue_system_menu d
-        WHERE 1=1 AND d.`status` = '10B'
+        WHERE 1=1
         <if test=" id !=null and id!='' ">  and d.parentId = #{id}  </if>
         ORDER BY d.menuCode
     </select>
