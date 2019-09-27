@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -47,9 +48,11 @@ public class LoginController extends BaseController{
      */
     @RequestMapping("/userPasswordLogin")
     @ResponseBody
-    public ResponseData userLogin(String loginName, String password, HttpServletRequest request) {
-        getParameterMap(request);
+    public ResponseData userLogin(String loginName, String password, HttpServletRequest request, HttpServletResponse response){
         log.info("登录------------>>/login/userPasswordLogin");
+        //允许跨域
+        response.setHeader("Access-Control-Allow-Origin","*");
+        getParameterMap(request);
         if(StringUtils.isEmpty(loginName)){
             return new ResponseData("用户名为空！");
         } else if(StringUtils.isEmpty(password)){
@@ -82,9 +85,11 @@ public class LoginController extends BaseController{
      */
     @RequestMapping("/userPhoneLogin")
     @ResponseBody
-    public ResponseData userPhoneLogin(String phone, String code, HttpServletRequest request) {
-        getParameterMap(request);
+    public ResponseData userPhoneLogin(String phone, String code, HttpServletRequest request, HttpServletResponse response){
         log.info("登录------------>>/login/userPhoneLogin");
+        //允许跨域
+        response.setHeader("Access-Control-Allow-Origin","*");
+        getParameterMap(request);
         if(StringUtils.isEmpty(phone)){
             return new ResponseData("用户名为空！");
         } else if(StringUtils.isEmpty(code) || code.length() != 6 || !code.equals(redisUtil.getString(phone))){
@@ -117,8 +122,10 @@ public class LoginController extends BaseController{
     @ResponseBody
 //    @RequiresPermissions("video:menu")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
-    public ResponseData getMenuList(@CurrentUser SystemUser systemUser, HttpServletRequest request) {
+    public ResponseData getMenuList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response){
         log.info("获取菜单------------>>/login/getMenuList");
+        //允许跨域
+        response.setHeader("Access-Control-Allow-Origin","*");
         getParameterMap(request);
 //        Subject subject = SecurityUtils.getSubject();
 //        if(subject.isPermitted("video:menu3")){
