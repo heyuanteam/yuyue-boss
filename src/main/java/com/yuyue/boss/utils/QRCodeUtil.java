@@ -87,7 +87,6 @@ public class QRCodeUtil {
             File upload= new File(path,"/qrcode_image");
             if(!upload.exists()){
                 upload.mkdirs();
-                System.out.println("----------");
             }
             //生成二维码
             File file = new File(upload+"/"+qrCodeName+"."+imageType);

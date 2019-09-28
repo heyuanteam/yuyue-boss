@@ -9,11 +9,17 @@ public class ResponseData<T> {
 
     private String message;
 
+    private int begin;
+
     private T data;
 
     public ResponseData() {
         this.code = CodeEnum.SUCCESS.getCode();
         this.message = CodeEnum.SUCCESS.getMessage();
+    }
+
+    public ResponseData(int begin) {
+        this.begin = begin;
     }
 
     public ResponseData(T obj) {
@@ -31,6 +37,13 @@ public class ResponseData<T> {
         this.code = code;
         this.message = msg;
         this.data = data;
+    }
+    public void setCode(int begin) {
+        this.begin = begin;
+    }
+
+    public int getBegin() {
+        return begin;
     }
 
     public String getMessage() {

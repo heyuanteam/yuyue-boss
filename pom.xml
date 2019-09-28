@@ -342,6 +342,7 @@
         </repository>
     </repositories>
     <build>
+        <finalName>yuyue-boss</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
