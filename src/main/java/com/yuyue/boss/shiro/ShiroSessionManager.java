@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 import redis.clients.jedis.JedisCluster;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 

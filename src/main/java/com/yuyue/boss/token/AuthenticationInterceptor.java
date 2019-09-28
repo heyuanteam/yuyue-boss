@@ -12,6 +12,8 @@ import com.yuyue.boss.api.service.LoginService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -28,6 +30,14 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        //设置跨域--开始
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        //无条件放行OPTIONS
+        if (httpRequest.getMethod().equals(RequestMethod.OPTIONS.name())) {
+            setHeader(httpRequest, httpResponse);
+//            return true;
+        }
         ResponseData returnResult=new ResponseData();
         // 如果不是映射到方法直接通过
         if (!(handler instanceof HandlerMethod)) {
@@ -43,8 +53,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             // 执行认证
             String token = request.getHeader("token");  // 从 http 请求头中取出 token
             if (token == null) {
-                returnResult.setMessage(CodeEnum.E_20011.getMessage());
-                returnResult.setCode(CodeEnum.E_20011.getCode());
+                returnResult.setMessage(CodeEnum.AUTH_ERROR.getMessage());
+                returnResult.setCode(CodeEnum.AUTH_ERROR.getCode());
                 //设置状态码
 //                response.setStatus(500);
                 response.setContentType("application/json;charset=UTF-8");
@@ -57,8 +67,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             try {
                 userId = String.valueOf(JWT.decode(token).getAudience().get(0));  // 获取 token 中的 user id
             } catch (JWTDecodeException e) {
-                returnResult.setMessage(CodeEnum.E_20011.getMessage());
-                returnResult.setCode(CodeEnum.E_20011.getCode());
+                returnResult.setMessage(CodeEnum.AUTH_ERROR.getMessage());
+                returnResult.setCode(CodeEnum.AUTH_ERROR.getCode());
                 //设置状态码
 //                response.setStatus(500);
                 response.setContentType("application/json;charset=UTF-8");
@@ -69,8 +79,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             }
             SystemUser user = loginService.getSystemUserMsg("","",userId,"");
             if (user == null) {
-                returnResult.setMessage(CodeEnum.E_20011.getMessage());
-                returnResult.setCode(CodeEnum.E_20011.getCode());
+                returnResult.setMessage(CodeEnum.AUTH_ERROR.getMessage());
+                returnResult.setCode(CodeEnum.AUTH_ERROR.getCode());
                 //设置状态码
 //                response.setStatus(500);
                 response.setContentType("application/json;charset=UTF-8");
@@ -85,8 +95,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 try {
                     verifier.verify(token);
                 } catch (JWTVerificationException e) {
-                    returnResult.setMessage(CodeEnum.E_20011.getMessage());
-                    returnResult.setCode(CodeEnum.E_20011.getCode());
+                    returnResult.setMessage(CodeEnum.AUTH_ERROR.getMessage());
+                    returnResult.setCode(CodeEnum.AUTH_ERROR.getCode());
                     //设置状态码
 //                    response.setStatus(500);
                     response.setContentType("application/json;charset=UTF-8");
@@ -100,6 +110,28 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             return true;
         }
         return true;
+    }
+
+    /**
+     * 为response设置header，实现跨域
+     */
+    private void setHeader(HttpServletRequest request, HttpServletResponse response) {
+        System.err.println("ShiroFilter");
+//        System.err.println("setHeader -- " + request.getHeader("Access-Control-Request-Headers"));
+        //跨域的header设置
+//        response.setHeader("Access-control-Allow-Origin", request.getHeader("Origin"));
+//        response.setHeader("Access-Control-Allow-Methods", request.getMethod());
+//        response.setHeader("Access-Control-Allow-Credentials", "true");
+//        response.setHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"));
+        response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "POST,PUT, GET, OPTIONS, DELETE");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers", "content-type,x-requested-with,token");
+//        response.setHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Allow-Headers") + ",token");
+        //防止乱码，适用于传输JSON数据
+        response.setHeader("Content-Type", "application/json;charset=UTF-8");
+        response.setStatus(HttpStatus.OK.value());
     }
 
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {}

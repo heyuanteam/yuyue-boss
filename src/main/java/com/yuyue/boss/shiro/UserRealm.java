@@ -34,7 +34,7 @@ public class UserRealm extends AuthorizingRealm {
      * @return
      */
     @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+    public AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         logger.info("调用了授权方法=======>>>>>>");
 //        //查询用户的权限
 //        Session session = SecurityUtils.getSubject().getSession();
@@ -54,7 +54,7 @@ public class UserRealm extends AuthorizingRealm {
      * LoginController.login()方法中执行Subject.login()时 执行此方法
      */
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
+    public AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
         String loginName = (String) authcToken.getPrincipal();
         // 获取用户密码
         String password = new String((char[]) authcToken.getCredentials());
