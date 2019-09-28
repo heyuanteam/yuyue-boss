@@ -3,6 +3,7 @@ package com.yuyue.boss.api.service.impl;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.yuyue.boss.api.domain.SystemMenu;
+import com.yuyue.boss.api.domain.SystemPermission;
 import com.yuyue.boss.api.domain.SystemUser;
 import com.yuyue.boss.api.domain.UserVO;
 import com.yuyue.boss.api.mapper.LoginMapper;
@@ -60,7 +61,20 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public List<SystemMenu> getMenu(String id){
-        return loginMapper.getMenu(id);
+    public List<SystemMenu> getMenu(String id,Integer sort){
+        return loginMapper.getMenu(id,sort);
     }
+
+    @Override
+    public void insertSystemMenu(SystemMenu systemMenu) { loginMapper.insertSystemMenu(systemMenu); }
+
+    @Override
+    public void updateSystemMenu(String id, int upSort,String status) { loginMapper.updateSystemMenu(id,upSort,status); }
+
+    @Override
+    public void insertSystemPermission(String id, String permissionName, String permissionKey, String parentId, String permissionCode) {
+       loginMapper.insertSystemPermission(id,permissionName,permissionKey,parentId,permissionCode); }
+
+    @Override
+    public void delMenu(String id) { loginMapper.delMenu(id);}
 }

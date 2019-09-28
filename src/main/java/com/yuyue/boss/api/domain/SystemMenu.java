@@ -22,7 +22,12 @@ public class SystemMenu implements Serializable {
     private String  status;
 //    请求路径
     private String  menuAction;
-//    菜单权限
+//    菜单图标
     private String  permissionKey;
+//    排序
+    private Integer  sort;
+//    权限
+    private String  role;
     private String  createTime;
+    private String  updateTime;
 }

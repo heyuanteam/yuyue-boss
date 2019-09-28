@@ -341,7 +341,10 @@
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
+
+    <!-- 打包文件名 -->
     <build>
+        <finalName>yuyue-boss</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
