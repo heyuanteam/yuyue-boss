@@ -29,16 +29,8 @@ public class AjaxPermissionsAuthorizationFilter extends FormAuthenticationFilter
         PrintWriter out = null;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-//        if (isAjax(request)) {
-        //跨域设置,谁来都放行,与设置成*效果相同,但是这里设置成*行不通,因此用该方法代替
-        httpServletResponse.setHeader("Access-Control-Allow-Origin", httpServletRequest.getHeader("Origin"));
-        httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
-        //不能设置成*,否则跨域请求会失败
-        httpServletResponse.setHeader("Access-Control-Allow-Methods", "POST,PUT, GET, OPTIONS, DELETE");
-        httpServletResponse.setHeader("Access-Control-Max-Age", "3600");
-        //我这里需要放行这三个header头部字段
-        httpServletResponse.setHeader("Access-Control-Allow-Headers", "content-type,x-requested-with,token");
-
+        //解决一下跨域问题
+        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
 
         JSONObject jsonObject = new JSONObject();
             jsonObject.put("code", CodeEnum.E_20011.getCode());
@@ -57,26 +49,6 @@ public class AjaxPermissionsAuthorizationFilter extends FormAuthenticationFilter
             }
 //        }
         return false;
-    }
-
-    //解决OPTIONS请求跨域问题
-    @Override
-    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-        if (request instanceof HttpServletRequest) {
-            if (((HttpServletRequest) request).getMethod().toUpperCase().equals("OPTIONS")) {
-                return true;
-            }
-        }
-        return super.isAccessAllowed(request, response, mappedValue);
-    }
-
-
-    private boolean isAjax(ServletRequest request){
-        String header = ((HttpServletRequest) request).getHeader("X-Requested-With");
-        if("XMLHttpRequest".equalsIgnoreCase(header)){
-            return Boolean.TRUE;
-        }
-        return Boolean.FALSE;
     }
 
     @Bean

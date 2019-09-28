@@ -29,11 +29,6 @@ public class BaseController {
     protected Map<String,String> getParameterMap(HttpServletRequest request, HttpServletResponse response){
         //解决一下跨域问题
         response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "*");
-        response.setHeader("Access-Control-Max-Age", "0");
-        response.setHeader("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,userId,token");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("XDomainRequestAllowed", "1");
         Map<String,String> map = new HashMap<>();
         Enumeration<String> enumeration = request.getParameterNames();
         while (enumeration.hasMoreElements()) {
