@@ -72,11 +72,12 @@ public class LoginController extends BaseController{
 //            UserVO userVO = (UserVO) session.getAttribute(Constants.SESSION_USER_INFO);
 //            Constants.REDIS_KEY_PREFIX_SHIRO_TOKEN + userVO.getToken()
             UserVO user = (UserVO) SecurityUtils.getSubject().getPrincipal();
-            redisUtil.setString(user.getId(), user.getPermissions(), Constants.REDIS_SHIRO_TOKEN_EXPIRES);
             user.setToken(loginService.getToken(user));
+            redisUtil.setString(Constants.REDIS_KEY_PREFIX_SHIRO_TOKEN + user.getToken(),
+                    user.getPermissions(), Constants.REDIS_SHIRO_TOKEN_EXPIRES);
 
 //            获取菜单
-            List<SystemMenu> menuList = loginService.getMenuList(userVO.getLoginName(), userVO.getPassword());
+            List<SystemMenu> menuList = loginService.getMenuList(user.getLoginName(), user.getPassword());
             Map<String,Object> map = Maps.newHashMap();
             map.put("menu",menuList);
             map.put("user",user);
@@ -110,8 +111,9 @@ public class LoginController extends BaseController{
         try {
             currentUser.login(token);
             UserVO user = (UserVO) SecurityUtils.getSubject().getPrincipal();
-            redisUtil.setString(user.getId(), user.getPermissions(), Constants.REDIS_SHIRO_TOKEN_EXPIRES);
             user.setToken(loginService.getToken(user));
+            redisUtil.setString(Constants.REDIS_KEY_PREFIX_SHIRO_TOKEN + user.getToken(),
+                    user.getPermissions(), Constants.REDIS_SHIRO_TOKEN_EXPIRES);
 
 //            获取菜单
             List<SystemMenu> menuList = loginService.getMenuList(user.getLoginName(), user.getPassword());

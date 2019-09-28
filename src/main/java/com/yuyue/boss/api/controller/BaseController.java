@@ -2,11 +2,13 @@ package com.yuyue.boss.api.controller;
 
 import com.alibaba.druid.support.json.JSONUtils;
 import com.yuyue.boss.enums.CodeEnum;
+import io.netty.handler.codec.http.HttpUtil;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.naming.AuthenticationException;
@@ -25,8 +27,8 @@ public class BaseController {
     protected static Logger log = LoggerFactory.getLogger(BaseController.class);
 
     protected Map<String,String> getParameterMap(HttpServletRequest request, HttpServletResponse response){
-        //允许跨域
-        response.setHeader("Access-Control-Allow-Origin","*");
+        //解决一下跨域问题
+        response.setHeader("Access-Control-Allow-Origin", "*");
         Map<String,String> map = new HashMap<>();
         Enumeration<String> enumeration = request.getParameterNames();
         while (enumeration.hasMoreElements()) {
@@ -39,16 +41,30 @@ public class BaseController {
     }
 
     /**
+     * 认证失败
+     * @param request
+     * @param response
+     */
+    @ExceptionHandler({UnauthenticatedException.class})
+    public void unauthenticatedException(HttpServletRequest request, HttpServletResponse response){
+        Map<String,Object> map = new HashMap<>();
+        log.info("认证失败=======================>>>");
+        map.put("code",CodeEnum.AUTH_ERROR.getCode());
+        map.put("message", CodeEnum.AUTH_ERROR.getMessage());
+        writeJson(map,request, response);
+    }
+
+    /**
      * 登录认证异常
      * @param request
      * @param response
      */
-    @ExceptionHandler({UnauthenticatedException.class, AuthenticationException.class})
+    @ExceptionHandler({AuthenticationException.class})
     public void authenticationException(HttpServletRequest request, HttpServletResponse response){
         Map<String,Object> map = new HashMap<>();
         log.info("登陆已过期,请重新登陆=======================>>>");
-        map.put("code",CodeEnum.E_20011.getCode());
-        map.put("message", CodeEnum.E_20011.getMessage());
+        map.put("code",CodeEnum.AUTH_ERROR.getCode());
+        map.put("message", CodeEnum.AUTH_ERROR.getMessage());
         writeJson(map,request, response);
     }
 

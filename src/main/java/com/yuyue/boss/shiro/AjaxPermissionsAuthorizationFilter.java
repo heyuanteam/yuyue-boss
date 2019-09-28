@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 
@@ -15,25 +16,38 @@ import java.io.PrintWriter;
  * Create by lujun.chen on 2018/09/29
  */
 public class AjaxPermissionsAuthorizationFilter extends FormAuthenticationFilter {
+
+    /**
+     * 表示当访问拒绝时是否已经处理了；如果返回true表示需要继续处理；如果返回false表示该拦截器实例已经处理了，将直接返回即可。
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
     @Override
-    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("code", CodeEnum.E_20011.getCode());
-        jsonObject.put("message", CodeEnum.E_20011.getMessage());
+    public boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
         PrintWriter out = null;
-        HttpServletResponse res = (HttpServletResponse) response;
-        try {
-            res.setCharacterEncoding("UTF-8");
-            res.setContentType("application/json");
-            out = response.getWriter();
-            out.println(jsonObject);
-        } catch (Exception e) {
-        } finally {
-            if (null != out) {
-                out.flush();
-                out.close();
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        //解决一下跨域问题
+        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+
+        JSONObject jsonObject = new JSONObject();
+            jsonObject.put("code", CodeEnum.E_20011.getCode());
+            jsonObject.put("message", CodeEnum.E_20011.getMessage());
+            try {
+                httpServletResponse.setCharacterEncoding("UTF-8");
+                httpServletResponse.setContentType("application/json");
+                out = response.getWriter();
+                out.println(jsonObject);
+            } catch (Exception e) {
+            } finally {
+                if (null != out) {
+                    out.flush();
+                    out.close();
+                }
             }
-        }
+//        }
         return false;
     }
 

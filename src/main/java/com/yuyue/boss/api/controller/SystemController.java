@@ -22,6 +22,7 @@ import java.util.List;
 /**
  * 系统配置
  */
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/system", produces = "application/json; charset=UTF-8")
 public class SystemController extends BaseController{
@@ -59,6 +60,24 @@ public class SystemController extends BaseController{
 //                list.add(map);
 //            }
 //        }
+        return new ResponseData(menuList);
+    }
+
+    /**
+     * 添加系统菜单
+     *
+     * @return
+     */
+    @RequestMapping(value = "/addMenu")
+    @ResponseBody
+    @RequiresPermissions("MenuManager:menu")//具有 user:detail 权限的用户才能访问此方法
+    @LoginRequired
+    public ResponseData addMenu(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response){
+        log.info("获取系统菜单------------>>/system/getMenuList");
+        getParameterMap(request,response);
+        List<SystemMenu> menuList = loginService.getMenu("");
+        SystemMenu systemMenu = menuList.get(menuList.size() - 1);
+
         return new ResponseData(menuList);
     }
 
