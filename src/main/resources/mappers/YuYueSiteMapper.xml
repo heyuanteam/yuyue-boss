@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yuyue.boss.api.mapper.YuYueSiteMapper">
+
+
+
+    <!-- 获取全部现场信息  或  查询 现场详情 -->
+    <select id="getYuYueSiteInfo" parameterType="String" resultType="com.yuyue.boss.api.domain.YuYueSite">
+        SELECT *,
+        DATE_FORMAT(ADMISSION_TIME ,'%Y-%m-%d %H:%i:%s') admissionTime,
+        DATE_FORMAT(START_TIME ,'%Y-%m-%d %H:%i:%s') startTime,
+        DATE_FORMAT(END_TIME ,'%Y-%m-%d %H:%i:%s') endTime
+        FROM yuyue_site where 1=1
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        ORDER BY START_TIME DESC
+        LIMIT #{begin},#{limit}
+    </select>
+
+    <select id="searchYuYueSiteInfo" parameterType="String" resultType="com.yuyue.boss.api.domain.YuYueSite">
+        SELECT *,
+        DATE_FORMAT(ADMISSION_TIME ,'%Y-%m-%d %H:%i:%s') admissionTime,
+        DATE_FORMAT(START_TIME ,'%Y-%m-%d %H:%i:%s') startTime,
+        DATE_FORMAT(END_TIME ,'%Y-%m-%d %H:%i:%s') endTime
+        FROM yuyue_site where 1=1
+        <if test="siteAddr != null and siteAddr != ''">
+            and siteAddr = #{siteAddr}
+        </if>
+        <if test="status != null and status != ''">
+            and  status = #{status}
+        </if>
+        <if test="jPushStatus != null and jPushStatus != ''">
+            and  jPushStatus = #{jPushStatus}
+        </if>
+        <if test="mainPerson != null and mainPerson != ''">
+            and  mainPerson = #{mainPerson}
+        </if>
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            and START_TIME  &gt;=#{startTime}  AND END_TIME &lt;= #{endTime}
+        </if>
+        ORDER BY START_TIME DESC
+        LIMIT #{begin},#{limit}
+    </select>
+
+
+
+
+
+</mapper>

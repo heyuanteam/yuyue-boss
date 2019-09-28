@@ -74,15 +74,20 @@ public class QRCodeUtil {
             if(!qrCodeFolder.exists()){
                 qrCodeFolder.mkdirs();
             }*/
-            //生成存储二维码的文件夹
-            String path = ClassUtils.getDefaultClassLoader().getResource("").getPath();
+            //生成存储在项目中二维码的文件夹
+            /*String path = ClassUtils.getDefaultClassLoader().getResource("").getPath();
             File upload= new File(path,"static/images");
             if(!upload.exists()){
                 upload.mkdirs();
                 System.out.println("----------");
             }
-            System.out.println("upload getAbsolutePath:"+upload.getAbsolutePath());
-
+            System.out.println("upload getAbsolutePath:"+upload.getAbsolutePath());*/
+            //生成存储在项目外放的二维码的文件夹
+            String path = System.getProperty("user.dir").replace("bin", "webapps");
+            File upload= new File(path,"/qrcode_image");
+            if(!upload.exists()){
+                upload.mkdirs();
+            }
             //生成二维码
             File file = new File(upload+"/"+qrCodeName+"."+imageType);
             if (!file.exists()) {
