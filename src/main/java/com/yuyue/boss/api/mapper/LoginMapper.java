@@ -25,7 +25,8 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
 
     List<SystemMenu> getMenuList(@Param("loginName") String loginName, @Param("password") String password);
 
-    List<SystemMenu> getMenu(@Param("id") String id,@Param("sort") Integer sort);
+    List<SystemMenu> getMenu(@Param("id") String id,@Param("sort") Integer sort,@Param("role") String role,
+                             @Param("menuName")String menuName,@Param("status")String status);
 
     @Transactional
     @Insert("replace into yuyue_system_menu (id,menuName,menuCode,menuAction,sort,role)  values  " +
@@ -34,7 +35,7 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     void insertSystemMenu(SystemMenu systemMenu);
 
     @Transactional
-    void updateSystemMenu(@Param("id")String id,@Param("upSort") int upSort,@Param("status")String status);
+    void updateSystemMenu(@Param("id")String id,@Param("upSort") int upSort,@Param("status")String status,@Param("menuName")String menuName);
 
     @Transactional
     @Insert("replace into yuyue_system_permission (id,permissionName,permissionKey,parentId,permissionCode)  values  " +
@@ -45,6 +46,12 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
                                 @Param("permissionCode") String permissionCode);
 
     @Transactional
-    @Delete("  ")
-    void delMenu(String id);
+    @Delete("DELETE FROM yuyue_system_menu WHERE id =#{id} ")
+    void delMenu(@Param("id") String id);
+
+    List<SystemPermission> getSystemPermission(@Param("parentId")String parentId,@Param("permissionCode") String permissionCode);
+
+    @Transactional
+    @Delete("DELETE FROM yuyue_system_permission WHERE id =#{id} ")
+    void delSystemPermission(@Param("id")String id);
 }

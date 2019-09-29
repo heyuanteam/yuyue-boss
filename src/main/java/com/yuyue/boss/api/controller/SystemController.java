@@ -47,14 +47,14 @@ public class SystemController extends BaseController{
     @LoginRequired
     public ResponseData getMenuList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response){
         log.info("获取系统菜单------------>>/system/getMenuList");
-        getParameterMap(request,response);
+        Map<String, String> parameterMap = getParameterMap(request, response);
 //        Subject subject = SecurityUtils.getSubject();
 //        if(subject.isPermitted("video:menu3")){
 //            return "video:menu";
 //        }else{
 //            return "没权限你Rap个锤子啊!";
 //        }
-        List<SystemMenu> menuList = loginService.getMenu("",0);
+        List<SystemMenu> menuList = loginService.getMenu("",0,"",parameterMap.get("menuName"),parameterMap.get("status"));
 //        List<Map<String,Object>> list = new ArrayList<>();
 //        for (SystemMenu systemMenu: menuList) {
 //            if(StringUtils.isNotEmpty(systemMenu.getId()) && !"0".equals(systemMenu.getId())){
@@ -87,7 +87,12 @@ public class SystemController extends BaseController{
         } else if (StringUtils.isEmpty(parameterMap.get("role"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"菜单权限不可以为空！");
         }
-        List<SystemMenu> menuList = loginService.getMenu("",0);
+        List<SystemMenu> roleList = loginService.getMenu("", 0, parameterMap.get("role"),"","");
+        if (CollectionUtils.isNotEmpty(roleList)){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"菜单权限已经存在！");
+        }
+
+        List<SystemMenu> menuList = loginService.getMenu("",0,"","","");
         int sort = menuList.get(menuList.size() - 1).getSort();
         sort += 1;
         SystemMenu systemMenu = new SystemMenu();
@@ -128,7 +133,7 @@ public class SystemController extends BaseController{
                             parameterMap.get("role")+":remove", systemPermission.getId(),menuCode+"0002");
                 }
             }
-            List<SystemMenu> list = loginService.getMenu("",0);
+            List<SystemMenu> list = loginService.getMenu("",0,"","","");
             return new ResponseData(list);
         } catch (Exception e){
             log.info("=======>>>>>>添加系统菜单失败！");
@@ -154,7 +159,7 @@ public class SystemController extends BaseController{
         if (StringUtils.isNotEmpty(parameterMap.get("sort")) &&
                 (0 == Integer.valueOf(parameterMap.get("sort")) || 1 == Integer.valueOf(parameterMap.get("sort")))){
             try {
-                List<SystemMenu> menuList = loginService.getMenu(parameterMap.get("id"),0);
+                List<SystemMenu> menuList = loginService.getMenu(parameterMap.get("id"),0,"","","");
                 if (CollectionUtils.isEmpty(menuList)){
                     return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"菜单ID错误！");
                 }
@@ -165,25 +170,30 @@ public class SystemController extends BaseController{
                 } else {
                     number = sort -1;//向上
                 }
-                loginService.updateSystemMenu(menuList.get(0).getId(),number,"");
-                List<SystemMenu> list2 = loginService.getMenu("",number);
-                loginService.updateSystemMenu(list2.get(0).getId(),sort,"");
-                List<SystemMenu> list = loginService.getMenu("",0);
+                loginService.updateSystemMenu(menuList.get(0).getId(),number,"","");
+                List<SystemMenu> list2 = loginService.getMenu("",number,"","","");
+                loginService.updateSystemMenu(list2.get(0).getId(),sort,"","");
+                List<SystemMenu> list = loginService.getMenu("",0,"","","");
                 return new ResponseData(list);
             } catch (Exception e) {
                 log.info("=======>>>>>>修改系统菜单失败！");
                 return new ResponseData(CodeEnum.SYSTEM_BUSY.getCode(),"修改系统菜单失败！");
             }
         } else if (StringUtils.isNotEmpty(parameterMap.get("status")) && ("10A".equals(parameterMap.get("status"))
-                || "10B".equals(parameterMap.get("status")))){
-            loginService.updateSystemMenu(parameterMap.get("id"),0,parameterMap.get("status"));
+                || "10B".equals(parameterMap.get("status"))) && StringUtils.isNotEmpty(parameterMap.get("menuName"))){
+
+            List<SystemMenu> menuNameList = loginService.getMenu("", 0, "",parameterMap.get("menuName"),"");
+            if (CollectionUtils.isNotEmpty(menuNameList)){
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"菜单名称已经存在！");
+            }
+            loginService.updateSystemMenu(parameterMap.get("id"),0,parameterMap.get("status"),parameterMap.get("menuName"));
             return new ResponseData(CodeEnum.SUCCESS.getCode(),"修改系统菜单成功！");
         }
         return new ResponseData(CodeEnum.SYSTEM_BUSY.getCode(),"参数错误！");
     }
 
     /**
-     * 删除系统菜单
+     * 删除系统菜单和权限
      *
      * @return
      */
@@ -198,25 +208,30 @@ public class SystemController extends BaseController{
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"菜单ID不可以为空！");
         }
         try {
-            List<SystemMenu> menuList = loginService.getMenu(parameterMap.get("id"),0);
+            List<SystemMenu> menuList = loginService.getMenu(parameterMap.get("id"),0,"","","");
             if (CollectionUtils.isEmpty(menuList)){
                 return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"菜单ID错误！");
             }
             loginService.delMenu(parameterMap.get("id"));
-//            List<SystemPermission> list = loginService.getSystemPermission("",menuList.get(0).getMenuCode());
-//            if (CollectionUtils.isEmpty(list)){
-//                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"权限ID错误！");
-//            }
-//            loginService.delSystemPermission("",menuList.get(0).getMenuCode());
-//            List<SystemPermission> list2 = loginService.getSystemPermission(list.get(0).getId(),"");
-//            for (SystemPermission systemPermission: list2) {
-//                loginService.delSystemPermission(systemPermission.getId(),"");
-//            }
-            return new ResponseData("");
+            List<SystemPermission> list = loginService.getSystemPermission("",menuList.get(0).getMenuCode());
+            if (CollectionUtils.isEmpty(list)){
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"权限ID错误！");
+            }
+            log.info("id====="+list.get(0).getId());
+            loginService.delSystemPermission(list.get(0).getId());
+            List<SystemPermission> list2 = loginService.getSystemPermission(list.get(0).getId(),"");
+            if (CollectionUtils.isNotEmpty(list2)){
+                for (SystemPermission systemPermission: list2) {
+                    loginService.delSystemPermission(systemPermission.getId());
+                }
+            }
+            return new ResponseData(CodeEnum.SUCCESS);
         } catch (Exception e) {
             log.info("=======>>>>>>删除系统菜单失败！");
             return new ResponseData(CodeEnum.SYSTEM_BUSY.getCode(),"删除系统菜单失败！");
         }
     }
+
+
 
 }
