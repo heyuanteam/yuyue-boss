@@ -4,8 +4,10 @@ import com.yuyue.boss.api.domain.YuYueSite;
 import com.yuyue.boss.api.mapper.YuYueSiteMapper;
 import com.yuyue.boss.api.service.YuYueSiteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 @Service("YuYueSiteService")
 public class YuYueSiteServiceImpl implements YuYueSiteService {
@@ -20,8 +22,8 @@ public class YuYueSiteServiceImpl implements YuYueSiteService {
      *
      */
     @Override
-    public List<YuYueSite> getYuYueSiteInfo(String id,int begin,int limit) {
-        return yuYueSiteMapper.getYuYueSiteInfo(id,begin,limit);
+    public List<YuYueSite> getYuYueSiteInfo(String id,String status,int begin,int limit) {
+        return yuYueSiteMapper.getYuYueSiteInfo(id,status,begin,limit);
     }
     /**
      * 通过搜索信息获取现场
@@ -68,6 +70,8 @@ public class YuYueSiteServiceImpl implements YuYueSiteService {
     public void deleteYuYueSiteById(String id) {
         yuYueSiteMapper.deleteYuYueSiteById(id);
     }
+
+
 
 
 }
