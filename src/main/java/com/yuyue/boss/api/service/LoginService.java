@@ -23,17 +23,23 @@ public interface LoginService {
     List<SystemMenu> getMenuList(String loginName, String password);
 
     //获取菜单
-    List<SystemMenu> getMenu(String id,Integer sort);
+    List<SystemMenu> getMenu(String id,Integer sort,String role,String menuName,String status);
 
     //插入菜单
     void insertSystemMenu(SystemMenu systemMenu);
 
     //修改菜单
-    void updateSystemMenu(String id, int upSort,String status);
+    void updateSystemMenu(String id, int upSort,String status,String menuName);
 
     //插入权限
     void insertSystemPermission(String id, String permissionName, String permissionKey, String parentId, String permissionCode);
 
     //删除菜单
     void delMenu(String id);
+
+    //查询权限
+    List<SystemPermission> getSystemPermission(String parentId, String permissionCode);
+
+    //删除权限
+    void delSystemPermission(String id);
 }

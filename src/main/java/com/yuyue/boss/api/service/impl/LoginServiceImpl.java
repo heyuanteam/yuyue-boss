@@ -61,15 +61,15 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public List<SystemMenu> getMenu(String id,Integer sort){
-        return loginMapper.getMenu(id,sort);
+    public List<SystemMenu> getMenu(String id,Integer sort,String role,String menuName,String status){
+        return loginMapper.getMenu(id,sort,role,menuName,status);
     }
 
     @Override
     public void insertSystemMenu(SystemMenu systemMenu) { loginMapper.insertSystemMenu(systemMenu); }
 
     @Override
-    public void updateSystemMenu(String id, int upSort,String status) { loginMapper.updateSystemMenu(id,upSort,status); }
+    public void updateSystemMenu(String id, int upSort,String status,String menuName) { loginMapper.updateSystemMenu(id,upSort,status,menuName); }
 
     @Override
     public void insertSystemPermission(String id, String permissionName, String permissionKey, String parentId, String permissionCode) {
@@ -77,4 +77,10 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public void delMenu(String id) { loginMapper.delMenu(id);}
+
+    @Override
+    public List<SystemPermission> getSystemPermission(String parentId, String permissionCode) { return loginMapper.getSystemPermission(parentId,permissionCode); }
+
+    @Override
+    public void delSystemPermission(String id) { loginMapper.delSystemPermission(id);}
 }
