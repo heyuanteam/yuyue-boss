@@ -1,9 +1,6 @@
 package com.yuyue.boss.api.service;
 
-import com.yuyue.boss.api.domain.SystemMenu;
-import com.yuyue.boss.api.domain.SystemPermission;
-import com.yuyue.boss.api.domain.SystemUser;
-import com.yuyue.boss.api.domain.UserVO;
+import com.yuyue.boss.api.domain.*;
 
 import java.util.List;
 
@@ -38,11 +35,23 @@ public interface LoginService {
     void delMenu(String id);
 
     //查询权限
-    List<SystemPermission> getSystemPermission(String parentId, String permissionCode);
+    List<SystemPermission> getSystemPermission(String parentId, String permissionCode,String id);
 
     //删除权限
     void delSystemPermission(String id);
 
     //获取系统用户
-    List<SystemUser> getSystemUser(String status,String systemName,String loginName);
+    List<SystemUser> getSystemUser(String status,String systemName,String loginName,String id);
+
+    //修改系统用户
+    void updateSystemUser(String id, String loginName, String password, String systemName, String phone,String status);
+
+    //删除系统用户
+    void delSystemUser(String id);
+
+    //删除系统用户的权限关联
+    void delSystemRole(String systemUserId);
+
+    //获取系统用户的权限关联
+    List<SystemRole> getSystemRole(String systemUserId);
 }

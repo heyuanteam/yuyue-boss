@@ -2,10 +2,7 @@ package com.yuyue.boss.api.service.impl;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.yuyue.boss.api.domain.SystemMenu;
-import com.yuyue.boss.api.domain.SystemPermission;
-import com.yuyue.boss.api.domain.SystemUser;
-import com.yuyue.boss.api.domain.UserVO;
+import com.yuyue.boss.api.domain.*;
 import com.yuyue.boss.api.mapper.LoginMapper;
 import com.yuyue.boss.api.service.LoginService;
 import com.yuyue.boss.utils.BeanUtil;
@@ -79,11 +76,25 @@ public class LoginServiceImpl implements LoginService {
     public void delMenu(String id) { loginMapper.delMenu(id);}
 
     @Override
-    public List<SystemPermission> getSystemPermission(String parentId, String permissionCode) { return loginMapper.getSystemPermission(parentId,permissionCode); }
+    public List<SystemPermission> getSystemPermission(String parentId, String permissionCode,String id) { return loginMapper.getSystemPermission(parentId,permissionCode,id); }
 
     @Override
     public void delSystemPermission(String id) { loginMapper.delSystemPermission(id);}
 
     @Override
-    public List<SystemUser> getSystemUser(String status, String systemName,String loginName) { return loginMapper.getSystemUser(status,systemName,loginName); }
+    public List<SystemUser> getSystemUser(String status, String systemName,String loginName,String id) { return loginMapper.getSystemUser(status,systemName,loginName,id); }
+
+    @Override
+    public void updateSystemUser(String id, String loginName, String password, String systemName, String phone,String status) {
+        loginMapper.updateSystemUser(id,loginName,password,systemName,phone,status);
+    }
+
+    @Override
+    public void delSystemUser(String id) { loginMapper.delSystemUser(id); }
+
+    @Override
+    public void delSystemRole(String systemUserId) { loginMapper.delSystemRole(systemUserId); }
+
+    @Override
+    public List<SystemRole> getSystemRole(String systemUserId) { return loginMapper.getSystemRole(systemUserId); }
 }

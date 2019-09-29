@@ -45,7 +45,7 @@
         SELECT *,DATE_FORMAT(d.CREATE_TIME ,'%Y-%m-%d %H:%i:%s') createTime
         ,DATE_FORMAT(d.UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') updateTime
         FROM yuyue_system_menu d
-        WHERE 1=1
+        WHERE 1=1 and d.status = '10B'
         <if test=" id !=null and id!='' ">  and d.id = #{id}  </if>
         <if test=" sort !=0 ">  and d.sort = #{sort}  </if>
         <if test=" role !=null and role!='' ">  and d.role = #{role}  </if>
@@ -82,6 +82,7 @@
         WHERE 1=1
         <if test=" parentId !=null and parentId!='' ">  and d.parentId = #{parentId}  </if>
         <if test=" permissionCode !=null and permissionCode!='' ">  and d.permissionCode = #{permissionCode}  </if>
+        <if test=" id !=null and id!='' ">  and d.id = #{id}  </if>
         ORDER BY d.permissionCode
     </select>
 
@@ -94,7 +95,34 @@
         <if test="status!=null and status!=''">  and b.status = #{status}  </if>
         <if test="systemName!=null and systemName!='' ">  and b.systemName = #{systemName}  </if>
         <if test="loginName!=null and loginName!='' ">  and b.loginName = #{loginName}  </if>
+        <if test="id!=null and id!='' ">  and b.id = #{id}  </if>
          order by b.CREATE_TIME
     </select>
+
+    <!-- 修改系统用户 -->
+    <update id="updateSystemUser" parameterType="String">
+        UPDATE yuyue_system_user b
+        <set>
+            <if test="loginName!=null and loginName!=''">
+                b.loginName = #{loginName},
+            </if>
+            <if test="password!=null and password!=''">
+                b.password = #{password},
+            </if>
+            <if test="systemName!=null and systemName!=''">
+                b.systemName = #{systemName},
+            </if>
+            <if test="phone!=null and phone!=''">
+                b.phone = #{phone},
+            </if>
+            <if test="status!=null and status!=''">
+                b.status = #{status},
+            </if>
+        </set>
+        WHERE 1=1
+        <if test="id!=null and id!=''">
+            and b.id = #{id}
+        </if>
+    </update>
 
 </mapper>

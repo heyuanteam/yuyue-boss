@@ -2,6 +2,7 @@ package com.yuyue.boss.api.mapper;
 
 import com.yuyue.boss.api.domain.SystemMenu;
 import com.yuyue.boss.api.domain.SystemPermission;
+import com.yuyue.boss.api.domain.SystemRole;
 import com.yuyue.boss.api.domain.SystemUser;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -49,11 +50,27 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     @Delete("DELETE FROM yuyue_system_menu WHERE id =#{id} ")
     void delMenu(@Param("id") String id);
 
-    List<SystemPermission> getSystemPermission(@Param("parentId")String parentId,@Param("permissionCode") String permissionCode);
+    List<SystemPermission> getSystemPermission(@Param("parentId")String parentId,@Param("permissionCode") String permissionCode,
+                                               @Param("id") String id);
 
     @Transactional
     @Delete("DELETE FROM yuyue_system_permission WHERE id =#{id} ")
     void delSystemPermission(@Param("id")String id);
 
-    List<SystemUser> getSystemUser(@Param("status") String status,@Param("systemName") String systemName,@Param("loginName") String loginName);
+    List<SystemUser> getSystemUser(@Param("status") String status,@Param("systemName") String systemName,@Param("loginName") String loginName,
+                                   @Param("id") String id);
+
+    void updateSystemUser(@Param("id") String id,@Param("loginName") String loginName,@Param("password") String password,
+                          @Param("systemName") String systemName,@Param("phone") String phone,@Param("status") String status);
+
+    @Transactional
+    @Delete("DELETE FROM yuyue_system_user WHERE id =#{id} ")
+    void delSystemUser(@Param("id")String id);
+
+    @Transactional
+    @Delete("DELETE FROM yuyue_system_role WHERE systemUserId =#{systemUserId} ")
+    void delSystemRole(@Param("systemUserId")String systemUserId);
+
+    @Select("SELECT * FROM yuyue_system_role WHERE systemUserId =#{systemUserId}")
+    List<SystemRole> getSystemRole(@Param("systemUserId")String systemUserId);
 }
