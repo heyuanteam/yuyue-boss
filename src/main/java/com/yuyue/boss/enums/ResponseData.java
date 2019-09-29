@@ -43,11 +43,11 @@ public class ResponseData<T> {
     }
 
     public int getBegin() {
-        return begin;
+        return this.begin;
     }
 
     public String getMessage() {
-        return message;
+        return this.message;
     }
 
     public void setMessage(String msg) {
@@ -63,7 +63,7 @@ public class ResponseData<T> {
     }
 
     public Integer getCode() {
-        return code;
+        return this.code;
     }
 
     public void setCode(Integer code) {
