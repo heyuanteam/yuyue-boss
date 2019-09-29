@@ -54,4 +54,6 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     @Transactional
     @Delete("DELETE FROM yuyue_system_permission WHERE id =#{id} ")
     void delSystemPermission(@Param("id")String id);
+
+    List<SystemUser> getSystemUser(@Param("status") String status,@Param("systemName") String systemName,@Param("loginName") String loginName);
 }

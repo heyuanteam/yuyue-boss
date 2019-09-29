@@ -42,4 +42,7 @@ public interface LoginService {
 
     //删除权限
     void delSystemPermission(String id);
+
+    //获取系统用户
+    List<SystemUser> getSystemUser(String status,String systemName,String loginName);
 }

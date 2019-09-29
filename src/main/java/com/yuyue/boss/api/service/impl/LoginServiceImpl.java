@@ -83,4 +83,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public void delSystemPermission(String id) { loginMapper.delSystemPermission(id);}
+
+    @Override
+    public List<SystemUser> getSystemUser(String status, String systemName,String loginName) { return loginMapper.getSystemUser(status,systemName,loginName); }
 }

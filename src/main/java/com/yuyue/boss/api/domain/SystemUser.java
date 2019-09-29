@@ -21,8 +21,8 @@ public class SystemUser implements Serializable {
     private String  loginName;
 //    密码
     private String  password;
-//    实名姓名
-    private String  realName;
+//   系统职称
+    private String  systemName;
 //    更新时间
     private String  updateTime;
 //    创建时间
