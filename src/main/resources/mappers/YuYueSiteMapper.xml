@@ -14,8 +14,14 @@
         <if test="id != null and id != ''">
             and id = #{id}
         </if>
+        <if test="status != null and status != ''">
+            and status = #{status}
+        </if>
         ORDER BY START_TIME DESC
-        LIMIT #{begin},#{limit}
+        <if test="begin >= 0 and  limit > 0">
+            LIMIT #{begin},#{limit}
+        </if>
+
     </select>
 
     <select id="searchYuYueSiteInfo" parameterType="String" resultType="com.yuyue.boss.api.domain.YuYueSite">
@@ -61,11 +67,11 @@
         set
 
         <if test="title != null and title != ''">
-            title=#{title},
+            title= #{title},
         </if>
 
         <if test="imageUrl != null and imageUrl != ''">
-            imageUrl={imageUrl},
+            imageUrl = #{imageUrl},
         </if>
 
         <if test="siteAddr != null and siteAddr != ''">

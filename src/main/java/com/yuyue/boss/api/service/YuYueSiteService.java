@@ -11,7 +11,7 @@ public interface YuYueSiteService {
 
 
 
-    List<YuYueSite> getYuYueSiteInfo(String id,int begin,int limit);
+    List<YuYueSite> getYuYueSiteInfo(String id,String status,int begin,int limit);
 
 
 
