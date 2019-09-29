@@ -25,7 +25,7 @@
         DATE_FORMAT(END_TIME ,'%Y-%m-%d %H:%i:%s') endTime
         FROM yuyue_site where 1=1
         <if test="siteAddr != null and siteAddr != ''">
-            and siteAddr = #{siteAddr}
+            and CONCAT(siteAddr) like concat('%', #{siteAddr}, '%')
         </if>
         <if test="status != null and status != ''">
             and  status = #{status}
@@ -34,7 +34,7 @@
             and  jPushStatus = #{jPushStatus}
         </if>
         <if test="mainPerson != null and mainPerson != ''">
-            and  mainPerson = #{mainPerson}
+            and CONCAT(mainPerson) like concat('%', #{mainPerson}, '%')
         </if>
         <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
             and START_TIME  &gt;=#{startTime}  AND END_TIME &lt;= #{endTime}
@@ -43,8 +43,70 @@
         LIMIT #{begin},#{limit}
     </select>
 
+    <insert id="insertYuYueSite" parameterType = "com.yuyue.boss.api.domain.YuYueSite">
+        INSERT INTO
+        yuyue_site (id,title,imageUrl,siteAddr,mainPerson,personTotal,qrCodePath,ADMISSION_TIME,START_TIME,END_TIME,status,jPushStatus)
+        VALUES
+        (#{id},#{title},#{imageUrl},#{siteAddr},#{mainPerson},
+        #{personTotal},#{qrCodePath},#{admissionTime},
+        #{startTime},#{endTime},#{status},#{jPushStatus})
+    </insert>
 
+    <delete id="deleteYuYueSiteById" parameterType="String">
+        DELETE FROM yuyue_site where id = #{id}
+    </delete>
 
+    <update id="updateYuYueSite"  parameterType="com.yuyue.boss.api.domain.YuYueSite">
+        UPDATE yuyue_site
+        set
 
+        <if test="title != null and title != ''">
+            title=#{title},
+        </if>
+
+        <if test="imageUrl != null and imageUrl != ''">
+            imageUrl={imageUrl},
+        </if>
+
+        <if test="siteAddr != null and siteAddr != ''">
+            siteAddr = #{siteAddr},
+        </if>
+
+        <if test="mainPerson != null and mainPerson != ''">
+            mainPerson = #{mainPerson},
+        </if>
+
+        <if test="personTotal != null and personTotal != ''">
+            personTotal = #{personTotal},
+        </if>
+
+        <if test="qrCodePath != null and qrCodePath != ''">
+            qrCodePath = #{qrCodePath},
+        </if>
+
+        <if test="admissionTime != null and admissionTime != ''">
+            ADMISSION_TIME = #{admissionTime},
+        </if>
+
+        <if test="startTime != null and startTime != ''">
+            START_TIME = #{startTime},
+        </if>
+
+        <if test="endTime != null and endTime != ''">
+            END_TIME = #{endTime},
+        </if>
+
+        <if test="jPushStatus != null and jPushStatus != ''">
+              jPushStatus = #{jPushStatus},
+        </if>
+
+        <if test=" status != null and status != ''">
+            status = #{status},
+        </if>
+
+        id=#{id}
+
+        WHERE id=#{id};
+    </update>
 
 </mapper>

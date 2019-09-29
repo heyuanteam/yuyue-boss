@@ -28,4 +28,12 @@ public interface YuYueSiteMapper extends MyBaseMapper<YuYueSite> {
     @Insert("UPDATE yuyue_site SET qrCodePath = #{qrCodePath} WHERE id= #{id}")
     void insertQRCodePath(@Param(value = "id")String id,@Param(value = "qrCodePath")String qrCodePath);
 
+
+    void insertYuYueSite(YuYueSite yuYueSite);
+
+    void deleteYuYueSiteById(String id);
+
+
+    void updateYuYueSite(YuYueSite yuYueSite);
+
 }

@@ -21,4 +21,11 @@ public interface YuYueSiteService {
 
     void insertQRCodePath(String id ,String qrCodePath);
 
+
+    void insertYuYueSite(YuYueSite yuYueSite);
+
+    void updateYuYueSite(YuYueSite yuYueSite);
+
+    void deleteYuYueSiteById(String id);
+
 }
