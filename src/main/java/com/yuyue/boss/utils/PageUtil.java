@@ -11,7 +11,7 @@ public class PageUtil {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"传入的page类型错误！！");
         }
 
-        int limit =15;
+        int limit =10;
         int begin = (Integer.parseInt(page)-1)*limit;
 
         return new ResponseData(begin);

@@ -44,49 +44,49 @@ public class YuYueSiteController extends BaseController{
     @ResponseBody
     @RequiresPermissions("scene:menu")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
-    public ResponseData getYuYueSiteInfo(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response){
+    public ResponseData getYuYueSiteInfo( HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
-        log.info("获取现场信息------------>>/site/getYuYueSiteInfo");
-        String id=request.getParameter("id");
+
+        //交集参数
         String page=request.getParameter("page");
+        String type=request.getParameter("type");
 
-
-        List<YuYueSite> yuYueSiteInfo = yuYueSiteService.getYuYueSiteInfo(id,"", PageUtil.getBeginPage(page).getBegin(), 15);
-        return new ResponseData(yuYueSiteInfo);
+        List<YuYueSite> yuYueSiteInfo =null;
+        if ("get".equals(type)){
+            log.info("获取现场信息------------>>/site/getYuYueSiteInfo");
+            String id=request.getParameter("id");
+            yuYueSiteInfo = yuYueSiteService.getYuYueSiteInfo(id,"", PageUtil.getBeginPage(page).getBegin(), 10);
+        }else if ("search".equals(type)){
+            log.info("现场搜索------------>>/site/searchYuYueSiteInfo");
+            String siteAddr=request.getParameter("siteAddr");
+            String status=request.getParameter("status");
+            String jPushStatus=request.getParameter("jPushStatus");
+            String mainPerson=request.getParameter("mainPerson");
+            String startTime=request.getParameter("startTime");
+            String endTime=request.getParameter("endTime");
+            yuYueSiteInfo = yuYueSiteService.searchYuYueSiteInfo(siteAddr, status, jPushStatus, mainPerson, startTime, endTime, PageUtil.getBeginPage(page).getBegin(), 10);
+        }else {
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"type参数错误！！");
+        }
+        return new ResponseData(yuYueSiteInfo,yuYueSiteInfo.size());
 
     }
+
+
 
     /**
-     * 现场搜索
-     * @param
+     * 添加现场
      * @param request
+     * @param response
+     * @return
      */
-    @RequestMapping("/searchYuYueSiteInfo")
-    @ResponseBody
-    @RequiresPermissions("scene:menu")//具有 user:detail 权限的用户才能访问此方法
-    @LoginRequired
-    public ResponseData searchYuYueSiteInfo(HttpServletRequest request, HttpServletResponse response){
-        getParameterMap(request,response);
-        log.info("现场搜索------------>>/site/searchYuYueSiteInfo");
-        String siteAddr=request.getParameter("siteAddr");
-        String status=request.getParameter("status");
-        String jPushStatus=request.getParameter("jPushStatus");
-        String mainPerson=request.getParameter("mainPerson");
-        String startTime=request.getParameter("startTime");
-        String endTime=request.getParameter("endTime");
-        String page=request.getParameter("page");
-
-        List<YuYueSite> yuYueSites = yuYueSiteService.searchYuYueSiteInfo(siteAddr, status, jPushStatus, mainPerson, startTime, endTime, PageUtil.getBeginPage(page).getBegin(), 15);
-        return new ResponseData(yuYueSites);
-
-    }
-
     @RequestMapping("/insertYuYueSite")
     @ResponseBody
     @RequiresPermissions("scene:save")//具有 user:save 权限的用户才能访问此方法
     @LoginRequired
     public ResponseData insertYuYueSite(HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
+        log.info("添加现场------------>>/site/insertYuYueSite");
         String id = UUID.randomUUID().toString().replace("-", "").toUpperCase().toString();
         String title = request.getParameter("title");
         String imageUrl = request.getParameter("imageUrl");
@@ -118,20 +118,26 @@ public class YuYueSiteController extends BaseController{
     @LoginRequired
     public ResponseData updateYuYueSite(YuYueSite yuYueSite,HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
-        /*String id = request.getParameter("id");*/
+        log.info("更新娱悦现场信息------------>>/site/updateYuYueSite");
         if (StringUtils.isEmpty(yuYueSite.getId()))
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"现场id为空！！");
         yuYueSiteService.updateYuYueSite(yuYueSite);
         return new ResponseData();
     }
 
-
+    /**
+     * 删除娱悦现场信息
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping("/deleteYuYueSiteById")
     @ResponseBody
     @RequiresPermissions("scene:remove")//具有 user:remove 权限的用户才能访问此方法
     @LoginRequired
     public ResponseData deleteYuYueSiteById(HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
+        log.info("删除娱悦现场信息------------>>/site/deleteYuYueSiteById");
         String id = request.getParameter("id");
         if (StringUtils.isEmpty(id))
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"现场id为空！！");

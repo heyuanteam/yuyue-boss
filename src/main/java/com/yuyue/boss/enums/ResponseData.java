@@ -11,6 +11,8 @@ public class ResponseData<T> {
 
     private int begin;
 
+    private int total;
+
     private T data;
 
     public ResponseData() {
@@ -27,6 +29,12 @@ public class ResponseData<T> {
         this.message = CodeEnum.SUCCESS.getMessage();
         this.data = obj;
     }
+    public ResponseData(T obj,int total) {
+        this.code = CodeEnum.SUCCESS.getCode();
+        this.message = CodeEnum.SUCCESS.getMessage();
+        this.data = obj;
+        this.total=total;
+    }
 
     public ResponseData(Integer code, String msg) {
         this.code = code;
@@ -38,12 +46,18 @@ public class ResponseData<T> {
         this.message = msg;
         this.data = data;
     }
-    public void setCode(int begin) {
+    public void setBegin(int begin) {
         this.begin = begin;
     }
 
     public int getBegin() {
         return this.begin;
+    }
+
+    public void setTotal(int total){ this.total=total;}
+
+    public int getTotal() {
+        return this.total;
     }
 
     public String getMessage() {
