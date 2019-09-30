@@ -16,16 +16,14 @@ import java.util.List;
 @AllArgsConstructor
 public class SystemUserVO implements Serializable {
     private static final long serialVersionUID = 1L;
-//    令牌
-    private String token;
 //    用户ID
     private String systemUserId;
 //    登录名
     private String loginName;
 //    真实姓名
-    private String realName;
+    private String systemName;
 //    最后登录时间
-    private String lastLoginTime;
+    private String createTime;
 //    手机号
     private String phone;
 //    用户是否启用

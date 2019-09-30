@@ -4,7 +4,7 @@
 
     <!--b.id = 'F9946CAE0D574FB1BDFDAE922F7821E9'-->
     <!-- 获取系统用户权限和个人信息 -->
-    <select id="getAppUserMsg" resultType="com.yuyue.boss.api.domain.UserVO" parameterType="String">
+    <select id="getAppUserMsg" resultType="com.yuyue.boss.api.domain.SystemUserVO" parameterType="String">
         SELECT b.id systemUserId,b.loginName,b.systemName,DATE_FORMAT(b.UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') createTime,b.phone,b.`status` systemUserStatus,b.`password`,
             c.id systemRoleId,c.`status` systemRoleStatus,
             d.id systemMeuId,d.`status` systemMenuStatus,d.menuAction,d.menuCode,d.parentId systemMeuPantId,d.menuName,
@@ -79,7 +79,7 @@
         SELECT *,DATE_FORMAT(d.CREATE_TIME ,'%Y-%m-%d %H:%i:%s') createTime
         ,DATE_FORMAT(d.UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') updateTime
         FROM yuyue_system_permission d
-        WHERE 1=1
+        WHERE 1=1 and d.permissionKey != '0'
         <if test=" parentId !=null and parentId!='' ">  and d.parentId = #{parentId}  </if>
         <if test=" permissionCode !=null and permissionCode!='' ">  and d.permissionCode = #{permissionCode}  </if>
         <if test=" id !=null and id!='' ">  and d.id = #{id}  </if>

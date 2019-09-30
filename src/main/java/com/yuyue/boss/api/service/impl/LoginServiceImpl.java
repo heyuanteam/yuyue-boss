@@ -2,6 +2,8 @@ package com.yuyue.boss.api.service.impl;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.yuyue.boss.api.domain.*;
 import com.yuyue.boss.api.mapper.LoginMapper;
 import com.yuyue.boss.api.service.LoginService;
@@ -76,7 +78,9 @@ public class LoginServiceImpl implements LoginService {
     public void delMenu(String id) { loginMapper.delMenu(id);}
 
     @Override
-    public List<SystemPermission> getSystemPermission(String parentId, String permissionCode,String id) { return loginMapper.getSystemPermission(parentId,permissionCode,id); }
+    public List<SystemPermission> getSystemPermission(String parentId, String permissionCode,String id) {
+        return loginMapper.getSystemPermission(parentId,permissionCode,id);
+    }
 
     @Override
     public void delSystemPermission(String id) { loginMapper.delSystemPermission(id);}
@@ -97,4 +101,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public List<SystemRole> getSystemRole(String systemUserId) { return loginMapper.getSystemRole(systemUserId); }
+
+    @Override
+    public List<SystemUserVO> getAppUserMsg(String loginName, String password) { return loginMapper.getAppUserMsg(loginName,password); }
 }

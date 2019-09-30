@@ -1,5 +1,6 @@
 package com.yuyue.boss.api.service;
 
+import com.github.pagehelper.PageInfo;
 import com.yuyue.boss.api.domain.*;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public interface LoginService {
     void delMenu(String id);
 
     //查询权限
-    List<SystemPermission> getSystemPermission(String parentId, String permissionCode,String id);
+    List<SystemPermission> getSystemPermission(String parentId, String permissionCode, String id);
 
     //删除权限
     void delSystemPermission(String id);
@@ -54,4 +55,7 @@ public interface LoginService {
 
     //获取系统用户的权限关联
     List<SystemRole> getSystemRole(String systemUserId);
+
+    //获取分配系统权限详情
+    List<SystemUserVO> getAppUserMsg(String loginName, String password);
 }
