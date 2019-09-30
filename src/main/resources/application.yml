@@ -39,6 +39,12 @@ spring:
     timeout: 0
     database: 0
 
+  pagehelper:
+    helper-dialect: mysql
+    reasonable: true
+    support-methods-arguments: true
+    params:
+
 #druid相关配置
   druid:
     username: root
@@ -98,3 +104,11 @@ jpush:
   #b8dae5591819e15fc3543cb6
   masterSecret: ba4e6c2302185825bbc50cb0
   apnsProduction: false   # 是否生成环境，true表示生成环境
+
+
+#PageHelper的配置
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql

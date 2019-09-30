@@ -1,9 +1,6 @@
 package com.yuyue.boss.api.mapper;
 
-import com.yuyue.boss.api.domain.SystemMenu;
-import com.yuyue.boss.api.domain.SystemPermission;
-import com.yuyue.boss.api.domain.SystemRole;
-import com.yuyue.boss.api.domain.SystemUser;
+import com.yuyue.boss.api.domain.*;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,4 +70,6 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
 
     @Select("SELECT * FROM yuyue_system_role WHERE systemUserId =#{systemUserId}")
     List<SystemRole> getSystemRole(@Param("systemUserId")String systemUserId);
+
+    List<SystemUserVO> getAppUserMsg(@Param("loginName")String loginName,@Param("password") String password);
 }

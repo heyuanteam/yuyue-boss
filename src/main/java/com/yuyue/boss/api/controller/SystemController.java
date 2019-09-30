@@ -1,14 +1,15 @@
 package com.yuyue.boss.api.controller;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
-import com.yuyue.boss.api.domain.SystemMenu;
-import com.yuyue.boss.api.domain.SystemPermission;
-import com.yuyue.boss.api.domain.SystemRole;
-import com.yuyue.boss.api.domain.SystemUser;
+import com.yuyue.boss.api.domain.*;
 import com.yuyue.boss.api.service.LoginService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
+import com.yuyue.boss.utils.PageUtil;
 import com.yuyue.boss.utils.RandomSaltUtil;
 import com.yuyue.boss.utils.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -56,7 +57,9 @@ public class SystemController extends BaseController {
 //        }else{
 //            return "没权限你Rap个锤子啊!";
 //        }
-        List<SystemMenu> menuList = loginService.getMenu("", 0, "", parameterMap.get("menuName"), parameterMap.get("status"));
+        try {
+            PageUtil.getPage(parameterMap.get("page"));
+            List<SystemMenu> menuList = loginService.getMenu("", 0, "", parameterMap.get("menuName"), parameterMap.get("status"));
 //        List<Map<String,Object>> list = new ArrayList<>();
 //        for (SystemMenu systemMenu: menuList) {
 //            if(StringUtils.isNotEmpty(systemMenu.getId()) && !"0".equals(systemMenu.getId())){
@@ -67,7 +70,12 @@ public class SystemController extends BaseController {
 //                list.add(map);
 //            }
 //        }
-        return new ResponseData(menuList);
+            PageUtil pageUtil = new PageUtil(menuList);
+            return new ResponseData(pageUtil);
+        } catch (Exception e) {
+            log.info("===========>>>>>>获取系统菜单失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"获取系统菜单失败！");
+        }
     }
 
     /**
@@ -246,8 +254,15 @@ public class SystemController extends BaseController {
     public ResponseData getSystemUser(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
         log.info("获取系统用户----------->>/system/getSystemUser");
         Map<String, String> parameterMap = getParameterMap(request, response);
-        List<SystemUser> menuList = loginService.getSystemUser(parameterMap.get("status"), parameterMap.get("systemName"),"","");
-        return new ResponseData(menuList);
+        try {
+            PageUtil.getPage(parameterMap.get("page"));
+            List<SystemUser> menuList = loginService.getSystemUser(parameterMap.get("status"), parameterMap.get("systemName"),"","");
+            PageUtil pageUtil = new PageUtil(menuList);
+            return new ResponseData(pageUtil);
+        } catch (Exception e) {
+            log.info("===========>>>>>>获取系统用户失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"获取系统用户失败！");
+        }
     }
 
     /**
@@ -373,7 +388,30 @@ public class SystemController extends BaseController {
     }
 
     /**
-     * 获取系统权限
+     * 获取用户分配系统权限详情
+     *
+     * @return
+     */
+    @RequestMapping(value = "/getSystemPermissionList")
+    @ResponseBody
+    @RequiresPermissions("PermissionManager:menu")
+    @LoginRequired
+    public ResponseData getSystemPermissionList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("获取用户分配系统权限详情----------->>/system/getSystemPermissionList");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        try {
+            PageUtil.getPage(parameterMap.get("page"));
+            List<SystemUserVO> systemUserVO = loginService.getAppUserMsg(parameterMap.get("loginName"),parameterMap.get("password"));
+            PageUtil pageUtil = new PageUtil(systemUserVO);
+            return new ResponseData(pageUtil);
+        } catch (Exception e) {
+            log.info("===========>>>>>>获取系统用户失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"获取系统用户失败！");
+        }
+    }
+
+    /**
+     * 获取系统权限列表
      *
      * @return
      */
@@ -382,10 +420,17 @@ public class SystemController extends BaseController {
     @RequiresPermissions("PermissionManager:menu")
     @LoginRequired
     public ResponseData getSystemPermission(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("获取系统权限----------->>/system/getSystemPermission");
+        log.info("获取系统权限列表----------->>/system/getSystemPermission");
         Map<String, String> parameterMap = getParameterMap(request, response);
-        List<SystemPermission> list = loginService.getSystemPermission("","","");
-        return new ResponseData(list);
+        try {
+            PageUtil.getPage(parameterMap.get("page"));
+            List<SystemPermission> list = loginService.getSystemPermission("","","");
+            PageUtil pageUtil = new PageUtil(list);
+            return new ResponseData(pageUtil);
+        } catch (Exception e) {
+            log.info("===========>>>>>>获取系统权限列表失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"获取系统权限列表失败！");
+        }
     }
 
 }
