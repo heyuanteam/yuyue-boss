@@ -27,8 +27,8 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
                              @Param("menuName")String menuName,@Param("status")String status);
 
     @Transactional
-    @Insert("INSERT into yuyue_system_menu (id,menuName,menuCode,menuAction,sort,role)  values  " +
-            "(#{id},#{menuName},#{menuCode},#{menuAction},#{sort},#{role})")
+    @Insert("INSERT into yuyue_system_menu (id,menuName,menuAction,sort,role)  values  " +
+            "(#{id},#{menuName},#{menuAction},#{sort},#{role})")
     @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
     void insertSystemMenu(SystemMenu systemMenu);
 
@@ -66,4 +66,10 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     List<SystemUserVO> getAppUserMsg(@Param("loginName")String loginName,@Param("password") String password);
 
     List<SystemMenu> getMenuString();
+
+    @Transactional
+    @Insert("INSERT into yuyue_system_user (id,loginName,password,systemName,phone,createUserId)  values  " +
+            "(#{id},#{loginName},#{password},#{systemName},#{phone},#{createUserId})")
+    @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
+    void insertSystemUser(SystemUser systemUser);
 }

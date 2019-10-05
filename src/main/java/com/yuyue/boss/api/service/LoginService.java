@@ -55,4 +55,7 @@ public interface LoginService {
 
     //获取分配系统权限详情
     List<SystemUserVO> getAppUserMsg(String loginName, String password);
+
+    //添加系统用户
+    void insertSystemUser(SystemUser user);
 }

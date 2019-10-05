@@ -120,4 +120,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public List<SystemUserVO> getAppUserMsg(String loginName, String password) { return loginMapper.getAppUserMsg(loginName,password); }
+
+    @Override
+    public void insertSystemUser(SystemUser user) { loginMapper.insertSystemUser(user); }
 }

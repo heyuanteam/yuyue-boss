@@ -247,8 +247,6 @@ public class SystemController extends BaseController {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "系统职称不可以为空！");
         } else if (StringUtils.isEmpty(parameterMap.get("phone"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "手机号不可以为空！");
-        } else if (StringUtils.isEmpty(parameterMap.get("createUserId"))){
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "创建人的ID不可以为空！");
         }
         List<SystemUser> loginName = loginService.getSystemUser("", "", parameterMap.get("loginName"),"");
         if (CollectionUtils.isNotEmpty(loginName)){
@@ -261,7 +259,8 @@ public class SystemController extends BaseController {
             user.setPassword(parameterMap.get("password"));
             user.setSystemName(parameterMap.get("systemName"));
             user.setPhone(parameterMap.get("phone"));
-            user.setCreateUserId(parameterMap.get("createUserId"));
+            user.setCreateUserId(systemUser.getId());
+            loginService.insertSystemUser(user);
 
             List<SystemMenu> menuList = loginService.getMenuString();
             if (CollectionUtils.isNotEmpty(menuList)){
