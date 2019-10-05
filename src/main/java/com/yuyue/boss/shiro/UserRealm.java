@@ -2,11 +2,14 @@ package com.yuyue.boss.shiro;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.yuyue.boss.api.domain.SystemPermission;
 import com.yuyue.boss.api.domain.UserVO;
 import com.yuyue.boss.api.service.LoginService;
 import com.yuyue.boss.enums.Constants;
 import com.yuyue.boss.utils.BeanUtil;
 import com.yuyue.boss.utils.RedisUtil;
+import com.yuyue.boss.utils.StringUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -18,6 +21,9 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Create by lujun.chen on 2018/09/29

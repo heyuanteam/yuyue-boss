@@ -12,15 +12,20 @@ import java.io.Serializable;
 public class SystemPermission implements Serializable {
     private static final long serialVersionUID = 1L;
     private String  id;
-//    权限名称
-    private String  permissionName;
-//    权限key
-    private String  permissionKey;
-//    上级ID
-    private String  parentId;
-//    权限code
-    private String  permissionCode;
+//    系统用户ID
+    private String  systemUserId;
+//   菜单ID
+    private String  menuId;
+//    查看权限
+    private String  menuKey;
+//    保存权限
+    private String  saveKey;
+//    删除权限
+    private String  removeKey;
 //    权限路径
     private String  permissionAction;
+//    是否启用
+    private String  status;
     private String  createTime;
+    private String  updateTime;
 }

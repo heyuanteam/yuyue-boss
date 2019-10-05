@@ -11,6 +11,7 @@ import com.yuyue.boss.api.domain.SystemUser;
 import com.yuyue.boss.api.service.LoginService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 
 public class AuthenticationInterceptor implements HandlerInterceptor {
@@ -74,8 +76,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 //                throw new RuntimeException("信息已失效，请重新登录");
                 return false;
             }
-            SystemUser user = loginService.getSystemUserMsg("","",userId,"");
-            if (user == null) {
+            List<SystemUser> user = loginService.getSystemUserMsg("","",userId,"");
+            if (CollectionUtils.isEmpty(user)) {
                 returnResult.setMessage(CodeEnum.AUTH_ERROR.getMessage());
                 returnResult.setCode(CodeEnum.AUTH_ERROR.getCode());
                 //设置状态码
@@ -88,7 +90,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             }
             // 验证 token
             try {
-                JWTVerifier verifier =  JWT.require(Algorithm.HMAC256(user.getPassword())).build();
+                JWTVerifier verifier =  JWT.require(Algorithm.HMAC256(user.get(0).getPassword())).build();
                 try {
                     verifier.verify(token);
                 } catch (JWTVerificationException e) {
@@ -103,7 +105,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                     return false;
                 }
             } catch (UnsupportedEncodingException ignore) {}
-            request.setAttribute("currentUser", user);
+            request.setAttribute("currentUser", user.get(0));
             return true;
         }
         return true;

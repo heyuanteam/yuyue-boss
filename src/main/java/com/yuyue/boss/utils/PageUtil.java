@@ -37,7 +37,7 @@ public class PageUtil{
         }
         if (page.matches("[0-9]+")){
             int pageSize = 10;
-            int pageNum = (Integer.parseInt(page) - 1) * pageSize;
+            int pageNum = Integer.parseInt(page);
             //这是把页码和条数写了上方便在浏览器上写
             PageHelper.startPage(pageNum,pageSize);
         }
