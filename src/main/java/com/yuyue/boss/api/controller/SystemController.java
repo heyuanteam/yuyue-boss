@@ -163,9 +163,15 @@ public class SystemController extends BaseController {
         } else if (StringUtils.isNotEmpty(parameterMap.get("status")) && ("10A".equals(parameterMap.get("status"))
                 || "10B".equals(parameterMap.get("status"))) && StringUtils.isNotEmpty(parameterMap.get("menuName"))) {
 
-            List<SystemMenu> menuNameList = loginService.getMenu("", 0, "", parameterMap.get("menuName"), "");
-            if (CollectionUtils.isNotEmpty(menuNameList)) {
-                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单名称已经存在！");
+            List<SystemMenu> list = loginService.getMenu(parameterMap.get("id"), 0, "","","");
+            if (CollectionUtils.isEmpty(list)) {
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "修改的菜单不存在！");
+            }
+            if (!parameterMap.get("menuName").equals(list.get(0).getMenuName())) {
+                List<SystemMenu> menuNameList = loginService.getMenu("", 0, "", parameterMap.get("menuName"), "");
+                if (CollectionUtils.isNotEmpty(menuNameList)) {
+                    return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单名称已经存在！");
+                }
             }
             loginService.updateSystemMenu(parameterMap.get("id"), 0, parameterMap.get("status"), parameterMap.get("menuName"));
             return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改系统菜单成功！");
@@ -308,7 +314,11 @@ public class SystemController extends BaseController {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "系统用户状态不可以为空！");
         }
 
-        if (StringUtils.isNotEmpty(parameterMap.get("loginName"))) {
+        List<SystemUser> list = loginService.getSystemUser("", "", "",parameterMap.get("id"));
+        if (CollectionUtils.isEmpty(list)) {
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "修改的用户不存在！");
+        }
+        if (!parameterMap.get("loginName").equals(list.get(0).getLoginName())) {
             List<SystemUser> loginName = loginService.getSystemUser("", "", parameterMap.get("loginName"),"");
             if (CollectionUtils.isNotEmpty(loginName)) {
                 return new ResponseData(CodeEnum.E_10009.getCode(), "登录名已经存在！");
