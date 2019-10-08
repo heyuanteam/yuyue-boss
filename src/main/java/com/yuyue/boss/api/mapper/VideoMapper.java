@@ -11,14 +11,12 @@ import java.util.List;
 public interface VideoMapper extends MyBaseMapper<UploadFile> {
 
     List<UploadFile> getVideoInfoList(@Param(value = "tableName") String tableName,@Param(value = "id")String id,
-                                      @Param(value = "status")String status,
-                                      @Param(value = "begin") int begin,@Param(value = "limit") int limit);
+                                      @Param(value = "status")String status);
 
 
     List<UploadFile> searchVideoInfo(@Param(value = "tableName") String tableName, @Param(value = "categoryId") String categoryId,
                                      @Param(value = "startTime")String startTime,@Param(value = "endTime")String endTime,
-                                     @Param(value = "title")String title,@Param(value = "status")String status,
-                                     @Param(value = "begin")int begin,@Param(value = "limit")int limit);
+                                     @Param(value = "title")String title,@Param(value = "status")String status);
 
     void insertVideo(UploadFile uploadFile);
 

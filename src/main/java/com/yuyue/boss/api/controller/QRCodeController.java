@@ -53,7 +53,7 @@ public class QRCodeController extends BaseController{
         if (StringUtils.isEmpty(content)){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"现场id为空！！");
         }
-        List<YuYueSite> yuYueSite = yuYueSiteService.getYuYueSiteInfo(content,"",0,1);
+        List<YuYueSite> yuYueSite = yuYueSiteService.getYuYueSiteInfo(content,"");
         if(StringUtils.isEmpty(yuYueSite)){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"传入的现场id错误！！");
         }

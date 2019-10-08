@@ -9,9 +9,13 @@ public class ResponseData<T> {
 
     private String message;
 
-    private int begin;
+
 
     private int total;
+
+    private int pages;
+
+    private int currentPage;
 
     private T data;
 
@@ -20,20 +24,20 @@ public class ResponseData<T> {
         this.message = CodeEnum.SUCCESS.getMessage();
     }
 
-    public ResponseData(int begin) {
-        this.begin = begin;
-    }
+
 
     public ResponseData(T obj) {
         this.code = CodeEnum.SUCCESS.getCode();
         this.message = CodeEnum.SUCCESS.getMessage();
         this.data = obj;
     }
-    public ResponseData(T obj,int total) {
+    public ResponseData(T obj,int currentPage,int total,int pages) {
         this.code = CodeEnum.SUCCESS.getCode();
         this.message = CodeEnum.SUCCESS.getMessage();
         this.data = obj;
+        this.currentPage=currentPage;
         this.total=total;
+        this.pages=pages;
     }
 
     public ResponseData(Integer code, String msg) {
@@ -46,12 +50,11 @@ public class ResponseData<T> {
         this.message = msg;
         this.data = data;
     }
-    public void setBegin(int begin) {
-        this.begin = begin;
-    }
 
-    public int getBegin() {
-        return this.begin;
+    public void setCurrentPage(int currentPage){ this.currentPage=currentPage;}
+
+    public int getCurrentPage() {
+        return this.currentPage;
     }
 
     public void setTotal(int total){ this.total=total;}
@@ -60,6 +63,11 @@ public class ResponseData<T> {
         return this.total;
     }
 
+    public void setPages(int total){ this.pages=pages;}
+
+    public int getPages() {
+        return this.pages;
+    }
     public String getMessage() {
         return this.message;
     }

@@ -21,22 +21,22 @@ public class VideoServiceImpl implements VideoService {
 
 
     @Override
-    public List<UploadFile> getVideoInfoList(String id, String status,String authorId, int begin, int limit) {
+    public List<UploadFile> getVideoInfoList(String id, String status,String authorId) {
         if (StringUtils.isEmpty(id)){
-            return videoMapper.getVideoInfoList(ResultJSONUtils.getHashValue("yuyue_upload_file_", authorId), id,status, begin, limit);
+            return videoMapper.getVideoInfoList(ResultJSONUtils.getHashValue("yuyue_upload_file_", authorId), id,status);
         }
 
         else{
-            List<UploadFile> uploadFiles = videoMapper.getVideoInfoList("yuyue_upload_file_0", "", status, begin, limit);
-            uploadFiles.addAll(videoMapper.getVideoInfoList("yuyue_upload_file_1", "", status, begin, limit));
+            List<UploadFile> uploadFiles = videoMapper.getVideoInfoList("yuyue_upload_file_0", "", status);
+            uploadFiles.addAll(videoMapper.getVideoInfoList("yuyue_upload_file_1", "", status));
             return uploadFiles;
         }
     }
 
     @Override
-    public List<UploadFile> searchVideoInfo(String categoryId, String startTime, String endTime, String title, String status, int begin, int limit) {
-        List<UploadFile> uploadFiles = videoMapper.searchVideoInfo("yuyue_upload_file_0",categoryId, startTime, endTime, title, status, begin, limit);
-        uploadFiles.addAll( videoMapper.searchVideoInfo("yuyue_upload_file_1",categoryId, startTime, endTime, title, status, begin, limit));
+    public List<UploadFile> searchVideoInfo(String categoryId, String startTime, String endTime, String title, String status) {
+        List<UploadFile> uploadFiles = videoMapper.searchVideoInfo("yuyue_upload_file_0",categoryId, startTime, endTime, title, status);
+        uploadFiles.addAll( videoMapper.searchVideoInfo("yuyue_upload_file_1",categoryId, startTime, endTime, title, status));
         return uploadFiles;
     }
 
@@ -55,7 +55,7 @@ public class VideoServiceImpl implements VideoService {
     }
     @Override
     public void deleteVideoById(String id, String authorId) {
-        List<UploadFile> uploadFile = videoMapper.getVideoInfoList(ResultJSONUtils.getHashValue("yuyue_upload_file_", authorId), id, "",-1, -1);
+        List<UploadFile> uploadFile = videoMapper.getVideoInfoList(ResultJSONUtils.getHashValue("yuyue_upload_file_", authorId), id, "");
         if (StringUtils.isEmpty(uploadFile))return;
         else{
             try {

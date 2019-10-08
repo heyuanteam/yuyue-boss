@@ -3,6 +3,7 @@
 <mapper namespace="com.yuyue.boss.api.mapper.AdReviewMapper" >
     <resultMap type="com.yuyue.boss.api.domain.Advertisement" id="myAdvertisement">
         <id column="id" property="id"/>
+        <result column="userId" property="userId"/>
         <result column="merchantAddr" property="merchantAddr"/>
         <result column="businessLicense" property="businessLicense"/>
         <result column="idCardZM" property="idCardZM"/>
@@ -23,33 +24,31 @@
 
     <select id="getAdReviewList" resultMap="myAdvertisement" parameterType="String">
         select
-        DATE_FORMAT(b.APPLICATION_TIME,'%Y-%m-%d %H:%i:%s') APPLICATION_TIME,
-        b.*
-        from yuyue_advertisement_info b
+        DATE_FORMAT(APPLICATION_TIME,'%Y-%m-%d %H:%i:%s') APPLICATION_TIME,
+        id,userId,merchantAddr,businessLicense,idCardZM,idCardFM,agencyCode,
+        merchantName,phone,produceAddr,fixedPhone,email,wx,qqNum,merchandiseUrl,telephone,status
+
+        from yuyue_advertisement_info
         WHERE  1=1
         <if test="merchantName != null and merchantName != ''">
-            and CONCAT(b.merchantName) like concat('%', #{merchantName}, '%')
+            and CONCAT(merchantName) like concat('%', #{merchantName}, '%')
         </if>
 
         <if test="phone != null and phone != ''">
-            and   b.phone = #{phone}
+            and   phone = #{phone}
         </if>
 
         <if test="status != null and status != ''">
-            and   b.status = #{status}
+            and   status = #{status}
         </if>
 
         <if test="applicationStartTime != null and applicationStartTime != '' and applicationEndTime != null and applicationEndTime != ''">
-            and   b.APPLICATION_TIME  between  #{applicationStartTime} and #{applicationEndTime}
+            and   APPLICATION_TIME  between  #{applicationStartTime} and #{applicationEndTime}
         </if>
 
 
-        ORDER BY b.APPLICATION_TIME DESC
-        <choose>
-            <when test="begin >= 0 and  limit > 0 ">
-                LIMIT #{begin},#{limit}
-            </when>
-        </choose>
+        ORDER BY APPLICATION_TIME DESC
+
 
 
     </select>

@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface AdReviewService {
 
-    List<Advertisement> getAdReviewList(String merchantName,String phone,String status,String applicationStartTime,String applicationEndTime,int begin,int limit);
+    List<Advertisement> getAdReviewList(String merchantName,String phone,String status,String applicationStartTime,String applicationEndTime);
 
     void updateAdReviewStatus(String id,String status);
 }

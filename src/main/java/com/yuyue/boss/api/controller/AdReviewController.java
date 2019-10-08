@@ -1,5 +1,7 @@
 package com.yuyue.boss.api.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.Advertisement;
 import com.yuyue.boss.api.domain.AppUser;
@@ -46,12 +48,14 @@ public class AdReviewController extends BaseController {
         String status = request.getParameter("status");
         String applicationStartTime = request.getParameter("applicationStartTime");
         String applicationEndTime = request.getParameter("applicationEndTime");
-
-        List<Advertisement> adReviewList =null;
-
-            adReviewList = adReviewService.getAdReviewList(merchantName, phone, status, applicationStartTime,applicationEndTime, PageUtil.getBeginPage(page).getBegin(), 10);
-
-        return new ResponseData(adReviewList);
+        PageHelper.startPage(Integer.parseInt(page), 10);
+        List<Advertisement> adReviewList = adReviewService.getAdReviewList(merchantName, phone, status, applicationStartTime,applicationEndTime);
+        PageInfo<Advertisement> pageInfo=new PageInfo<>(adReviewList);
+        long total = pageInfo.getTotal();
+        int pages = pageInfo.getPages();
+        int currentPage = Integer.parseInt(page);
+        System.out.println("total:"+total+"lastPage:"+"pages:"+pages);
+        return new ResponseData(adReviewList, currentPage,(int) total,pages);
     }
 
     @RequestMapping("/updateAdReviewStatus")

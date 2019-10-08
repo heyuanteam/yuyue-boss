@@ -52,11 +52,7 @@
         </choose>
 
         ORDER BY b.UPLOAD_TIME DESC
-        <choose>
-            <when test="begin >= 0 and  limit > 0 ">
-                LIMIT #{begin},#{limit}
-            </when>
-        </choose>
+
 
 
     </select>
@@ -81,7 +77,7 @@
             and  UPLOAD_TIME BETWEEN  #{startTime}  AND  #{endTime}
         </if>
         ORDER BY b.UPLOAD_TIME DESC
-        LIMIT #{begin},#{limit}
+
     </select>
 
 

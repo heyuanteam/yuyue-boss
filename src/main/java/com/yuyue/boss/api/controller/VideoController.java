@@ -1,5 +1,7 @@
 package com.yuyue.boss.api.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.SystemUser;
@@ -43,14 +45,21 @@ public class VideoController extends BaseController {
         //交集参数
         String type=request.getParameter("type");
         String page=request.getParameter("page");
+        if (StringUtils.isEmpty(page))
+            return new ResponseData(CodeEnum.E_90003.getCode(),"page不可为空");
 
         List<UploadFile> uploadFiles=null;
         if ("get".equals(type)){
             log.info("获取视频信息------------>>/video/getVideoInfoList");
             String id=request.getParameter("id");
             String authorId=request.getParameter("authorId");
-            if (StringUtils.isNotEmpty(id) && StringUtils.isNotEmpty(authorId) ) uploadFiles = videoService.getVideoInfoList(id,authorId,"",-1, -1);
-            else uploadFiles = videoService.getVideoInfoList("","","10A",PageUtil.getBeginPage(page).getBegin(), 10);
+            if (StringUtils.isNotEmpty(id) && StringUtils.isNotEmpty(authorId) ) uploadFiles = videoService.getVideoInfoList(id,authorId,"");
+            else {
+                PageHelper.startPage(Integer.parseInt(page), 10);
+                uploadFiles = videoService.getVideoInfoList("","","10A");
+
+            }
+
 
         }else if("search".equals(type)){
             log.info("视频搜索------------>>/video/searchVideoInfo");
@@ -59,12 +68,16 @@ public class VideoController extends BaseController {
             String endTime=request.getParameter("endTime");
             String title=request.getParameter("title");
             String status=request.getParameter("status");
-            uploadFiles = videoService.searchVideoInfo(categoryId, startTime, endTime, title, status,PageUtil.getBeginPage(page).getBegin(), 10);
+            PageHelper.startPage(Integer.parseInt(page), 10);
+            uploadFiles = videoService.searchVideoInfo(categoryId, startTime, endTime, title, status);
         }else {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"type参数错误！！");
         }
-
-        return new ResponseData(uploadFiles,uploadFiles.size());
+        PageInfo<UploadFile> pageInfo=new PageInfo<>(uploadFiles);
+        long total = pageInfo.getTotal();
+        int pages = pageInfo.getPages();
+        int currentPage = Integer.parseInt(page);
+        return new ResponseData(uploadFiles,currentPage,(int)total,pages);
 
     }
 
@@ -145,7 +158,7 @@ public class VideoController extends BaseController {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"作者id为空！！");
         else if (StringUtils.isEmpty(status))
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"现场状态为空！！");
-        List<UploadFile> videoInfoList = videoService.getVideoInfoList(id, authorId,"", -1, -1);
+        List<UploadFile> videoInfoList = videoService.getVideoInfoList(id, authorId,"");
         if (StringUtils.isEmpty(videoInfoList))return new ResponseData(CodeEnum.SUCCESS.getCode(),"未查询该视频！！");
         if ("10B".equals(status) || "10C".equals(status)){
             /*UploadFile uploadFile = videoInfoList.get(0);

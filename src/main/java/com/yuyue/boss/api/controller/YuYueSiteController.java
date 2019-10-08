@@ -1,5 +1,7 @@
 package com.yuyue.boss.api.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.SystemUser;
@@ -50,12 +52,15 @@ public class YuYueSiteController extends BaseController{
         //交集参数
         String page=request.getParameter("page");
         String type=request.getParameter("type");
+        if (StringUtils.isEmpty(page))
+            return new ResponseData(CodeEnum.E_90003.getCode(),"page不可为空");
 
         List<YuYueSite> yuYueSiteInfo =null;
         if ("get".equals(type)){
             log.info("获取现场信息------------>>/site/getYuYueSiteInfo");
             String id=request.getParameter("id");
-            yuYueSiteInfo = yuYueSiteService.getYuYueSiteInfo(id,"", PageUtil.getBeginPage(page).getBegin(), 10);
+            PageHelper.startPage(Integer.parseInt(page), 10);
+            yuYueSiteInfo = yuYueSiteService.getYuYueSiteInfo(id,"");
         }else if ("search".equals(type)){
             log.info("现场搜索------------>>/site/searchYuYueSiteInfo");
             String siteAddr=request.getParameter("siteAddr");
@@ -64,11 +69,16 @@ public class YuYueSiteController extends BaseController{
             String mainPerson=request.getParameter("mainPerson");
             String startTime=request.getParameter("startTime");
             String endTime=request.getParameter("endTime");
-            yuYueSiteInfo = yuYueSiteService.searchYuYueSiteInfo(siteAddr, status, jPushStatus, mainPerson, startTime, endTime, PageUtil.getBeginPage(page).getBegin(), 10);
+            PageHelper.startPage(Integer.parseInt(page), 10);
+            yuYueSiteInfo = yuYueSiteService.searchYuYueSiteInfo(siteAddr, status, jPushStatus, mainPerson, startTime, endTime);
         }else {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"type参数错误！！");
         }
-        return new ResponseData(yuYueSiteInfo,yuYueSiteInfo.size());
+        PageInfo<YuYueSite> pageInfo=new PageInfo<>(yuYueSiteInfo);
+        long total = pageInfo.getTotal();
+        int pages = pageInfo.getPages();
+        int currentPage = Integer.parseInt(page);
+        return new ResponseData(yuYueSiteInfo,currentPage,(int)total,pages);
 
     }
 

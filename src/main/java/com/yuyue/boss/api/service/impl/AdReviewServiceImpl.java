@@ -13,8 +13,8 @@ public class AdReviewServiceImpl implements AdReviewService {
     @Autowired
     private AdReviewMapper adReviewMapper;
     @Override
-    public List<Advertisement> getAdReviewList(String merchantName, String phone, String status, String applicationStartTime,String applicationEndTime, int begin, int limit) {
-        return adReviewMapper.getAdReviewList(merchantName,phone,status, applicationStartTime,applicationEndTime,begin,limit);
+    public List<Advertisement> getAdReviewList(String merchantName, String phone, String status, String applicationStartTime,String applicationEndTime) {
+        return adReviewMapper.getAdReviewList(merchantName,phone,status, applicationStartTime,applicationEndTime);
     }
 
     @Override

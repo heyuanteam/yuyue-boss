@@ -22,16 +22,16 @@ public class YuYueSiteServiceImpl implements YuYueSiteService {
      *
      */
     @Override
-    public List<YuYueSite> getYuYueSiteInfo(String id,String status,int begin,int limit) {
-        return yuYueSiteMapper.getYuYueSiteInfo(id,status,begin,limit);
+    public List<YuYueSite> getYuYueSiteInfo(String id,String status) {
+        return yuYueSiteMapper.getYuYueSiteInfo(id,status);
     }
     /**
      * 通过搜索信息获取现场
      * @param siteAddr,status,jPushStatus,mainPerson,startTime,endTime,begin,limit
      */
     @Override
-    public List<YuYueSite> searchYuYueSiteInfo(String siteAddr, String status, String jPushStatus, String mainPerson, String startTime, String endTime,int begin,int limit) {
-        return yuYueSiteMapper.searchYuYueSiteInfo(siteAddr,status,jPushStatus,mainPerson,startTime,endTime,begin,limit);
+    public List<YuYueSite> searchYuYueSiteInfo(String siteAddr, String status, String jPushStatus, String mainPerson, String startTime, String endTime) {
+        return yuYueSiteMapper.searchYuYueSiteInfo(siteAddr,status,jPushStatus,mainPerson,startTime,endTime);
     }
 
     /**
