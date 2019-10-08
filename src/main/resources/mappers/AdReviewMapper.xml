@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yuyue.boss.api.mapper.AdReviewMapper" >
+    <resultMap type="com.yuyue.boss.api.domain.Advertisement" id="myAdvertisement">
+        <id column="id" property="id"/>
+        <result column="merchantAddr" property="merchantAddr"/>
+        <result column="businessLicense" property="businessLicense"/>
+        <result column="idCardZM" property="idCardZM"/>
+        <result column="idCardFM" property="idCardFM"/>
+        <result column="agencyCode" property="agencyCode"/>
+        <result column="merchantName" property="merchantName"/>
+        <result column="phone" property="phone"/>
+        <result column="produceAddr" property="produceAddr"/>
+        <result column="fixedPhone" property="fixedPhone"/>
+        <result column="email" property="email"/>
+        <result column="wx" property="wx"/>
+        <result column="qqNum" property="qqNum"/>
+        <result column="merchandiseUrl" property="merchandiseUrl"/>
+        <result column="telephone" property="telephone"/>
+        <result column="APPLICATION_TIME" property="applicationTime"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <select id="getAdReviewList" resultMap="myAdvertisement" parameterType="String">
+        select
+        DATE_FORMAT(b.APPLICATION_TIME,'%Y-%m-%d %H:%i:%s') APPLICATION_TIME,
+        b.*
+        from yuyue_advertisement_info b
+        WHERE  1=1
+        <if test="merchantName != null and merchantName != ''">
+            and CONCAT(b.merchantName) like concat('%', #{merchantName}, '%')
+        </if>
+
+        <if test="phone != null and phone != ''">
+            and   b.phone = #{phone}
+        </if>
+
+        <if test="status != null and status != ''">
+            and   b.status = #{status}
+        </if>
+
+        <if test="applicationStartTime != null and applicationStartTime != '' and applicationEndTime != null and applicationEndTime != ''">
+            and   b.APPLICATION_TIME  between  #{applicationStartTime} and #{applicationEndTime}
+        </if>
+
+
+        ORDER BY b.APPLICATION_TIME DESC
+        <choose>
+            <when test="begin >= 0 and  limit > 0 ">
+                LIMIT #{begin},#{limit}
+            </when>
+        </choose>
+
+
+    </select>
+
+
+
+
+    <update id="updateAdReviewStatus"  parameterType="String">
+        UPDATE yuyue_advertisement_info
+        set
+        <if test="status != null and status != ''">
+            status= #{status},
+        </if>
+        id=#{id}
+
+        WHERE id=#{id};
+    </update>
+</mapper>
