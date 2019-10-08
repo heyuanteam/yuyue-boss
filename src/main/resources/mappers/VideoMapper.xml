@@ -40,23 +40,23 @@
         from ${tableName} b
         left join yuyue_merchant m on b.authorId = m.ID
         WHERE  1=1 and b.filesType = 'video' and b.status ='10A'
-            <choose>
-                <when test="id!=null and id!=''">
-                  and b.id=#{id}
-                </when>
-            </choose>
-            <choose>
-                <when test="status!=null and status!=''">
-                  and   b.USER_STATUS = #{status}
-                </when>
-            </choose>
+        <choose>
+            <when test="id!=null and id!=''">
+                and b.id=#{id}
+            </when>
+        </choose>
+        <choose>
+            <when test="status!=null and status!=''">
+                and   b.USER_STATUS = #{status}
+            </when>
+        </choose>
 
-            ORDER BY b.UPLOAD_TIME DESC
-            <choose>
-                <when test="begin >= 0 and  limit > 0 ">
-                   LIMIT #{begin},#{limit}
-                </when>
-            </choose>
+        ORDER BY b.UPLOAD_TIME DESC
+        <choose>
+            <when test="begin >= 0 and  limit > 0 ">
+                LIMIT #{begin},#{limit}
+            </when>
+        </choose>
 
 
     </select>
@@ -86,11 +86,11 @@
 
 
     <update id="updateVideo"  parameterType="com.yuyue.boss.api.domain.UploadFile">
-    UPDATE ${tableName}
-    set
-    <if test="status != null and status != ''">
-        status= #{status},
-    </if>
+        UPDATE ${tableName}
+        set
+        <if test="status != null and status != ''">
+            status= #{status},
+        </if>
         id=#{id}
 
         WHERE id=#{id};

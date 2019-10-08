@@ -45,12 +45,12 @@ public class VideoServiceImpl implements VideoService {
 
     }
 
-   /* @Override
-    public void updateVideo(UploadFile uploadFile) {
-        videoMapper.updateVideo(uploadFile,ResultJSONUtils.getHashValue("yuyue_upload_file_", uploadFile.getAuthorId()));
-    }*/
-   @Override
-   public void updateVideo(String id,String authorId,String status){
+    /* @Override
+     public void updateVideo(UploadFile uploadFile) {
+         videoMapper.updateVideo(uploadFile,ResultJSONUtils.getHashValue("yuyue_upload_file_", uploadFile.getAuthorId()));
+     }*/
+    @Override
+    public void updateVideo(String id,String authorId,String status){
         videoMapper.updateVideo(id,ResultJSONUtils.getHashValue("yuyue_upload_file_",authorId),status);
     }
     @Override

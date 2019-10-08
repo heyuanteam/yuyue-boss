@@ -22,7 +22,7 @@ public interface VideoMapper extends MyBaseMapper<UploadFile> {
 
     void insertVideo(UploadFile uploadFile);
 
-   // void updateVideo(UploadFile uploadFile,@Param(value = "tableName") String tableName);
+    // void updateVideo(UploadFile uploadFile,@Param(value = "tableName") String tableName);
 
     void updateVideo(@Param(value = "id")String id,@Param(value = "tableName") String tableName,@Param(value = "status")String status);
 
