@@ -65,11 +65,14 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
 
     List<SystemUserVO> getAppUserMsg(@Param("loginName")String loginName,@Param("password") String password);
 
-    List<SystemMenu> getMenuString();
-
     @Transactional
     @Insert("INSERT into yuyue_system_user (id,loginName,password,systemName,phone,createUserId)  values  " +
             "(#{id},#{loginName},#{password},#{systemName},#{phone},#{createUserId})")
     @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
     void insertSystemUser(SystemUser systemUser);
+
+    @Transactional
+    @Update("UPDATE yuyue_system_permission SET menuKey=#{menuKey},saveKey=#{saveKey},removeKey=#{removeKey} WHERE id =#{id} ")
+    void updateSystemPermission(@Param("id")String id,@Param("menuKey") String menuKey,@Param("saveKey") String saveKey,
+                                @Param("removeKey")String removeKey);
 }

@@ -60,6 +60,9 @@ public class SystemController extends BaseController {
         try {
             PageUtil.getPage(parameterMap.get("page"));
             List<SystemMenu> menuList = loginService.getMenu("", 0, "", parameterMap.get("menuName"), parameterMap.get("status"));
+            if (CollectionUtils.isEmpty(menuList)){
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "搜索的不存在！");
+            }
             PageUtil pageUtil = new PageUtil(menuList);
             return new ResponseData(pageUtil);
         } catch (Exception e) {
@@ -160,9 +163,15 @@ public class SystemController extends BaseController {
         } else if (StringUtils.isNotEmpty(parameterMap.get("status")) && ("10A".equals(parameterMap.get("status"))
                 || "10B".equals(parameterMap.get("status"))) && StringUtils.isNotEmpty(parameterMap.get("menuName"))) {
 
-            List<SystemMenu> menuNameList = loginService.getMenu("", 0, "", parameterMap.get("menuName"), "");
-            if (CollectionUtils.isNotEmpty(menuNameList)) {
-                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单名称已经存在！");
+            List<SystemMenu> list = loginService.getMenu(parameterMap.get("id"), 0, "","","");
+            if (CollectionUtils.isEmpty(list)) {
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "修改的菜单不存在！");
+            }
+            if (!parameterMap.get("menuName").equals(list.get(0).getMenuName())) {
+                List<SystemMenu> menuNameList = loginService.getMenu("", 0, "", parameterMap.get("menuName"), "");
+                if (CollectionUtils.isNotEmpty(menuNameList)) {
+                    return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单名称已经存在！");
+                }
             }
             loginService.updateSystemMenu(parameterMap.get("id"), 0, parameterMap.get("status"), parameterMap.get("menuName"));
             return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改系统菜单成功！");
@@ -218,7 +227,10 @@ public class SystemController extends BaseController {
         Map<String, String> parameterMap = getParameterMap(request, response);
         try {
             PageUtil.getPage(parameterMap.get("page"));
-            List<SystemUser> menuList = loginService.getSystemUser(parameterMap.get("status"), parameterMap.get("systemName"),"","");
+            List<SystemUser> menuList = loginService.getSystemUser(parameterMap.get("status"), parameterMap.get("systemName"),parameterMap.get("loginName"),"");
+            if (CollectionUtils.isEmpty(menuList)){
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "搜索的不存在！");
+            }
             PageUtil pageUtil = new PageUtil(menuList);
             return new ResponseData(pageUtil);
         } catch (Exception e) {
@@ -262,7 +274,7 @@ public class SystemController extends BaseController {
             user.setCreateUserId(systemUser.getId());
             loginService.insertSystemUser(user);
 
-            List<SystemMenu> menuList = loginService.getMenuString();
+            List<SystemMenu> menuList = loginService.getMenu("",0,"","","");
             if (CollectionUtils.isNotEmpty(menuList)){
                 for (SystemMenu systemMenu: menuList) {
                     loginService.insertSystemPermission(RandomSaltUtil.generetRandomSaltCode(32),user.getId(),
@@ -302,7 +314,11 @@ public class SystemController extends BaseController {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "系统用户状态不可以为空！");
         }
 
-        if (StringUtils.isNotEmpty(parameterMap.get("loginName"))) {
+        List<SystemUser> list = loginService.getSystemUser("", "", "",parameterMap.get("id"));
+        if (CollectionUtils.isEmpty(list)) {
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "修改的用户不存在！");
+        }
+        if (!parameterMap.get("loginName").equals(list.get(0).getLoginName())) {
             List<SystemUser> loginName = loginService.getSystemUser("", "", parameterMap.get("loginName"),"");
             if (CollectionUtils.isNotEmpty(loginName)) {
                 return new ResponseData(CodeEnum.E_10009.getCode(), "登录名已经存在！");
@@ -336,7 +352,7 @@ public class SystemController extends BaseController {
         if (StringUtils.isNotEmpty(parameterMap.get("id"))) {
             List<SystemUser> list = loginService.getSystemUser("", "", "",parameterMap.get("id"));
             if (CollectionUtils.isEmpty(list)) {
-                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "系统用户ID错误！");
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "搜索的不存在！");
             }
         }
         try {
@@ -367,13 +383,53 @@ public class SystemController extends BaseController {
         log.info("获取用户分配系统权限详情----------->>/system/getSystemPermissionList");
         Map<String, String> parameterMap = getParameterMap(request, response);
         try {
+            List<SystemUser> userList = loginService.getSystemUser("", "", "", parameterMap.get("id"));
+            if (CollectionUtils.isEmpty(userList)){
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "用户不存在！");
+            }
             PageUtil.getPage(parameterMap.get("page"));
-            List<SystemUserVO> systemUserVO = loginService.getAppUserMsg(parameterMap.get("loginName"),parameterMap.get("password"));
+            List<SystemUserVO> systemUserVO = loginService.getAppUserMsg(userList.get(0).getLoginName(),userList.get(0).getPassword());
+            if (CollectionUtils.isEmpty(systemUserVO)){
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "搜索的不存在！");
+            }
             PageUtil pageUtil = new PageUtil(systemUserVO);
             return new ResponseData(pageUtil);
         } catch (Exception e) {
             log.info("===========>>>>>>获取系统用户失败！");
             return new ResponseData(CodeEnum.E_400.getCode(),"获取系统用户失败！");
+        }
+    }
+
+    /**
+     * 修改用户分配系统权限详情
+     *
+     * @return
+     */
+    @RequestMapping(value = "/editSystemPermission")
+    @ResponseBody
+    @RequiresPermissions("PermissionManager:save")
+    @LoginRequired
+    public ResponseData editSystemPermission(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response
+                                            ,@RequestBody List<SystemPermission> systemPermissionList) {
+        log.info("修改用户分配系统权限详情----------->>/system/editSystemPermission");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        try {
+            for (SystemPermission systemPermission : systemPermissionList) {
+                List<SystemPermission> list = loginService.getSystemPermission("", "", systemPermission.getId());
+                if (CollectionUtils.isNotEmpty(list)){
+                    loginService.updateSystemPermission(systemPermission.getId(),systemPermission.getMenuKey(),
+                            systemPermission.getSaveKey(),systemPermission.getRemoveKey());
+                } else {
+                    log.info("系统权限不存在===========>>>>>>>>"+systemPermission.getId());
+                }
+            }
+            PageUtil.getPage(parameterMap.get("page"));
+            List<SystemPermission> list = loginService.getSystemPermission("", "", "");
+            PageUtil pageUtil = new PageUtil(list);
+            return new ResponseData(pageUtil);
+        } catch (Exception e) {
+            log.info("===========>>>>>>修改用户分配系统权限失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"修改用户分配系统权限失败！");
         }
     }
 
