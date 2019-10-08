@@ -130,8 +130,26 @@
         SELECT b.*
         from yuyue_system b where 1=1
         <if test="status!=null and status!=''">  and b.status = #{status}  </if>
+        <if test="id!=null and id!=''">  and b.id = #{id}  </if>
         <if test="typeName!=null and typeName!='' ">  and b.typeName like concat('%', #{typeName}, '%')</if>
         order by b.typeCode
     </select>
+
+    <!-- 修改系统字典 -->
+    <update id="updateLookupCde" parameterType="String">
+        UPDATE yuyue_system b
+        <set>
+            <if test="typeName!=null and typeName!=''">
+                b.typeName = #{typeName},
+            </if>
+            <if test="status!=null and status!=''">
+                b.status = #{status},
+            </if>
+        </set>
+        WHERE 1=1
+        <if test="id!=null and id!=''">
+            and b.id = #{id}
+        </if>
+    </update>
 
 </mapper>

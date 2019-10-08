@@ -17,7 +17,7 @@ public class LookupCde implements Serializable {
 //    字典名称
     private String  typeName;
 //    字典code
-    private String  typeCode;
+    private int  sort;
 //    是否启用
     private String  status;
     @JSONField(format="yyyy-MM-dd HH:mm:ss")

@@ -76,5 +76,12 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     void updateSystemPermission(@Param("id")String id,@Param("menuKey") String menuKey,@Param("saveKey") String saveKey,
                                 @Param("removeKey")String removeKey);
 
-    List<LookupCde> getLookupCdeSystem(@Param("status") String status,@Param("typeName") String typeName);
+    List<LookupCde> getLookupCdeSystem(@Param("status") String status,@Param("typeName") String typeName,@Param("id") String id);
+
+    @Transactional
+    @Insert("INSERT into yuyue_system (id,typeName,sort) values (#{id},#{typeName},#{sort})")
+    @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
+    void insertLookupCde(LookupCde lookupCde);
+
+    void updateLookupCde(@Param("id")String id,@Param("typeName") String typeName,@Param("status") String status);
 }

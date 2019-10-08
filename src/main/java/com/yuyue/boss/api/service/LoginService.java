@@ -60,5 +60,11 @@ public interface LoginService {
     void updateSystemPermission(String id, String menuKey, String saveKey, String removeKey);
 
     //搜索字典
-    List<LookupCde> getLookupCdeSystem(String status, String typeName);
+    List<LookupCde> getLookupCdeSystem(String status, String typeName, String id);
+
+    //添加字典
+    void insertLookupCde(LookupCde lookupCde);
+
+    //修改字典
+    void updateLookupCde(String id, String typeName, String status);
 }

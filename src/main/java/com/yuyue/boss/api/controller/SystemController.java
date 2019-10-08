@@ -469,7 +469,7 @@ public class SystemController extends BaseController {
         Map<String, String> parameterMap = getParameterMap(request, response);
         try {
             PageUtil.getPage(parameterMap.get("page"));
-            List<LookupCde> menuList = loginService.getLookupCdeSystem(parameterMap.get("status"), parameterMap.get("typeName"));
+            List<LookupCde> menuList = loginService.getLookupCdeSystem(parameterMap.get("status"), parameterMap.get("typeName"),"");
             if (CollectionUtils.isEmpty(menuList)){
                 return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "搜索的不存在！");
             }
@@ -481,4 +481,80 @@ public class SystemController extends BaseController {
         }
     }
 
+    /**
+     * 添加系统字典
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/addLookupCdeSystem")
+    @ResponseBody
+    @RequiresPermissions("LookupCdeManager:save")
+    @LoginRequired
+    public ResponseData addLookupCdeSystem(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("添加系统字典----------->>/system/addLookupCdeSystem");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        if (StringUtils.isEmpty(parameterMap.get("typeName"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典名称不可以为空！");
+        }
+        List<LookupCde> menuList = loginService.getLookupCdeSystem("", parameterMap.get("typeName"),"");
+        if (CollectionUtils.isNotEmpty(menuList)){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典名称已经存在！");
+        }
+        try {
+            List<LookupCde> list = loginService.getLookupCdeSystem("", "","");
+            int sort = list.get(0).getSort();
+            sort += 1;
+            LookupCde lookupCde = new LookupCde();
+            lookupCde.setId(RandomSaltUtil.generetRandomSaltCode(32));
+            lookupCde.setTypeName(parameterMap.get("typeName"));
+            lookupCde.setSort(sort);
+            loginService.insertLookupCde(lookupCde);
+            return new ResponseData(CodeEnum.SUCCESS);
+        } catch (Exception e) {
+            log.info("===========>>>>>>添加系统字典失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"添加系统字典失败！");
+        }
+    }
+
+    /**
+     * 修改系统字典
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/editLookupCdeSystem")
+    @ResponseBody
+    @RequiresPermissions("LookupCdeManager:save")
+    @LoginRequired
+    public ResponseData editLookupCdeSystem(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("修改系统字典----------->>/system/editLookupCdeSystem");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        if (StringUtils.isEmpty(parameterMap.get("typeName"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典名称不可以为空！");
+        } else if (StringUtils.isEmpty(parameterMap.get("status"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典状态不可以为空！");
+        } else if (StringUtils.isEmpty(parameterMap.get("id"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典ID不可以为空！");
+        }
+        List<LookupCde> list = loginService.getLookupCdeSystem("", "", parameterMap.get("id"));
+        if (CollectionUtils.isEmpty(list)){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "修改字典不存在！");
+        }
+        if (!parameterMap.get("typeName").equals(list.get(0).getTypeName())) {
+            List<LookupCde> menuList = loginService.getLookupCdeSystem("", parameterMap.get("typeName"),"");
+            if (CollectionUtils.isNotEmpty(menuList)){
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典名称已经存在！");
+            }
+        }
+        try {
+            loginService.updateLookupCde(parameterMap.get("id"),parameterMap.get("typeName"),parameterMap.get("status"));
+            return new ResponseData(CodeEnum.SUCCESS);
+        } catch (Exception e) {
+            log.info("===========>>>>>>修改系统字典失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"修改系统字典失败！");
+        }
+    }
 }
