@@ -124,4 +124,7 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public void updateSystemPermission(String id, String menuKey, String saveKey, String removeKey) {
         loginMapper.updateSystemPermission(id,menuKey,saveKey,removeKey); }
+
+    @Override
+    public List<LookupCde> getLookupCdeSystem(String status, String typeName) { return loginMapper.getLookupCdeSystem(status,typeName); }
 }

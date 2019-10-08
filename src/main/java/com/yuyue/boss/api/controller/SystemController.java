@@ -1,5 +1,6 @@
 package com.yuyue.boss.api.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -41,7 +42,9 @@ public class SystemController extends BaseController {
 
     /**
      * 获取系统菜单
-     *
+     * @param systemUser
+     * @param request
+     * @param response
      * @return
      */
     @RequestMapping(value = "/getMenu")
@@ -73,7 +76,9 @@ public class SystemController extends BaseController {
 
     /**
      * 添加系统菜单
-     *
+     * @param systemUser
+     * @param request
+     * @param response
      * @return
      */
     @RequestMapping(value = "/addMenu")
@@ -124,7 +129,9 @@ public class SystemController extends BaseController {
 
     /**
      * 修改系统菜单
-     *
+     * @param systemUser
+     * @param request
+     * @param response
      * @return
      */
     @RequestMapping(value = "/editMenu")
@@ -181,7 +188,9 @@ public class SystemController extends BaseController {
 
     /**
      * 删除系统菜单和权限
-     *
+     * @param systemUser
+     * @param request
+     * @param response
      * @return
      */
     @RequestMapping(value = "/delMenu")
@@ -215,7 +224,9 @@ public class SystemController extends BaseController {
 
     /**
      * 获取系统用户
-     *
+     * @param systemUser
+     * @param request
+     * @param response
      * @return
      */
     @RequestMapping(value = "/getSystemUser")
@@ -241,7 +252,9 @@ public class SystemController extends BaseController {
 
     /**
      * 添加系统用户和添加权限
-     *
+     * @param systemUser
+     * @param request
+     * @param response
      * @return
      */
     @RequestMapping(value = "/addSystemUser")
@@ -290,7 +303,9 @@ public class SystemController extends BaseController {
 
     /**
      * 修改系统用户
-     *
+     * @param systemUser
+     * @param request
+     * @param response
      * @return
      */
     @RequestMapping(value = "/editSystemUser")
@@ -336,7 +351,9 @@ public class SystemController extends BaseController {
 
     /**
      * 删除系统用户和权限
-     *
+     * @param systemUser
+     * @param request
+     * @param response
      * @return
      */
     @RequestMapping(value = "/delSystemUser")
@@ -372,7 +389,9 @@ public class SystemController extends BaseController {
 
     /**
      * 获取用户分配系统权限详情
-     *
+     * @param systemUser
+     * @param request
+     * @param response
      * @return
      */
     @RequestMapping(value = "/getSystemPermissionList")
@@ -402,17 +421,21 @@ public class SystemController extends BaseController {
 
     /**
      * 修改用户分配系统权限详情
-     *
+     * @param systemUser
+     * @param response
+     * @param systemPermissionList
      * @return
      */
-    @RequestMapping(value = "/editSystemPermission")
+    @PostMapping(value = "/editSystemPermission")
     @ResponseBody
     @RequiresPermissions("PermissionManager:save")
     @LoginRequired
-    public ResponseData editSystemPermission(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response
-                                            ,@RequestBody List<SystemPermission> systemPermissionList) {
+    public ResponseData editSystemPermission(@CurrentUser SystemUser systemUser, HttpServletResponse response,
+                                             @RequestBody List<SystemPermission> systemPermissionList) {
         log.info("修改用户分配系统权限详情----------->>/system/editSystemPermission");
-        Map<String, String> parameterMap = getParameterMap(request, response);
+        //解决一下跨域问题
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        log.info("参数======>>>>>>"+JSON.toJSONString(systemPermissionList));
         try {
             for (SystemPermission systemPermission : systemPermissionList) {
                 List<SystemPermission> list = loginService.getSystemPermission("", "", systemPermission.getId());
@@ -423,13 +446,38 @@ public class SystemController extends BaseController {
                     log.info("系统权限不存在===========>>>>>>>>"+systemPermission.getId());
                 }
             }
-            PageUtil.getPage(parameterMap.get("page"));
-            List<SystemPermission> list = loginService.getSystemPermission("", "", "");
-            PageUtil pageUtil = new PageUtil(list);
-            return new ResponseData(pageUtil);
+            return new ResponseData(CodeEnum.SUCCESS);
         } catch (Exception e) {
             log.info("===========>>>>>>修改用户分配系统权限失败！");
             return new ResponseData(CodeEnum.E_400.getCode(),"修改用户分配系统权限失败！");
+        }
+    }
+
+    /**
+     * 获取系统字典
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/getLookupCdeSystem")
+    @ResponseBody
+    @RequiresPermissions("LookupCdeManager:menu")
+    @LoginRequired
+    public ResponseData getLookupCdeSystem(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("获取系统字典----------->>/system/getSystem");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        try {
+            PageUtil.getPage(parameterMap.get("page"));
+            List<LookupCde> menuList = loginService.getLookupCdeSystem(parameterMap.get("status"), parameterMap.get("typeName"));
+            if (CollectionUtils.isEmpty(menuList)){
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "搜索的不存在！");
+            }
+            PageUtil pageUtil = new PageUtil(menuList);
+            return new ResponseData(pageUtil);
+        } catch (Exception e) {
+            log.info("===========>>>>>>获取系统字典失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"获取系统字典失败！");
         }
     }
 

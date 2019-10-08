@@ -11,8 +11,10 @@
             d.id systemMeuId,d.`status` systemMenuStatus,d.menuAction,d.parentId systemMeuPantId,d.menuName,d.role
         FROM yuyue_system_user b,yuyue_system_menu d,yuyue_system_permission c
         WHERE b.id = c.systemUserId AND d.id = c.menuId
-          AND b.loginName = 'admin' AND b.`password` = '123456'
+        <if test="loginName!=null and loginName!=''">  and b.loginName = #{loginName}  </if>
+        <if test="password!=null and password!='' ">  and b.`password` = #{password}  </if>
           /*AND b.`status` = '10B' AND d.`status` = '10B' AND c.`status` = '10B'*/
+
         ORDER BY d.sort
     </select>
 
@@ -22,7 +24,7 @@
                DATE_FORMAT(b.UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') updateTime,
                DATE_FORMAT(b.CREATE_TIME ,'%Y-%m-%d %H:%i:%s') createTime
         from yuyue_system_user b where 1=1
-        <if test="loginName!=null and loginName!=''">  and b.loginName = #{loginName}  </if>
+        <if test="loginName!=null and loginName!=''">and b.loginName like concat('%', #{loginName}, '%') </if>
         <if test="password!=null and password!='' ">  and b.`password` = #{password}  </if>
         <if test="id!=null and id!='' ">  and b.id = #{id} </if>
         <if test="phone!=null and phone!='' ">  and b.phone = #{phone} </if>
@@ -47,7 +49,7 @@
         <if test=" id !=null and id!='' ">  and d.id = #{id}  </if>
         <if test=" sort !=0 ">  and d.sort = #{sort}  </if>
         <if test=" role !=null and role!='' ">  and d.role = #{role}  </if>
-        <if test=" menuName !=null and menuName!='' ">  and d.menuName = #{menuName}  </if>
+        <if test=" menuName !=null and menuName!='' ">and d.menuName like concat('%', #{menuName}, '%') </if>
         <if test="status!=null and status!=''"> and d.status = #{status} </if>
         ORDER BY d.sort,d.status
     </select>
@@ -92,7 +94,7 @@
         from yuyue_system_user b where 1=1
         <if test="status!=null and status!=''">  and b.status = #{status}  </if>
         <if test="systemName!=null and systemName!='' ">  and b.systemName = #{systemName}  </if>
-        <if test="loginName!=null and loginName!='' ">  and b.loginName = #{loginName}  </if>
+        <if test="loginName!=null and loginName!='' "> and b.loginName like concat('%', #{loginName}, '%')</if>
         <if test="id!=null and id!='' ">  and b.id = #{id}  </if>
          order by b.CREATE_TIME
     </select>
@@ -122,5 +124,14 @@
             and b.id = #{id}
         </if>
     </update>
+
+    <!-- 获取系统字典 -->
+    <select id="getLookupCdeSystem" resultType="com.yuyue.boss.api.domain.LookupCde" parameterType="String">
+        SELECT b.*
+        from yuyue_system b where 1=1
+        <if test="status!=null and status!=''">  and b.status = #{status}  </if>
+        <if test="typeName!=null and typeName!='' ">  and b.typeName like concat('%', #{typeName}, '%')</if>
+        order by b.typeCode
+    </select>
 
 </mapper>

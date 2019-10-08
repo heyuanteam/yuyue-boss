@@ -58,4 +58,7 @@ public interface LoginService {
 
     //修改用户分配系统权限详情
     void updateSystemPermission(String id, String menuKey, String saveKey, String removeKey);
+
+    //搜索字典
+    List<LookupCde> getLookupCdeSystem(String status, String typeName);
 }

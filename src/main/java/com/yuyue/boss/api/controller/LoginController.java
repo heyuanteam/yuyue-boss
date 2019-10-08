@@ -46,8 +46,10 @@ public class LoginController extends BaseController{
      *
      * shiro登录，shiro采用Facade模式（门面模式），所有与shiro的交互都通过Subject对象API。
      * 调用Subject.login后会触发UserRealm的doGetAuthenticationInfo方法，进行具体的登录验证处理。
-     *
-     * @param password 密码
+     * @param loginName
+     * @param password
+     * @param request
+     * @param response
      * @return
      */
     @RequestMapping("/userPasswordLogin")
@@ -90,6 +92,10 @@ public class LoginController extends BaseController{
 
     /**
      * 短信验证登录
+     * @param phone
+     * @param code
+     * @param request
+     * @param response
      * @return
      */
     @RequestMapping("/userPhoneLogin")
