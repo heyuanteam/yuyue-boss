@@ -12,7 +12,7 @@ import java.util.List;
 public interface YuYueSiteMapper extends MyBaseMapper<YuYueSite> {
 
 
-    List<YuYueSite> getYuYueSiteInfo(@Param("id") String id,@Param("status") String status,@Param(value = "begin")int begin,@Param(value = "limit")int limit);
+    List<YuYueSite> getYuYueSiteInfo(@Param("id") String id,@Param("status") String status);
 
 
 
@@ -21,9 +21,7 @@ public interface YuYueSiteMapper extends MyBaseMapper<YuYueSite> {
                                         @Param(value = "jPushStatus")String jPushStatus,
                                         @Param(value = "mainPerson")String mainPerson,
                                         @Param(value = "startTime")String startTime,
-                                        @Param(value = "endTime")String endTime,
-                                        @Param(value = "begin")int begin,
-                                        @Param(value = "limit")int limit);
+                                        @Param(value = "endTime")String endTime);
 
     @Insert("UPDATE yuyue_site SET qrCodePath = #{qrCodePath} WHERE id= #{id}")
     void insertQRCodePath(@Param(value = "id")String id,@Param(value = "qrCodePath")String qrCodePath);

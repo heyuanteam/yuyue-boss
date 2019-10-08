@@ -11,12 +11,12 @@ public interface YuYueSiteService {
 
 
 
-    List<YuYueSite> getYuYueSiteInfo(String id,String status,int begin,int limit);
+    List<YuYueSite> getYuYueSiteInfo(String id,String status);
 
 
 
     List<YuYueSite> searchYuYueSiteInfo(String siteAddr, String status,String jPushStatus,
-                                        String mainPerson,String startTime,String endTime,int begin,int limit);
+                                        String mainPerson,String startTime,String endTime);
 
 
     void insertQRCodePath(String id ,String qrCodePath);
