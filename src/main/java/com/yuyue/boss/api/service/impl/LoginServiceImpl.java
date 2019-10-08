@@ -83,9 +83,6 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public List<SystemMenu> getMenuString() { return loginMapper.getMenuString();}
-
-    @Override
     public void insertSystemMenu(SystemMenu systemMenu) { loginMapper.insertSystemMenu(systemMenu); }
 
     @Override
@@ -123,4 +120,8 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public void insertSystemUser(SystemUser user) { loginMapper.insertSystemUser(user); }
+
+    @Override
+    public void updateSystemPermission(String id, String menuKey, String saveKey, String removeKey) {
+        loginMapper.updateSystemPermission(id,menuKey,saveKey,removeKey); }
 }

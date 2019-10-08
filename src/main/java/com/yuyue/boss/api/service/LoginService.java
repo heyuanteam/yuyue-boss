@@ -23,9 +23,6 @@ public interface LoginService {
     //获取菜单
     List<SystemMenu> getMenu(String id,Integer sort,String role,String menuName,String status);
 
-    //获取菜单包含10A
-    List<SystemMenu> getMenuString();
-
     //插入菜单
     void insertSystemMenu(SystemMenu systemMenu);
 
@@ -58,4 +55,7 @@ public interface LoginService {
 
     //添加系统用户
     void insertSystemUser(SystemUser user);
+
+    //修改用户分配系统权限详情
+    void updateSystemPermission(String id, String menuKey, String saveKey, String removeKey);
 }
