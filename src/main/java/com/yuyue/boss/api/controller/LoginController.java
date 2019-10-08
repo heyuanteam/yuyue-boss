@@ -12,6 +12,7 @@ import com.yuyue.boss.enums.Constants;
 import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.RedisUtil;
 import com.yuyue.boss.utils.StringUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -101,13 +102,13 @@ public class LoginController extends BaseController{
         } else if(StringUtils.isEmpty(code) || code.length() != 6 || !code.equals(redisUtil.getString(phone))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"验证码错误！");
         }
-        SystemUser systemUser = loginService.getSystemUserMsg("","","",phone);
-        if(StringUtils.isNull(systemUser)){
+        List<SystemUser> systemUser = loginService.getSystemUserMsg("","","",phone);
+        if(CollectionUtils.isEmpty(systemUser)){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"用户名或密码不正确！");
         }
 
         Subject currentUser = SecurityUtils.getSubject();
-        UsernamePasswordToken token = new UsernamePasswordToken(systemUser.getLoginName(), systemUser.getPassword());
+        UsernamePasswordToken token = new UsernamePasswordToken(systemUser.get(0).getLoginName(), systemUser.get(0).getPassword());
         try {
             currentUser.login(token);
             UserVO user = (UserVO) SecurityUtils.getSubject().getPrincipal();

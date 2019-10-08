@@ -5,16 +5,15 @@
     <!--b.id = 'F9946CAE0D574FB1BDFDAE922F7821E9'-->
     <!-- 获取系统用户权限和个人信息 -->
     <select id="getAppUserMsg" resultType="com.yuyue.boss.api.domain.SystemUserVO" parameterType="String">
-        SELECT b.id systemUserId,b.loginName,b.systemName,DATE_FORMAT(b.UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') createTime,b.phone,b.`status` systemUserStatus,b.`password`,
-            c.id systemRoleId,c.`status` systemRoleStatus,
-            d.id systemMeuId,d.`status` systemMenuStatus,d.menuAction,d.menuCode,d.parentId systemMeuPantId,d.menuName,
-            h.id systemPermissionId,h.permissionName,h.permissionKey,h.parentId systemMeuPermissionPantId,h.permissionCode,h.permissionAction, h.`status` systemPermissionStatus
-        FROM yuyue_system_user b,yuyue_system_role c,yuyue_system_menu d,yuyue_system_permission h
-        WHERE b.id = c.systemUserId
-            AND b.loginName = 'admin' AND b.`password` = '123456'
-            AND b.`status` = '10B' AND d.id = c.menuId AND d.`status` = '10B'
-            AND h.id = c.permissionId AND h.`status` = '10B' AND c.`status` = '10B'
-        ORDER BY h.permissionCode
+        SELECT b.id systemUserId,b.loginName,b.systemName,b.phone,b.`status` systemUserStatus,
+            c.id systemPermissionId,c.`status` systemPermissionStatus,c.menuKey,c.saveKey,c.removeKey,
+            DATE_FORMAT(c.UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') createTime,DATE_FORMAT(c.UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') updateTime,
+            d.id systemMeuId,d.`status` systemMenuStatus,d.menuAction,d.parentId systemMeuPantId,d.menuName
+        FROM yuyue_system_user b,yuyue_system_menu d,yuyue_system_permission c
+        WHERE b.id = c.systemUserId AND d.id = c.menuId
+          AND b.loginName = 'admin' AND b.`password` = '123456'
+          AND b.`status` = '10B' AND d.`status` = '10B' AND c.`status` = '10B'
+        ORDER BY d.sort
     </select>
 
     <!-- 获取个人信息 -->
@@ -27,17 +26,16 @@
         <if test="password!=null and password!='' ">  and b.`password` = #{password}  </if>
         <if test="id!=null and id!='' ">  and b.id = #{id} </if>
         <if test="phone!=null and phone!='' ">  and b.phone = #{phone} </if>
-        limit 1
     </select>
 
     <!--获取权限关联菜单列表-->
     <select id="getMenuList" resultType="com.yuyue.boss.api.domain.SystemMenu" parameterType="String">
         SELECT d.menuName,d.id,d.menuAction,d.sort
-        FROM yuyue_system_user b,yuyue_system_role c,yuyue_system_menu d
+        FROM yuyue_system_user b,yuyue_system_permission c,yuyue_system_menu d
         WHERE b.id = c.systemUserId AND b.`status` = '10B' AND d.id = c.menuId AND d.`status` = '10B'
         <if test="loginName!=null and loginName!=''">  and b.loginName = #{loginName}  </if>
         <if test="password!=null and password!='' ">  and b.`password` = #{password}  </if>
-        GROUP BY d.id  ORDER BY d.sort,d.menuCode
+        GROUP BY d.id  ORDER BY d.sort
     </select>
 
     <!--获取菜单-->
@@ -51,7 +49,16 @@
         <if test=" role !=null and role!='' ">  and d.role = #{role}  </if>
         <if test=" menuName !=null and menuName!='' ">  and d.menuName = #{menuName}  </if>
         <if test="status!=null and status!=''"> and d.status = #{status} </if>
-        ORDER BY d.sort,d.menuCode
+        ORDER BY d.sort
+    </select>
+
+    <!--获取菜单包含10A-->
+    <select id="getMenuString" resultType="com.yuyue.boss.api.domain.SystemMenu" parameterType="String">
+        SELECT *,DATE_FORMAT(d.CREATE_TIME ,'%Y-%m-%d %H:%i:%s') createTime
+        ,DATE_FORMAT(d.UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') updateTime
+        FROM yuyue_system_menu d
+        WHERE 1=1
+        ORDER BY d.sort
     </select>
 
     <!--修改菜单-->
@@ -79,11 +86,11 @@
         SELECT *,DATE_FORMAT(d.CREATE_TIME ,'%Y-%m-%d %H:%i:%s') createTime
         ,DATE_FORMAT(d.UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') updateTime
         FROM yuyue_system_permission d
-        WHERE 1=1 and d.permissionKey != '0'
-        <if test=" parentId !=null and parentId!='' ">  and d.parentId = #{parentId}  </if>
-        <if test=" permissionCode !=null and permissionCode!='' ">  and d.permissionCode = #{permissionCode}  </if>
+        WHERE 1=1
         <if test=" id !=null and id!='' ">  and d.id = #{id}  </if>
-        ORDER BY d.permissionCode
+        <if test=" menuId!=null and menuId!='' ">  and d.menuId = #{menuId}  </if>
+        <if test=" systemUserId !=null and systemUserId!='' ">  and d.systemUserId = #{systemUserId}  </if>
+        ORDER BY d.CREATE_TIME
     </select>
 
     <!-- 获取系统用户 -->

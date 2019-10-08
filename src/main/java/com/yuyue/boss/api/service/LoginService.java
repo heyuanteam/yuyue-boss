@@ -12,7 +12,7 @@ public interface LoginService {
     UserVO getUser(String loginName, String password);
 
     //获取系统用户个人信息
-    SystemUser getSystemUserMsg(String loginName,String password,String id,String phone);
+    List<SystemUser> getSystemUserMsg(String loginName,String password,String id,String phone);
 
     //获取token
     String getToken(UserVO systemUser);
@@ -23,6 +23,9 @@ public interface LoginService {
     //获取菜单
     List<SystemMenu> getMenu(String id,Integer sort,String role,String menuName,String status);
 
+    //获取菜单包含10A
+    List<SystemMenu> getMenuString();
+
     //插入菜单
     void insertSystemMenu(SystemMenu systemMenu);
 
@@ -30,13 +33,13 @@ public interface LoginService {
     void updateSystemMenu(String id, int upSort,String status,String menuName);
 
     //插入权限
-    void insertSystemPermission(String id, String permissionName, String permissionKey, String parentId, String permissionCode);
+    void insertSystemPermission(String id, String systemUserId, String menuId, String menuKey, String saveKey, String removeKey);
 
     //删除菜单
     void delMenu(String id);
 
     //查询权限
-    List<SystemPermission> getSystemPermission(String parentId, String permissionCode, String id);
+    List<SystemPermission> getSystemPermission(String menuId,String systemUserId, String id);
 
     //删除权限
     void delSystemPermission(String id);
@@ -50,12 +53,9 @@ public interface LoginService {
     //删除系统用户
     void delSystemUser(String id);
 
-    //删除系统用户的权限关联
-    void delSystemRole(String systemUserId);
-
-    //获取系统用户的权限关联
-    List<SystemRole> getSystemRole(String systemUserId);
-
     //获取分配系统权限详情
     List<SystemUserVO> getAppUserMsg(String loginName, String password);
+
+    //添加系统用户
+    void insertSystemUser(SystemUser user);
 }

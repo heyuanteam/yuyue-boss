@@ -14,8 +14,6 @@ public class SystemMenu implements Serializable {
     private String  id;
 //    菜单名称
     private String  menuName;
-//    菜单code
-    private String  menuCode;
 //    上级ID
     private String  parentId;
 //    是否启用

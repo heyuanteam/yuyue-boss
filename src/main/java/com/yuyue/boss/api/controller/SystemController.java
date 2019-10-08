@@ -60,16 +60,6 @@ public class SystemController extends BaseController {
         try {
             PageUtil.getPage(parameterMap.get("page"));
             List<SystemMenu> menuList = loginService.getMenu("", 0, "", parameterMap.get("menuName"), parameterMap.get("status"));
-//        List<Map<String,Object>> list = new ArrayList<>();
-//        for (SystemMenu systemMenu: menuList) {
-//            if(StringUtils.isNotEmpty(systemMenu.getId()) && !"0".equals(systemMenu.getId())){
-//                Map<String,Object> map = new HashMap<>();
-//                List<String> menus = loginService.getMenu(systemMenu.getId());
-//                map.put("menuName",systemMenu.getMenuName());
-//                map.put("menuLsits",menus);
-//                list.add(map);
-//            }
-//        }
             PageUtil pageUtil = new PageUtil(menuList);
             return new ResponseData(pageUtil);
         } catch (Exception e) {
@@ -108,39 +98,17 @@ public class SystemController extends BaseController {
         SystemMenu systemMenu = new SystemMenu();
         try {
             systemMenu.setId(RandomSaltUtil.generetRandomSaltCode(32));
-            int length = String.valueOf(sort).length();
-            String menuCode = "";
-            if (1 == length) {
-                menuCode = "000" + sort;
-            } else if (2 == length) {
-                menuCode = "00" + sort;
-            } else if (3 == length) {
-                menuCode = "0" + sort;
-            } else if (4 == length) {
-                menuCode = "" + sort;
-            }
             systemMenu.setMenuName(parameterMap.get("menuName"));
             systemMenu.setMenuAction(parameterMap.get("menuAction"));
             systemMenu.setRole(parameterMap.get("role"));
-            systemMenu.setMenuCode(menuCode);
             systemMenu.setSort(sort);
             loginService.insertSystemMenu(systemMenu);
-            //插入三条权限记录
-            SystemPermission systemPermission = new SystemPermission();
-            for (int i = 0; i < 3; i++) {
-                if (0 == i) {
-                    systemPermission.setId(RandomSaltUtil.generetRandomSaltCode(32));
-                    systemPermission.setPermissionName(parameterMap.get("menuName"));
-                    systemPermission.setPermissionKey(parameterMap.get("role") + ":menu");
-                    systemPermission.setParentId("00000000000000000000000000000000");
-                    loginService.insertSystemPermission(systemPermission.getId(), systemPermission.getPermissionName(),
-                            systemPermission.getPermissionKey(), systemPermission.getParentId(), menuCode);
-                } else if (1 == i) {
-                    loginService.insertSystemPermission(RandomSaltUtil.generetRandomSaltCode(32), "保存" + parameterMap.get("menuName"),
-                            parameterMap.get("role") + ":save", systemPermission.getId(), menuCode + "0001");
-                } else if (2 == i) {
-                    loginService.insertSystemPermission(RandomSaltUtil.generetRandomSaltCode(32), "删除" + parameterMap.get("menuName"),
-                            parameterMap.get("role") + ":remove", systemPermission.getId(), menuCode + "0002");
+            //插入权限记录
+            List<SystemUser> userList = loginService.getSystemUserMsg("", "", "", "");
+            if (CollectionUtils.isNotEmpty(userList)){
+                for (SystemUser user: userList) {
+                    loginService.insertSystemPermission(RandomSaltUtil.generetRandomSaltCode(32),user.getId(),
+                            systemMenu.getId(),"","","");
                 }
             }
             List<SystemMenu> list = loginService.getMenu("", 0, "", "", "");
@@ -223,15 +191,9 @@ public class SystemController extends BaseController {
                 return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单ID错误！");
             }
             loginService.delMenu(parameterMap.get("id"));
-            List<SystemPermission> list = loginService.getSystemPermission("", menuList.get(0).getMenuCode(),"");
-            if (CollectionUtils.isEmpty(list)) {
-                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "权限ID错误！");
-            }
-            log.info("id=====" + list.get(0).getId());
-            loginService.delSystemPermission(list.get(0).getId());
-            List<SystemPermission> list2 = loginService.getSystemPermission(list.get(0).getId(), "","");
-            if (CollectionUtils.isNotEmpty(list2)) {
-                for (SystemPermission systemPermission : list2) {
+            List<SystemPermission> list = loginService.getSystemPermission(parameterMap.get("id"),"","");
+            if (CollectionUtils.isNotEmpty(list)) {
+                for (SystemPermission systemPermission : list) {
                     loginService.delSystemPermission(systemPermission.getId());
                 }
             }
@@ -266,7 +228,7 @@ public class SystemController extends BaseController {
     }
 
     /**
-     * 添加系统用户
+     * 添加系统用户和添加权限
      *
      * @return
      */
@@ -285,8 +247,6 @@ public class SystemController extends BaseController {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "系统职称不可以为空！");
         } else if (StringUtils.isEmpty(parameterMap.get("phone"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "手机号不可以为空！");
-        } else if (StringUtils.isEmpty(parameterMap.get("createUserId"))){
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "创建人的ID不可以为空！");
         }
         List<SystemUser> loginName = loginService.getSystemUser("", "", parameterMap.get("loginName"),"");
         if (CollectionUtils.isNotEmpty(loginName)){
@@ -299,7 +259,16 @@ public class SystemController extends BaseController {
             user.setPassword(parameterMap.get("password"));
             user.setSystemName(parameterMap.get("systemName"));
             user.setPhone(parameterMap.get("phone"));
-            user.setCreateUserId(parameterMap.get("createUserId"));
+            user.setCreateUserId(systemUser.getId());
+            loginService.insertSystemUser(user);
+
+            List<SystemMenu> menuList = loginService.getMenuString();
+            if (CollectionUtils.isNotEmpty(menuList)){
+                for (SystemMenu systemMenu: menuList) {
+                    loginService.insertSystemPermission(RandomSaltUtil.generetRandomSaltCode(32),user.getId(),
+                            systemMenu.getId(),"","","");
+                }
+            }
             return new ResponseData(CodeEnum.SUCCESS);
         } catch (Exception e) {
             log.info("===========>>>>>>添加系统用户失败！");
@@ -364,20 +333,18 @@ public class SystemController extends BaseController {
         if (StringUtils.isEmpty(parameterMap.get("id"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "系统用户ID不可以为空！");
         }
-
-        List<SystemUser> list = new ArrayList<>();
         if (StringUtils.isNotEmpty(parameterMap.get("id"))) {
-            list = loginService.getSystemUser("", "", "",parameterMap.get("id"));
+            List<SystemUser> list = loginService.getSystemUser("", "", "",parameterMap.get("id"));
             if (CollectionUtils.isEmpty(list)) {
                 return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "系统用户ID错误！");
             }
         }
         try {
             loginService.delSystemUser(parameterMap.get("id"));
-            List<SystemRole> idList = loginService.getSystemRole(parameterMap.get("id"));
-            if (CollectionUtils.isNotEmpty(idList)){
-                for (SystemRole systemRole : idList) {
-                    loginService.delSystemRole(systemRole.getSystemUserId());
+            List<SystemPermission> SystemPermissionList = loginService.getSystemPermission("",parameterMap.get("id"),"");
+            if (CollectionUtils.isNotEmpty(SystemPermissionList)){
+                for (SystemPermission systemPermission : SystemPermissionList) {
+                    loginService.delSystemPermission(systemPermission.getId());
                 }
             }
             return new ResponseData(CodeEnum.SUCCESS);
@@ -407,29 +374,6 @@ public class SystemController extends BaseController {
         } catch (Exception e) {
             log.info("===========>>>>>>获取系统用户失败！");
             return new ResponseData(CodeEnum.E_400.getCode(),"获取系统用户失败！");
-        }
-    }
-
-    /**
-     * 获取系统权限列表
-     *
-     * @return
-     */
-    @RequestMapping(value = "/getSystemPermission")
-    @ResponseBody
-    @RequiresPermissions("PermissionManager:menu")
-    @LoginRequired
-    public ResponseData getSystemPermission(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("获取系统权限列表----------->>/system/getSystemPermission");
-        Map<String, String> parameterMap = getParameterMap(request, response);
-        try {
-            PageUtil.getPage(parameterMap.get("page"));
-            List<SystemPermission> list = loginService.getSystemPermission("","","");
-            PageUtil pageUtil = new PageUtil(list);
-            return new ResponseData(pageUtil);
-        } catch (Exception e) {
-            log.info("===========>>>>>>获取系统权限列表失败！");
-            return new ResponseData(CodeEnum.E_400.getCode(),"获取系统权限列表失败！");
         }
     }
 

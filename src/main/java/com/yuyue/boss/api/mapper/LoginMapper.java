@@ -13,13 +13,13 @@ import java.util.List;
 @Repository
 public interface LoginMapper extends MyBaseMapper<SystemUser> {
 
-    SystemUser getSystemUserMsg(@Param("loginName") String loginName, @Param("password") String password,@Param("id") String id,
+    List<SystemUser> getSystemUserMsg(@Param("loginName") String loginName, @Param("password") String password,@Param("id") String id,
                                 @Param("phone") String phone);
 
-    @Select("SELECT h.permissionKey FROM yuyue_system_user b,yuyue_system_role c,yuyue_system_menu d,yuyue_system_permission h" +
-            " WHERE b.id = #{systemUserId} AND b.`status` = '10B' AND d.id = c.menuId AND d.`status` = '10B'" +
-            "   AND h.id = c.permissionId AND h.`status` = '10B' AND c.`status` = '10B' ORDER BY h.permissionCode")
-    List<String> getSystemUserVO(@Param("systemUserId") String systemUserId);
+    @Select("SELECT c.menuKey,c.saveKey,c.removeKey FROM yuyue_system_user b,yuyue_system_menu d,yuyue_system_permission c" +
+            " WHERE b.id =#{systemUserId} AND d.id = c.menuId " +
+            "  AND b.`status` = '10B' AND d.`status` = '10B' AND c.`status` = '10B' ORDER BY d.sort")
+    List<SystemPermission> getSystemUserVO(@Param("systemUserId") String systemUserId);
 
     List<SystemMenu> getMenuList(@Param("loginName") String loginName, @Param("password") String password);
 
@@ -27,8 +27,8 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
                              @Param("menuName")String menuName,@Param("status")String status);
 
     @Transactional
-    @Insert("replace into yuyue_system_menu (id,menuName,menuCode,menuAction,sort,role)  values  " +
-            "(#{id},#{menuName},#{menuCode},#{menuAction},#{sort},#{role})")
+    @Insert("INSERT into yuyue_system_menu (id,menuName,menuAction,sort,role)  values  " +
+            "(#{id},#{menuName},#{menuAction},#{sort},#{role})")
     @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
     void insertSystemMenu(SystemMenu systemMenu);
 
@@ -36,18 +36,17 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     void updateSystemMenu(@Param("id")String id,@Param("upSort") int upSort,@Param("status")String status,@Param("menuName")String menuName);
 
     @Transactional
-    @Insert("replace into yuyue_system_permission (id,permissionName,permissionKey,parentId,permissionCode)  values  " +
-            "(#{id},#{permissionName},#{permissionKey},#{parentId},#{permissionCode})")
+    @Insert("INSERT into yuyue_system_permission (id,systemUserId,menuId,menuKey,saveKey,removeKey)  values  " +
+            "(#{id},#{systemUserId},#{menuId},#{menuKey},#{saveKey},#{removeKey})")
     @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
-    void insertSystemPermission(@Param("id") String id,@Param("permissionName") String permissionName,
-                                @Param("permissionKey") String permissionKey, @Param("parentId") String parentId,
-                                @Param("permissionCode") String permissionCode);
+    void insertSystemPermission(@Param("id") String id,@Param("systemUserId") String systemUserId, @Param("menuId") String menuId,
+                                @Param("menuKey") String menuKey, @Param("saveKey") String saveKey, @Param("removeKey") String removeKey);
 
     @Transactional
     @Delete("DELETE FROM yuyue_system_menu WHERE id =#{id} ")
     void delMenu(@Param("id") String id);
 
-    List<SystemPermission> getSystemPermission(@Param("parentId")String parentId,@Param("permissionCode") String permissionCode,
+    List<SystemPermission> getSystemPermission(@Param("menuId")String menuId,@Param("systemUserId")String systemUserId,
                                                @Param("id") String id);
 
     @Transactional
@@ -64,12 +63,13 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     @Delete("DELETE FROM yuyue_system_user WHERE id =#{id} ")
     void delSystemUser(@Param("id")String id);
 
-    @Transactional
-    @Delete("DELETE FROM yuyue_system_role WHERE systemUserId =#{systemUserId} ")
-    void delSystemRole(@Param("systemUserId")String systemUserId);
-
-    @Select("SELECT * FROM yuyue_system_role WHERE systemUserId =#{systemUserId}")
-    List<SystemRole> getSystemRole(@Param("systemUserId")String systemUserId);
-
     List<SystemUserVO> getAppUserMsg(@Param("loginName")String loginName,@Param("password") String password);
+
+    List<SystemMenu> getMenuString();
+
+    @Transactional
+    @Insert("INSERT into yuyue_system_user (id,loginName,password,systemName,phone,createUserId)  values  " +
+            "(#{id},#{loginName},#{password},#{systemName},#{phone},#{createUserId})")
+    @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
+    void insertSystemUser(SystemUser systemUser);
 }

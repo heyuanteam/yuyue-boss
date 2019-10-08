@@ -8,6 +8,8 @@ import com.yuyue.boss.api.domain.*;
 import com.yuyue.boss.api.mapper.LoginMapper;
 import com.yuyue.boss.api.service.LoginService;
 import com.yuyue.boss.utils.BeanUtil;
+import com.yuyue.boss.utils.StringUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,14 +31,29 @@ public class LoginServiceImpl implements LoginService {
     private LoginMapper loginMapper;
 
     @Override
-    public SystemUser getSystemUserMsg(String loginName,String password,String id,String phone) { return loginMapper.getSystemUserMsg(loginName,password,id,phone); }
+    public List<SystemUser> getSystemUserMsg(String loginName,String password,String id,String phone) { return loginMapper.getSystemUserMsg(loginName,password,id,phone); }
 
 
     @Override
     public UserVO getUser(String loginName, String password) {
-        SystemUser systemUser = getSystemUserMsg(loginName, password,"","");
-        UserVO userVO = BeanUtil.copyProperties(systemUser, UserVO.class);
-        userVO.setPermissions(loginMapper.getSystemUserVO(systemUser.getId()));
+        List<SystemUser> systemUser = getSystemUserMsg(loginName, password,"","");
+        UserVO userVO = BeanUtil.copyProperties(systemUser.get(0), UserVO.class);
+        List<SystemPermission> list = loginMapper.getSystemUserVO(systemUser.get(0).getId());
+        List<String> arrayList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(list)) {
+            for (SystemPermission systemPermission: list) {
+                if (StringUtils.isNotEmpty(systemPermission.getMenuKey())) {
+                    arrayList.add(systemPermission.getMenuKey());
+                }
+                if (StringUtils.isNotEmpty(systemPermission.getSaveKey())){
+                    arrayList.add(systemPermission.getSaveKey());
+                }
+                if (StringUtils.isNotEmpty(systemPermission.getRemoveKey())){
+                    arrayList.add(systemPermission.getRemoveKey());
+                }
+            }
+        }
+        userVO.setPermissions(arrayList);
         userVO.setToken(getToken(userVO));
         return userVO;
     }
@@ -65,21 +83,25 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
+    public List<SystemMenu> getMenuString() { return loginMapper.getMenuString();}
+
+    @Override
     public void insertSystemMenu(SystemMenu systemMenu) { loginMapper.insertSystemMenu(systemMenu); }
 
     @Override
     public void updateSystemMenu(String id, int upSort,String status,String menuName) { loginMapper.updateSystemMenu(id,upSort,status,menuName); }
 
     @Override
-    public void insertSystemPermission(String id, String permissionName, String permissionKey, String parentId, String permissionCode) {
-       loginMapper.insertSystemPermission(id,permissionName,permissionKey,parentId,permissionCode); }
+    public void insertSystemPermission(String id, String systemUserId, String menuId, String menuKey, String saveKey, String removeKey) {
+        loginMapper.insertSystemPermission(id,systemUserId,menuId,menuKey,saveKey,removeKey);
+    }
 
     @Override
     public void delMenu(String id) { loginMapper.delMenu(id);}
 
     @Override
-    public List<SystemPermission> getSystemPermission(String parentId, String permissionCode,String id) {
-        return loginMapper.getSystemPermission(parentId,permissionCode,id);
+    public List<SystemPermission> getSystemPermission(String menuId,String systemUserId,String id) {
+        return loginMapper.getSystemPermission(menuId,systemUserId,id);
     }
 
     @Override
@@ -97,11 +119,8 @@ public class LoginServiceImpl implements LoginService {
     public void delSystemUser(String id) { loginMapper.delSystemUser(id); }
 
     @Override
-    public void delSystemRole(String systemUserId) { loginMapper.delSystemRole(systemUserId); }
-
-    @Override
-    public List<SystemRole> getSystemRole(String systemUserId) { return loginMapper.getSystemRole(systemUserId); }
-
-    @Override
     public List<SystemUserVO> getAppUserMsg(String loginName, String password) { return loginMapper.getAppUserMsg(loginName,password); }
+
+    @Override
+    public void insertSystemUser(SystemUser user) { loginMapper.insertSystemUser(user); }
 }
