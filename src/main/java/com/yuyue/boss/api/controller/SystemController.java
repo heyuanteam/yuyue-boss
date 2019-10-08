@@ -383,12 +383,12 @@ public class SystemController extends BaseController {
         log.info("获取用户分配系统权限详情----------->>/system/getSystemPermissionList");
         Map<String, String> parameterMap = getParameterMap(request, response);
         try {
-//            List<SystemUser> userList = loginService.getSystemUser("", "", "", "");
-//            if (CollectionUtils.isEmpty(userList)){
-//                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "搜索的不存在！");
-//            }
+            List<SystemUser> userList = loginService.getSystemUser("", "", "", parameterMap.get("id"));
+            if (CollectionUtils.isEmpty(userList)){
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "用户不存在！");
+            }
             PageUtil.getPage(parameterMap.get("page"));
-            List<SystemUserVO> systemUserVO = loginService.getAppUserMsg(parameterMap.get("loginName"),parameterMap.get("password"));
+            List<SystemUserVO> systemUserVO = loginService.getAppUserMsg(userList.get(0).getLoginName(),userList.get(0).getPassword());
             if (CollectionUtils.isEmpty(systemUserVO)){
                 return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "搜索的不存在！");
             }

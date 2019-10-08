@@ -48,5 +48,7 @@ public class SystemUserVO implements Serializable {
     private String systemMeuPantId;
 //    菜单名称
     private String menuName;
+//    菜单权限
+    private String role;
 
 }
