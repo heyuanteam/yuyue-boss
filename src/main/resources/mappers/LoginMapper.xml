@@ -132,7 +132,7 @@
         <if test="status!=null and status!=''">  and b.status = #{status}  </if>
         <if test="id!=null and id!=''">  and b.id = #{id}  </if>
         <if test="typeName!=null and typeName!='' ">  and b.typeName like concat('%', #{typeName}, '%')</if>
-        order by b.typeCode
+        order by b.sort
     </select>
 
     <!-- 修改系统字典 -->
@@ -141,6 +141,32 @@
         <set>
             <if test="typeName!=null and typeName!=''">
                 b.typeName = #{typeName},
+            </if>
+            <if test="status!=null and status!=''">
+                b.status = #{status},
+            </if>
+        </set>
+        WHERE 1=1
+        <if test="id!=null and id!=''">
+            and b.id = #{id}
+        </if>
+    </update>
+
+    <!-- 获取系统字典下级 -->
+    <select id="getLookupCdeList" resultType="com.yuyue.boss.api.domain.LookupCdeConfig" parameterType="String">
+        SELECT b.*
+        from yuyue_system_config b where 1=1
+        <if test="id!=null and id!=''">  and b.id = #{id}  </if>
+        <if test="systemId!=null and systemId!=''">  and b.systemId = #{systemId}  </if>
+        order by b.createTime
+    </select>
+
+    <!-- 修改系统字典下级 -->
+    <update id="updateLookupCdeList" parameterType="String">
+        UPDATE yuyue_system_config b
+        <set>
+            <if test="type!=null and type!=''">
+                b.type = #{type},
             </if>
             <if test="status!=null and status!=''">
                 b.status = #{status},
