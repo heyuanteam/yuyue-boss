@@ -73,7 +73,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public List<SystemMenu> getMenuList(String loginName, String password){
+    public List<SystemMenuVo> getMenuList(String loginName, String password){
         return loginMapper.getMenuList(loginName,password);
     }
 

@@ -18,7 +18,7 @@ public interface LoginService {
     String getToken(UserVO systemUser);
 
     //获取菜单列表
-    List<SystemMenu> getMenuList(String loginName, String password);
+    List<SystemMenuVo> getMenuList(String loginName, String password);
 
     //获取菜单
     List<SystemMenu> getMenu(String id,Integer sort,String role,String menuName,String status);

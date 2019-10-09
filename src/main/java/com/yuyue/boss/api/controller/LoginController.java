@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.SystemMenu;
+import com.yuyue.boss.api.domain.SystemMenuVo;
 import com.yuyue.boss.api.domain.SystemUser;
 import com.yuyue.boss.api.domain.UserVO;
 import com.yuyue.boss.api.service.LoginService;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -66,6 +68,9 @@ public class LoginController extends BaseController{
         if(StringUtils.isNull(userVO)){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"用户名或密码不正确！");
         }
+        if ("10A".equals(userVO.getStatus())) {
+            return new ResponseData(CodeEnum.E_502.getCode(),"该账号已禁用！");
+        }
         Subject currentUser = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(loginName, password);
         try {
@@ -80,7 +85,14 @@ public class LoginController extends BaseController{
                     user.getPermissions(), Constants.REDIS_SHIRO_TOKEN_EXPIRES);
 
 //            获取菜单
-            List<SystemMenu> menuList = loginService.getMenuList(user.getLoginName(), user.getPassword());
+            List<SystemMenuVo> menuList = loginService.getMenuList(user.getLoginName(), user.getPassword());
+            Iterator<SystemMenuVo> iterator = menuList.iterator();
+            while (iterator.hasNext()) {
+                SystemMenuVo systemMenuVo = iterator.next();
+                if (StringUtils.isEmpty(systemMenuVo.getMenuKey())){
+                    iterator.remove();
+                }
+            }
             Map<String,Object> map = Maps.newHashMap();
             map.put("menu",menuList);
             map.put("user",user);
@@ -112,7 +124,9 @@ public class LoginController extends BaseController{
         if(CollectionUtils.isEmpty(systemUser)){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"用户名或密码不正确！");
         }
-
+        if ("10A".equals(systemUser.get(0).getStatus())) {
+            return new ResponseData(CodeEnum.E_502.getCode(),"该账号已禁用！");
+        }
         Subject currentUser = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(systemUser.get(0).getLoginName(), systemUser.get(0).getPassword());
         try {
@@ -123,7 +137,14 @@ public class LoginController extends BaseController{
                     user.getPermissions(), Constants.REDIS_SHIRO_TOKEN_EXPIRES);
 
 //            获取菜单
-            List<SystemMenu> menuList = loginService.getMenuList(user.getLoginName(), user.getPassword());
+            List<SystemMenuVo> menuList = loginService.getMenuList(user.getLoginName(), user.getPassword());
+            Iterator<SystemMenuVo> iterator = menuList.iterator();
+            while (iterator.hasNext()) {
+                SystemMenuVo systemMenuVo = iterator.next();
+                if (StringUtils.isEmpty(systemMenuVo.getMenuKey())){
+                    iterator.remove();
+                }
+            }
             Map<String,Object> map = Maps.newHashMap();
             map.put("menu",menuList);
             map.put("user",user);

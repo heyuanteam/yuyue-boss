@@ -21,7 +21,7 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
             "  AND b.`status` = '10B' AND d.`status` = '10B' AND c.`status` = '10B' ORDER BY d.sort")
     List<SystemPermission> getSystemUserVO(@Param("systemUserId") String systemUserId);
 
-    List<SystemMenu> getMenuList(@Param("loginName") String loginName, @Param("password") String password);
+    List<SystemMenuVo> getMenuList(@Param("loginName") String loginName, @Param("password") String password);
 
     List<SystemMenu> getMenu(@Param("id") String id,@Param("sort") Integer sort,@Param("role") String role,
                              @Param("menuName")String menuName,@Param("status")String status);
