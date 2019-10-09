@@ -1,9 +1,6 @@
 package com.yuyue.boss.api.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.*;
@@ -97,7 +94,19 @@ public class SystemController extends BaseController {
         }
         List<SystemMenu> roleList = loginService.getMenu("", 0, parameterMap.get("role"), "", "");
         if (CollectionUtils.isNotEmpty(roleList)) {
-            return new ResponseData(CodeEnum.SUCCESS.getCode(), "菜单权限已经存在！");
+            for (SystemMenu systemMenu:roleList) {
+                if (parameterMap.get("role").equals(systemMenu.getRole())){
+                    return new ResponseData(CodeEnum.SUCCESS.getCode(), "菜单权限已经存在！");
+                }
+            }
+        }
+        List<SystemMenu> menuNameList = loginService.getMenu("", 0, "", parameterMap.get("menuName"), "");
+        if (CollectionUtils.isNotEmpty(menuNameList)) {
+            for (SystemMenu systemMenu:menuNameList) {
+                if (parameterMap.get("menuName").equals(systemMenu.getMenuName())){
+                    return new ResponseData(CodeEnum.SUCCESS.getCode(), "菜单名称已经存在！");
+                }
+            }
         }
 
         List<SystemMenu> menuList = loginService.getMenu("", 0, "", "", "");
@@ -177,7 +186,11 @@ public class SystemController extends BaseController {
             if (!parameterMap.get("menuName").equals(list.get(0).getMenuName())) {
                 List<SystemMenu> menuNameList = loginService.getMenu("", 0, "", parameterMap.get("menuName"), "");
                 if (CollectionUtils.isNotEmpty(menuNameList)) {
-                    return new ResponseData(CodeEnum.SUCCESS.getCode(), "菜单名称已经存在！");
+                    for (SystemMenu systemMenu:menuNameList) {
+                        if (parameterMap.get("menuName").equals(systemMenu.getMenuName())){
+                            return new ResponseData(CodeEnum.SUCCESS.getCode(), "菜单名称已经存在！");
+                        }
+                    }
                 }
             }
             loginService.updateSystemMenu(parameterMap.get("id"), 0, parameterMap.get("status"), parameterMap.get("menuName"));
@@ -275,7 +288,11 @@ public class SystemController extends BaseController {
         }
         List<SystemUser> loginName = loginService.getSystemUser("", "", parameterMap.get("loginName"),"");
         if (CollectionUtils.isNotEmpty(loginName)){
-            return new ResponseData(CodeEnum.E_10009.getCode(), "登录名已经存在！");
+            for (SystemUser user:loginName) {
+                if (parameterMap.get("loginName").equals(user.getLoginName())){
+                    return new ResponseData(CodeEnum.SUCCESS.getCode(), "登录名已经存在！");
+                }
+            }
         }
         SystemUser user = new SystemUser();
         try {
@@ -334,9 +351,13 @@ public class SystemController extends BaseController {
             return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改的用户不存在！");
         }
         if (!parameterMap.get("loginName").equals(list.get(0).getLoginName())) {
-            List<SystemUser> loginName = loginService.getSystemUser("", "", parameterMap.get("loginName"),"");
-            if (CollectionUtils.isNotEmpty(loginName)) {
-                return new ResponseData(CodeEnum.E_10009.getCode(), "登录名已经存在！");
+            List<SystemUser> userList = loginService.getSystemUser("", "", parameterMap.get("loginName"),"");
+            if (CollectionUtils.isNotEmpty(userList)) {
+                for (SystemUser user:userList) {
+                    if (parameterMap.get("loginName").equals(user.getLoginName())){
+                        return new ResponseData(CodeEnum.SUCCESS.getCode(), "登录名已经存在！");
+                    }
+                }
             }
         }
         try {
@@ -498,9 +519,13 @@ public class SystemController extends BaseController {
         if (StringUtils.isEmpty(parameterMap.get("typeName"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典名称不可以为空！");
         }
-        List<LookupCde> menuList = loginService.getLookupCdeSystem("", parameterMap.get("typeName"),"");
-        if (CollectionUtils.isNotEmpty(menuList)){
-            return new ResponseData(CodeEnum.SUCCESS.getCode(), "字典名称已经存在！");
+        List<LookupCde> LookupCdeList = loginService.getLookupCdeSystem("", parameterMap.get("typeName"),"");
+        if (CollectionUtils.isNotEmpty(LookupCdeList)){
+            for (LookupCde lookupCde:LookupCdeList) {
+                if (parameterMap.get("typeName").equals(lookupCde.getTypeName())){
+                    return new ResponseData(CodeEnum.SUCCESS.getCode(), "字典名称已经存在！");
+                }
+            }
         }
         try {
             List<LookupCde> list = loginService.getLookupCdeSystem("", "","");
@@ -544,9 +569,13 @@ public class SystemController extends BaseController {
             return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改字典不存在！");
         }
         if (!parameterMap.get("typeName").equals(list.get(0).getTypeName())) {
-            List<LookupCde> menuList = loginService.getLookupCdeSystem("", parameterMap.get("typeName"),"");
-            if (CollectionUtils.isNotEmpty(menuList)){
-                return new ResponseData(CodeEnum.SUCCESS.getCode(), "字典名称已经存在！");
+            List<LookupCde> LookupCdeList = loginService.getLookupCdeSystem("", parameterMap.get("typeName"),"");
+            if (CollectionUtils.isNotEmpty(LookupCdeList)){
+                for (LookupCde lookupCde:LookupCdeList) {
+                    if (parameterMap.get("typeName").equals(lookupCde.getTypeName())){
+                        return new ResponseData(CodeEnum.SUCCESS.getCode(), "字典名称已经存在！");
+                    }
+                }
             }
         }
         try {

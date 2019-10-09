@@ -7,14 +7,13 @@
     <select id="getAppUserMsg" resultType="com.yuyue.boss.api.domain.SystemUserVO" parameterType="String">
         SELECT b.id systemUserId,b.loginName,b.systemName,b.phone,b.`status` systemUserStatus,
             c.id systemPermissionId,c.`status` systemPermissionStatus,c.menuKey,c.saveKey,c.removeKey,
-            DATE_FORMAT(c.UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') createTime,DATE_FORMAT(c.UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') updateTime,
+            DATE_FORMAT(c.CREATE_TIME ,'%Y-%m-%d %H:%i:%s') createTime,DATE_FORMAT(c.UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') updateTime,
             d.id systemMeuId,d.`status` systemMenuStatus,d.menuAction,d.parentId systemMeuPantId,d.menuName,d.role
         FROM yuyue_system_user b,yuyue_system_menu d,yuyue_system_permission c
         WHERE b.id = c.systemUserId AND d.id = c.menuId
         <if test="loginName!=null and loginName!=''">  and b.loginName = #{loginName}  </if>
         <if test="password!=null and password!='' ">  and b.`password` = #{password}  </if>
           /*AND b.`status` = '10B' AND d.`status` = '10B' AND c.`status` = '10B'*/
-
         ORDER BY d.sort
     </select>
 

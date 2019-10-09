@@ -16,9 +16,8 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     List<SystemUser> getSystemUserMsg(@Param("loginName") String loginName, @Param("password") String password,@Param("id") String id,
                                 @Param("phone") String phone);
 
-    @Select("SELECT c.menuKey,c.saveKey,c.removeKey FROM yuyue_system_user b,yuyue_system_menu d,yuyue_system_permission c" +
-            " WHERE b.id =#{systemUserId} AND d.id = c.menuId " +
-            "  AND b.`status` = '10B' AND d.`status` = '10B' AND c.`status` = '10B' ORDER BY d.sort")
+    @Select("SELECT c.menuKey,c.saveKey,c.removeKey FROM yuyue_system_permission c" +
+            " WHERE c.systemUserId =#{systemUserId} AND c.`status` = '10B' ORDER BY c.CREATE_TIME")
     List<SystemPermission> getSystemUserVO(@Param("systemUserId") String systemUserId);
 
     List<SystemMenuVo> getMenuList(@Param("loginName") String loginName, @Param("password") String password);

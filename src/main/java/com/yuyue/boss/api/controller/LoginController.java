@@ -1,5 +1,6 @@
 package com.yuyue.boss.api.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
@@ -83,7 +84,6 @@ public class LoginController extends BaseController{
             user.setToken(loginService.getToken(user));
             redisUtil.setString(Constants.REDIS_KEY_PREFIX_SHIRO_TOKEN + user.getToken(),
                     user.getPermissions(), Constants.REDIS_SHIRO_TOKEN_EXPIRES);
-
 //            获取菜单
             List<SystemMenuVo> menuList = loginService.getMenuList(user.getLoginName(), user.getPassword());
             Iterator<SystemMenuVo> iterator = menuList.iterator();
