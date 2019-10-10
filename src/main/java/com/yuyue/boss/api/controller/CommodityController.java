@@ -37,6 +37,13 @@ public class CommodityController extends BaseController {
     @Autowired
     private CommodityService commodityService;
 
+    /**
+     * 获取爆款列表及搜索
+     * @param commodity
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping("/getCommodityList")
     @ResponseBody
     @RequiresPermissions("explosive:menu")//具有 user:detail 权限的用户才能访问此方法
@@ -62,7 +69,11 @@ public class CommodityController extends BaseController {
         return new ResponseData(commodityInfo, currentPage,(int) total,pages);
     }
 
-
+    /**
+     * 获取爆款详情
+     * @param id
+     * @return
+     */
     @RequestMapping("/getCommodityInfoById")
     @ResponseBody
     @RequiresPermissions("explosive:menu")//具有 user:detail 权限的用户才能访问此方法
@@ -76,7 +87,11 @@ public class CommodityController extends BaseController {
     }
 
 
-
+    /**
+     * 删除爆款
+     * @param id
+     * @return
+     */
     @RequestMapping("/deleteCommodity")
     @ResponseBody
     @RequiresPermissions("explosive:remove")//具有 user:detail 权限的用户才能访问此方法
@@ -142,8 +157,6 @@ public class CommodityController extends BaseController {
                 e.printStackTrace();
             }
 */
-
-
             System.out.println("开始时间："+commodity.getStartDate());
             System.out.println("结束时间："+commodity.getEndDate());
 

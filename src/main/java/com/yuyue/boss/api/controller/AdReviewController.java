@@ -34,6 +34,12 @@ public class AdReviewController extends BaseController {
     @Autowired
     private AppUserService appUserService;
 
+    /**
+     * 广告商审核列表
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping("/getAdReviewList")
     @ResponseBody
     @RequiresPermissions("advertisement:menu")//具有 user:detail 权限的用户才能访问此方法
@@ -56,6 +62,12 @@ public class AdReviewController extends BaseController {
         return new ResponseData(adReviewList, currentPage,(int) total,pages);
     }
 
+    /**
+     * 修改广告商审核状态
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping("/updateAdReviewStatus")
     @ResponseBody
     @RequiresPermissions("advertisement:save")//具有 user:detail 权限的用户才能访问此方法
@@ -86,8 +98,6 @@ public class AdReviewController extends BaseController {
                 return new ResponseData(CodeEnum.E_400);
             appUserService.updateAppUser(appUserMsg);
         }
-
-
         else
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"type参数错误！！");
         return new ResponseData();

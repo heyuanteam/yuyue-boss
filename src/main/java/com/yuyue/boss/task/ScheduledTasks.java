@@ -27,7 +27,7 @@ public class ScheduledTasks {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
-    private PayService pyService;a
+    private PayService payService;
     @Autowired
     private YuYueSiteService yuYueSiteService;
     @Autowired
@@ -43,19 +43,16 @@ public class ScheduledTasks {
         c.add(Calendar.MINUTE,-30);
         String startTime = dateFormat.format(c.getTime());
         System.out.println("========>>>"+startTime);
-        List<Order> list = pyService.findOrderList(startTime);
+        List<Order> list = payService.findOrderList(startTime);
         if(CollectionUtils.isNotEmpty(list)){
             for (Order order: list) {
                 log.info("订单"+order.getOrderNo()+"=====金额："+order.getMoney()+">>>>>>>>>>>已超时");
-                pyService.updateOrderStatus("ERROR", "支付超时", "10D", order.getOrderNo());
+                payService.updateOrderStatus("ERROR", "支付超时", "10D", order.getOrderNo());
             }
         }
         log.info("订单支付超时判断结束==================================>>>>>>>>>>>");
     }
 
-    /**
-     * 8小时执行一次（执行娱悦现场定时任务）
-     *
     /**
      * 8小时执行一次（执行娱悦现场定时任务）
      */
@@ -114,7 +111,7 @@ public class ScheduledTasks {
 
 
     /**
-     * 8小时执行一次（执行娱悦现场定时任务）
+     * 8小时执行一次（执行爆款定时任务）
      */
     @Scheduled(cron = "0 0 8 * * ?")
     private void updateCommodityEndStatus(){

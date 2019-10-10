@@ -19,6 +19,9 @@ public class CommodityServiceImpl implements CommodityService {
     private CommodityMapper commodityMapper;
 
 
+    /**
+     * 获取爆款详情
+     */
     @Override
     public Commodity getCommodityInfoById(String id) {
         List<Commodity> commodityInfo = commodityMapper.getCommodityInfo(id, "", "", "", "", "");
@@ -26,17 +29,24 @@ public class CommodityServiceImpl implements CommodityService {
         else return null;
     }
 
+    /**
+     * 获取爆款列表及搜索
+     */
     @Override
     public List<Commodity> getCommodityInfo( String commodityId,String commodityName, String category,String status,
                                             String startTime, String endTime) {
         return commodityMapper.getCommodityInfo(commodityId,commodityName,category,status,startTime,endTime);
     }
-
+    /**
+     * 删除爆款
+     */
     @Override
     public void deleteCommodity(String id) {
         commodityMapper.deleteCommodityByPrimaryKey(id);
     }
-
+    /**
+     * 修改商品状态及发布时间
+     */
     @Override
     public void updateCommodityInfo(Commodity commodity) {
         commodityMapper.updateCommodityInfo(commodity);
