@@ -11,6 +11,8 @@ import com.yuyue.boss.api.domain.SystemUser;
 import com.yuyue.boss.api.service.LoginService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
+import com.yuyue.boss.utils.HttpUtils;
+import com.yuyue.boss.utils.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +38,11 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         //解决一下跨域问题
-        response.setHeader("Access-Control-Allow-Origin", "*");
+        if (httpRequest.getMethod().equals(RequestMethod.OPTIONS.name())) {
+            HttpUtils.setHeader(httpRequest,httpResponse);
+            return true;
+        }
+
         ResponseData returnResult=new ResponseData();
         // 如果不是映射到方法直接通过
         if (!(handler instanceof HandlerMethod)) {

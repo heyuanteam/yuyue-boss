@@ -49,7 +49,7 @@ public class ScheduledTasks {
     }
 
     /**
-     *8小时执行一次（执行娱悦现场定时任务）
+     * 8小时执行一次（执行娱悦现场定时任务）
      */
     @Scheduled(cron = "0 0 8 * * ?")
     private void updateYuYueSiteStartStatus(){

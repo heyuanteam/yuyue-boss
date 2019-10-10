@@ -8,6 +8,7 @@ import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.QRCodeUtil;
 import com.yuyue.boss.utils.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/qrCode", produces = "application/json; charset=UTF-8")
+@Slf4j
 public class QRCodeController extends BaseController{
-    private static Logger log = LoggerFactory.getLogger(LoginController.class);
     @Autowired
     private YuYueSiteService yuYueSiteService;
     /**

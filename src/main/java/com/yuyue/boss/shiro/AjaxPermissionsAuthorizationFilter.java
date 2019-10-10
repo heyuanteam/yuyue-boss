@@ -2,6 +2,7 @@ package com.yuyue.boss.shiro;
 
 import com.alibaba.fastjson.JSONObject;
 import com.yuyue.boss.enums.CodeEnum;
+import com.yuyue.boss.utils.HttpUtils;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -30,24 +31,23 @@ public class AjaxPermissionsAuthorizationFilter extends FormAuthenticationFilter
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         //解决一下跨域问题
-        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+        HttpUtils.setHeader(httpServletRequest,httpServletResponse);
 
         JSONObject jsonObject = new JSONObject();
-            jsonObject.put("code", CodeEnum.E_20011.getCode());
-            jsonObject.put("message", CodeEnum.E_20011.getMessage());
-            try {
-                httpServletResponse.setCharacterEncoding("UTF-8");
-                httpServletResponse.setContentType("application/json");
-                out = response.getWriter();
-                out.println(jsonObject);
-            } catch (Exception e) {
-            } finally {
-                if (null != out) {
-                    out.flush();
-                    out.close();
-                }
+        jsonObject.put("code", CodeEnum.E_20011.getCode());
+        jsonObject.put("message", CodeEnum.E_20011.getMessage());
+        try {
+            httpServletResponse.setCharacterEncoding("UTF-8");
+            httpServletResponse.setContentType("application/json");
+            out = response.getWriter();
+            out.println(jsonObject);
+        } catch (Exception e) {
+        } finally {
+            if (null != out) {
+                out.flush();
+                out.close();
             }
-//        }
+        }
         return false;
     }
 

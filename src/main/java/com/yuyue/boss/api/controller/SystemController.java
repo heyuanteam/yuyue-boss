@@ -10,6 +10,7 @@ import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.PageUtil;
 import com.yuyue.boss.utils.RandomSaltUtil;
 import com.yuyue.boss.utils.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -31,8 +32,8 @@ import java.util.Map;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/system", produces = "application/json; charset=UTF-8")
+@Slf4j
 public class SystemController extends BaseController {
-    private static Logger log = LoggerFactory.getLogger(SystemController.class);
 
     @Autowired
     private LoginService loginService;

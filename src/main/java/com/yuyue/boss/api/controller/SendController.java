@@ -6,6 +6,7 @@ import com.yuyue.boss.config.JPushClients;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.RedisUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +22,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value="/send", produces = "application/json; charset=UTF-8")
+@Slf4j
 public class SendController extends BaseController{
-    private static Logger log = LoggerFactory.getLogger(SendController.class);
 
     @Autowired
     private JPushClients jPushClients;
@@ -62,9 +63,9 @@ public class SendController extends BaseController{
                         jPushClients.sendToAll(jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), jPush.getExtras(),
                                 apnsProduction,masterSecret,appKey);
                         sendService.updateValid("10B",jPush.getId());
+                        log.info("极光推送结束-------------->>SUCCESS");
                         return new ResponseData(CodeEnum.SUCCESS);
                     } catch (Exception e) {
-                        e.printStackTrace();
                         log.info("极光推送失败！");
                         sendService.updateValid("10C",jPush.getId());
                         return new ResponseData(CodeEnum.E_400.getCode(),"极光推送失败！");

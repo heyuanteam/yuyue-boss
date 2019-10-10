@@ -2,7 +2,9 @@ package com.yuyue.boss.api.controller;
 
 import com.alibaba.druid.support.json.JSONUtils;
 import com.yuyue.boss.enums.CodeEnum;
+import com.yuyue.boss.utils.HttpUtils;
 import io.netty.handler.codec.http.HttpUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
@@ -23,12 +25,12 @@ import java.util.Map;
 /**
  * controller基类
  */
+@Slf4j
 public class BaseController {
-    protected static Logger log = LoggerFactory.getLogger(BaseController.class);
 
     protected Map<String,String> getParameterMap(HttpServletRequest request, HttpServletResponse response){
         //解决一下跨域问题
-        response.setHeader("Access-Control-Allow-Origin", "*");
+        HttpUtils.setHeader(request,response);
         Map<String,String> map = new HashMap<>();
         Enumeration<String> enumeration = request.getParameterNames();
         while (enumeration.hasMoreElements()) {

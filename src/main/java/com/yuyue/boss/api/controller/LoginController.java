@@ -14,6 +14,7 @@ import com.yuyue.boss.enums.Constants;
 import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.RedisUtil;
 import com.yuyue.boss.utils.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -37,8 +38,8 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(value = "/login", produces = "application/json; charset=UTF-8")
+@Slf4j
 public class LoginController extends BaseController{
-    private static Logger log = LoggerFactory.getLogger(LoginController.class);
     @Autowired
     private LoginService loginService;
     @Autowired
