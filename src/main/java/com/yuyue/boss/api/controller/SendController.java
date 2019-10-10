@@ -1,6 +1,9 @@
 package com.yuyue.boss.api.controller;
 
+import com.yuyue.boss.annotation.CurrentUser;
+import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.JPush;
+import com.yuyue.boss.api.domain.SystemUser;
 import com.yuyue.boss.api.service.SendService;
 import com.yuyue.boss.config.JPushClients;
 import com.yuyue.boss.enums.CodeEnum;
@@ -46,9 +49,11 @@ public class SendController extends BaseController{
     @RequestMapping("/sendJPush")
     @ResponseBody
 //    @Async // 异步方法
-    public ResponseData sendJPush(HttpServletRequest request, HttpServletResponse response){
+    @LoginRequired
+    public ResponseData sendJPush(@CurrentUser SystemUser systemUser,HttpServletRequest request, HttpServletResponse response){
         log.info("极光推送-------------->>/sendJPush/sendJPush");
         getParameterMap(request,response);
+
 //        用户ID,别名
 //        List<String> aliasList = Arrays.asList("239");
 //        String notificationTitle = "通知内容标题";

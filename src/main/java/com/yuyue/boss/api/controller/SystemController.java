@@ -1,6 +1,7 @@
 package com.yuyue.boss.api.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.beust.jcommander.internal.Maps;
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.*;
@@ -747,6 +748,39 @@ public class SystemController extends BaseController {
         } catch (Exception e) {
             log.info("===========>>>>>>删除系统字典下级失败！");
             return new ResponseData(CodeEnum.E_400.getCode(),"删除系统字典下级失败！");
+        }
+    }
+
+    /**
+     * 获取全部字典
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/getSystemList")
+    @ResponseBody
+    @LoginRequired
+    public ResponseData getSystemList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("获取全部字典----------->>/system/getSystemList");
+        getParameterMap(request, response);
+        try {
+            List<LookupCde> lookupCdeList = loginService.getLookupCdeSystem("", "","");
+            List list = new ArrayList<>();
+            if (CollectionUtils.isNotEmpty(lookupCdeList)){
+                for (LookupCde lookupCde: lookupCdeList) {
+                    Map<String,Object> map = Maps.newHashMap();
+                    map.put("id",lookupCde.getId());
+                    map.put("typeName",lookupCde.getTypeName());
+                    List<LookupCdeConfig> lookupCdeConfigList = loginService.getLookupCdeList(lookupCde.getId(),"");
+                    map.put("content",lookupCdeConfigList);
+                    list.add(map);
+                }
+            }
+            return new ResponseData(list);
+        } catch (Exception e) {
+            log.info("===========>>>>>>获取全部字典失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"获取全部字典失败！");
         }
     }
 }
