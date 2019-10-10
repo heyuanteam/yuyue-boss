@@ -12,11 +12,16 @@ public class AdReviewServiceImpl implements AdReviewService {
 
     @Autowired
     private AdReviewMapper adReviewMapper;
+    /**
+     * 修改广告商审核状态
+     */
     @Override
     public List<Advertisement> getAdReviewList(String merchantName, String phone, String status, String applicationStartTime,String applicationEndTime) {
         return adReviewMapper.getAdReviewList(merchantName,phone,status, applicationStartTime,applicationEndTime);
     }
-
+    /**
+     * 修改广告商审核状态
+     */
     @Override
     public void updateAdReviewStatus(String id, String status) {
         adReviewMapper.updateAdReviewStatus(id,status);

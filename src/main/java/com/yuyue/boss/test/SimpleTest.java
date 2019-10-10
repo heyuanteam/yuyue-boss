@@ -1,6 +1,13 @@
 package com.yuyue.boss.test;
 
+import com.yuyue.boss.api.domain.Commodity;
+
+import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class SimpleTest {
 
@@ -145,6 +152,23 @@ public class SimpleTest {
         String date1="";
         String da=date1.split(" ")[0];
         System.out.println(da);
+        Date parse = null;
+        try {
+            parse = dateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Calendar instance = Calendar.getInstance();
+        instance.setTime(parse);
+        instance.add(Calendar.MONTH, 1);
+        String format = dateFormat.format(instance.getTime());
+        System.out.println(dateFormat.format(instance.getTime()));
+
+        Commodity commodity = new Commodity();
+
+        System.out.println(commodity.getStartDate());
+
     }
 
 }
