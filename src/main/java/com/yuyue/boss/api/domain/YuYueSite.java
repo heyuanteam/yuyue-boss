@@ -37,10 +37,4 @@ public class YuYueSite implements Serializable {
     //极光状态
     private String jPushStatus;
 
-
-
-
-
-
-
 }

@@ -4,7 +4,9 @@ import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.JPush;
 import com.yuyue.boss.api.domain.SystemUser;
+import com.yuyue.boss.api.domain.YuYueSite;
 import com.yuyue.boss.api.service.SendService;
+import com.yuyue.boss.api.service.YuYueSiteService;
 import com.yuyue.boss.config.JPushClients;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
@@ -35,6 +37,8 @@ public class SendController extends BaseController{
     private JPushClients jPushClients;
     @Autowired
     private SendService sendService;
+    @Autowired
+    private YuYueSiteService yuYueSiteService;
 
     //极光推送
     @Value("${jpush.appKey}")
@@ -56,27 +60,26 @@ public class SendController extends BaseController{
     public ResponseData sendJPush(@CurrentUser SystemUser systemUser,HttpServletRequest request, HttpServletResponse response){
         log.info("极光推送-------------->>/sendJPush/sendJPush");
         Map<String, String> parameterMap = getParameterMap(request, response);
-        if (StringUtils.isEmpty(parameterMap.get("title"))) {
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "通知内容标题不可以为空！");
-        } else if (StringUtils.isEmpty(parameterMap.get("type"))) {
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "类型不可以为空！");
-        } else if (StringUtils.isEmpty(parameterMap.get("content"))) {
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "内容不可以为空！");
+        if (StringUtils.isEmpty(parameterMap.get("id"))) {
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "标题ID不可以为空！");
         }
+        List<YuYueSite> idList = yuYueSiteService.getYuYueSiteInfo(parameterMap.get("id"), "");
         JPush jPush = new JPush();
-        jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
-        jPush.setNotificationTitle(parameterMap.get("title"));
-        jPush.setMsgTitle(parameterMap.get("msgTitle"));
-        jPush.setMsgContent(parameterMap.get("msgContent"));
-        jPush.setExtras(parameterMap.get("type"));
         try {
-            sendService.insertJPush(jPush);
-
-            jPushClients.sendToAll(jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), jPush.getExtras(),
-                    apnsProduction,masterSecret,appKey);
-            sendService.updateValid("10B",jPush.getId());
-            log.info("极光推送结束-------------->>SUCCESS");
-            return new ResponseData(CodeEnum.SUCCESS);
+            if (CollectionUtils.isNotEmpty(idList)) {
+                jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
+                jPush.setNotificationTitle(idList.get(0).getTitle());
+                jPush.setMsgTitle(idList.get(0).getSiteAddr());
+                jPush.setMsgContent(idList.get(0).getImageUrl());
+                jPush.setExtras("1");
+                sendService.insertJPush(jPush);
+                jPushClients.sendToAll(jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), jPush.getExtras(),
+                        apnsProduction,masterSecret,appKey);
+                sendService.updateValid("10B",jPush.getId());
+                log.info("极光推送结束-------------->>SUCCESS");
+                return new ResponseData(CodeEnum.SUCCESS);
+            }
+            return new ResponseData(CodeEnum.E_400.getCode(),"极光推送参数错误！");
         } catch (Exception e) {
             log.info("极光推送失败！");
             sendService.updateValid("10C",jPush.getId());
@@ -88,12 +91,5 @@ public class SendController extends BaseController{
 //        String msgTitle = "消息内容标题";
 //        String msgContent = "消息内容";
 //        List<JPush> list = sendService.getValid();
-//        if(CollectionUtils.isNotEmpty(list)){
-//            for (int i = 0; i < list.size(); i++) {
-//                JPush jPush = list.get(i);
-//                if(jPush != null){
-//                }
-//            }
-//        }
     }
 }

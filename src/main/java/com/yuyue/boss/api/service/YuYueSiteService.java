@@ -8,19 +8,12 @@ import java.util.List;
 
 public interface YuYueSiteService {
 
-
-
-
     List<YuYueSite> getYuYueSiteInfo(String id,String status);
-
-
 
     List<YuYueSite> searchYuYueSiteInfo(String siteAddr, String status,String jPushStatus,
                                         String mainPerson,String startTime,String endTime);
 
-
     void insertQRCodePath(String id ,String qrCodePath);
-
 
     void insertYuYueSite(YuYueSite yuYueSite);
 
