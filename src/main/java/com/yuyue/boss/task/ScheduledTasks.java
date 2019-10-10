@@ -1,6 +1,8 @@
 package com.yuyue.boss.task;
 
+import com.yuyue.boss.api.domain.Commodity;
 import com.yuyue.boss.api.domain.YuYueSite;
+import com.yuyue.boss.api.service.CommodityService;
 import com.yuyue.boss.api.service.YuYueSiteService;
 import com.yuyue.boss.utils.StringUtils;
 import org.slf4j.Logger;
@@ -10,6 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -20,9 +23,12 @@ public class ScheduledTasks {
 
     @Autowired
     private YuYueSiteService yuYueSiteService;
+    @Autowired
+    private CommodityService commodityService;
 
 
-    /**8小时执行一次（执行娱悦现场定时任务）
+    /**
+     * 8小时执行一次（执行娱悦现场定时任务）
      *
      */
     @Scheduled(cron = "0 0 8 * * ?")
@@ -79,5 +85,26 @@ public class ScheduledTasks {
     }
 
 
-
+    /**
+     * 8小时执行一次（执行娱悦现场定时任务）
+     */
+    @Scheduled(cron = "0 0 8 * * ?")
+    private void updateCommodityEndStatus(){
+        log.info("执行爆款定时任务：---------->结束状态");
+        List<Commodity> commodityInfo = commodityService.getCommodityInfo("", "", "", "10C", "", "");
+        if (StringUtils.isEmpty(commodityInfo)) return;
+        for (Commodity commodity: commodityInfo
+             ) {
+            String endTime = commodity.getEndDate();
+            if (StringUtils.isEmpty(endTime)) continue;
+            try {
+                if (new Date().after(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(endTime))){
+                    commodity.setStatus("10D");
+                     commodityService.updateCommodityInfo(commodity);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
