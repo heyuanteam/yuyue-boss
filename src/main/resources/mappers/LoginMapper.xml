@@ -7,14 +7,13 @@
     <select id="getAppUserMsg" resultType="com.yuyue.boss.api.domain.SystemUserVO" parameterType="String">
         SELECT b.id systemUserId,b.loginName,b.systemName,b.phone,b.`status` systemUserStatus,
             c.id systemPermissionId,c.`status` systemPermissionStatus,c.menuKey,c.saveKey,c.removeKey,
-            DATE_FORMAT(c.UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') createTime,DATE_FORMAT(c.UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') updateTime,
+            DATE_FORMAT(c.CREATE_TIME ,'%Y-%m-%d %H:%i:%s') createTime,DATE_FORMAT(c.UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') updateTime,
             d.id systemMeuId,d.`status` systemMenuStatus,d.menuAction,d.parentId systemMeuPantId,d.menuName,d.role
         FROM yuyue_system_user b,yuyue_system_menu d,yuyue_system_permission c
         WHERE b.id = c.systemUserId AND d.id = c.menuId
         <if test="loginName!=null and loginName!=''">  and b.loginName = #{loginName}  </if>
         <if test="password!=null and password!='' ">  and b.`password` = #{password}  </if>
           /*AND b.`status` = '10B' AND d.`status` = '10B' AND c.`status` = '10B'*/
-
         ORDER BY d.sort
     </select>
 
@@ -31,8 +30,8 @@
     </select>
 
     <!--获取权限关联菜单列表-->
-    <select id="getMenuList" resultType="com.yuyue.boss.api.domain.SystemMenu" parameterType="String">
-        SELECT d.menuName,d.id,d.menuAction,d.sort
+    <select id="getMenuList" resultType="com.yuyue.boss.api.domain.SystemMenuVo" parameterType="String">
+        SELECT d.menuName,d.id,d.menuAction,d.sort,c.menuKey
         FROM yuyue_system_user b,yuyue_system_permission c,yuyue_system_menu d
         WHERE b.id = c.systemUserId AND b.`status` = '10B' AND d.id = c.menuId AND d.`status` = '10B'
         <if test="loginName!=null and loginName!=''">  and b.loginName = #{loginName}  </if>
@@ -132,7 +131,7 @@
         <if test="status!=null and status!=''">  and b.status = #{status}  </if>
         <if test="id!=null and id!=''">  and b.id = #{id}  </if>
         <if test="typeName!=null and typeName!='' ">  and b.typeName like concat('%', #{typeName}, '%')</if>
-        order by b.typeCode
+        order by b.sort
     </select>
 
     <!-- 修改系统字典 -->
@@ -141,6 +140,32 @@
         <set>
             <if test="typeName!=null and typeName!=''">
                 b.typeName = #{typeName},
+            </if>
+            <if test="status!=null and status!=''">
+                b.status = #{status},
+            </if>
+        </set>
+        WHERE 1=1
+        <if test="id!=null and id!=''">
+            and b.id = #{id}
+        </if>
+    </update>
+
+    <!-- 获取系统字典下级 -->
+    <select id="getLookupCdeList" resultType="com.yuyue.boss.api.domain.LookupCdeConfig" parameterType="String">
+        SELECT b.*
+        from yuyue_system_config b where 1=1
+        <if test="id!=null and id!=''">  and b.id = #{id}  </if>
+        <if test="systemId!=null and systemId!=''">  and b.systemId = #{systemId}  </if>
+        order by b.createTime
+    </select>
+
+    <!-- 修改系统字典下级 -->
+    <update id="updateLookupCdeList" parameterType="String">
+        UPDATE yuyue_system_config b
+        <set>
+            <if test="type!=null and type!=''">
+                b.type = #{type},
             </if>
             <if test="status!=null and status!=''">
                 b.status = #{status},

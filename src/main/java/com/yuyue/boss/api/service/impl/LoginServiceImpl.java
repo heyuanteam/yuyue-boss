@@ -73,7 +73,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public List<SystemMenu> getMenuList(String loginName, String password){
+    public List<SystemMenuVo> getMenuList(String loginName, String password){
         return loginMapper.getMenuList(loginName,password);
     }
 
@@ -134,4 +134,24 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public void updateLookupCde(String id, String typeName, String status) {
         loginMapper.updateLookupCde(id,typeName,status); }
+
+    @Override
+    public List<LookupCdeConfig> getLookupCdeList(String systemId,String id) {
+        return loginMapper.getLookupCdeList(systemId,id); }
+
+    @Override
+    public void insertLookupCdeConfig(LookupCdeConfig lookupCdeConfig) {
+        loginMapper.insertLookupCdeConfig(lookupCdeConfig); }
+
+    @Override
+    public void updateLookupCdeList(String id, String type, String status) {
+        loginMapper.updateLookupCdeList(id,type,status); }
+
+    @Override
+    public void delLookupCdeList(String id) {
+        loginMapper.delLookupCdeList(id); }
+
+    @Override
+    public void delLookupCdeSystem(String id) {
+        loginMapper.delLookupCdeSystem(id); }
 }

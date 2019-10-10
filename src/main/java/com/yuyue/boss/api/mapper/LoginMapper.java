@@ -16,12 +16,11 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     List<SystemUser> getSystemUserMsg(@Param("loginName") String loginName, @Param("password") String password,@Param("id") String id,
                                 @Param("phone") String phone);
 
-    @Select("SELECT c.menuKey,c.saveKey,c.removeKey FROM yuyue_system_user b,yuyue_system_menu d,yuyue_system_permission c" +
-            " WHERE b.id =#{systemUserId} AND d.id = c.menuId " +
-            "  AND b.`status` = '10B' AND d.`status` = '10B' AND c.`status` = '10B' ORDER BY d.sort")
+    @Select("SELECT c.menuKey,c.saveKey,c.removeKey FROM yuyue_system_permission c" +
+            " WHERE c.systemUserId =#{systemUserId} AND c.`status` = '10B' ORDER BY c.CREATE_TIME")
     List<SystemPermission> getSystemUserVO(@Param("systemUserId") String systemUserId);
 
-    List<SystemMenu> getMenuList(@Param("loginName") String loginName, @Param("password") String password);
+    List<SystemMenuVo> getMenuList(@Param("loginName") String loginName, @Param("password") String password);
 
     List<SystemMenu> getMenu(@Param("id") String id,@Param("sort") Integer sort,@Param("role") String role,
                              @Param("menuName")String menuName,@Param("status")String status);
@@ -84,4 +83,21 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     void insertLookupCde(LookupCde lookupCde);
 
     void updateLookupCde(@Param("id")String id,@Param("typeName") String typeName,@Param("status") String status);
+
+    List<LookupCdeConfig> getLookupCdeList(@Param("systemId")String systemId,@Param("id")String id);
+
+    @Transactional
+    @Insert("INSERT into yuyue_system_config (id,type,systemId,status) values (#{id},#{type},#{systemId},#{status})")
+    @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
+    void insertLookupCdeConfig(LookupCdeConfig lookupCdeConfig);
+
+    void updateLookupCdeList(@Param("id")String id,@Param("type") String type,@Param("status") String status);
+
+    @Transactional
+    @Delete("DELETE FROM yuyue_system_config WHERE id =#{id} ")
+    void delLookupCdeList(@Param("id") String id);
+
+    @Transactional
+    @Delete("DELETE FROM yuyue_system WHERE id =#{id} ")
+    void delLookupCdeSystem(@Param("id") String id);
 }

@@ -1,10 +1,13 @@
 package com.yuyue.boss.task;
 
+import com.yuyue.boss.api.domain.Order;
 import com.yuyue.boss.api.domain.Commodity;
 import com.yuyue.boss.api.domain.YuYueSite;
+import com.yuyue.boss.api.service.PayService;
 import com.yuyue.boss.api.service.CommodityService;
 import com.yuyue.boss.api.service.YuYueSiteService;
 import com.yuyue.boss.utils.StringUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,22 +17,47 @@ import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 @Component
 public class ScheduledTasks {
     private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+    @Autowired
+    private PayService pyService;a
     @Autowired
     private YuYueSiteService yuYueSiteService;
     @Autowired
     private CommodityService commodityService;
 
+    /**
+     * 订单支付超时判断,25分钟
+     */
+    @Scheduled(cron = "0 0/25 * * * *")
+    public void outTime() {
+        log.info("订单支付超时判断开始==================================>>>>>>>>>>>");
+        Calendar c = Calendar.getInstance();//可以对每个时间域单独修改
+        c.add(Calendar.MINUTE,-30);
+        String startTime = dateFormat.format(c.getTime());
+        System.out.println("========>>>"+startTime);
+        List<Order> list = pyService.findOrderList(startTime);
+        if(CollectionUtils.isNotEmpty(list)){
+            for (Order order: list) {
+                log.info("订单"+order.getOrderNo()+"=====金额："+order.getMoney()+">>>>>>>>>>>已超时");
+                pyService.updateOrderStatus("ERROR", "支付超时", "10D", order.getOrderNo());
+            }
+        }
+        log.info("订单支付超时判断结束==================================>>>>>>>>>>>");
+    }
 
     /**
      * 8小时执行一次（执行娱悦现场定时任务）
      *
+    /**
+     * 8小时执行一次（执行娱悦现场定时任务）
      */
     @Scheduled(cron = "0 0 8 * * ?")
     private void updateYuYueSiteStartStatus(){

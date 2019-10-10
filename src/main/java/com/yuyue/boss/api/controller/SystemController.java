@@ -1,9 +1,6 @@
 package com.yuyue.boss.api.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.*;
@@ -13,6 +10,7 @@ import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.PageUtil;
 import com.yuyue.boss.utils.RandomSaltUtil;
 import com.yuyue.boss.utils.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -34,8 +32,8 @@ import java.util.Map;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/system", produces = "application/json; charset=UTF-8")
+@Slf4j
 public class SystemController extends BaseController {
-    private static Logger log = LoggerFactory.getLogger(SystemController.class);
 
     @Autowired
     private LoginService loginService;
@@ -64,7 +62,7 @@ public class SystemController extends BaseController {
             PageUtil.getPage(parameterMap.get("page"));
             List<SystemMenu> menuList = loginService.getMenu("", 0, "", parameterMap.get("menuName"), parameterMap.get("status"));
             if (CollectionUtils.isEmpty(menuList)){
-                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "搜索的不存在！");
+                return new ResponseData(CodeEnum.SUCCESS.getCode(), "搜索的不存在！");
             }
             PageUtil pageUtil = new PageUtil(menuList);
             return new ResponseData(pageUtil);
@@ -97,7 +95,19 @@ public class SystemController extends BaseController {
         }
         List<SystemMenu> roleList = loginService.getMenu("", 0, parameterMap.get("role"), "", "");
         if (CollectionUtils.isNotEmpty(roleList)) {
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单权限已经存在！");
+            for (SystemMenu systemMenu:roleList) {
+                if (parameterMap.get("role").equals(systemMenu.getRole())){
+                    return new ResponseData(CodeEnum.SUCCESS.getCode(), "菜单权限已经存在！");
+                }
+            }
+        }
+        List<SystemMenu> menuNameList = loginService.getMenu("", 0, "", parameterMap.get("menuName"), "");
+        if (CollectionUtils.isNotEmpty(menuNameList)) {
+            for (SystemMenu systemMenu:menuNameList) {
+                if (parameterMap.get("menuName").equals(systemMenu.getMenuName())){
+                    return new ResponseData(CodeEnum.SUCCESS.getCode(), "菜单名称已经存在！");
+                }
+            }
         }
 
         List<SystemMenu> menuList = loginService.getMenu("", 0, "", "", "");
@@ -172,12 +182,16 @@ public class SystemController extends BaseController {
 
             List<SystemMenu> list = loginService.getMenu(parameterMap.get("id"), 0, "","","");
             if (CollectionUtils.isEmpty(list)) {
-                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "修改的菜单不存在！");
+                return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改的菜单不存在！");
             }
             if (!parameterMap.get("menuName").equals(list.get(0).getMenuName())) {
                 List<SystemMenu> menuNameList = loginService.getMenu("", 0, "", parameterMap.get("menuName"), "");
                 if (CollectionUtils.isNotEmpty(menuNameList)) {
-                    return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单名称已经存在！");
+                    for (SystemMenu systemMenu:menuNameList) {
+                        if (parameterMap.get("menuName").equals(systemMenu.getMenuName())){
+                            return new ResponseData(CodeEnum.SUCCESS.getCode(), "菜单名称已经存在！");
+                        }
+                    }
                 }
             }
             loginService.updateSystemMenu(parameterMap.get("id"), 0, parameterMap.get("status"), parameterMap.get("menuName"));
@@ -206,7 +220,7 @@ public class SystemController extends BaseController {
         try {
             List<SystemMenu> menuList = loginService.getMenu(parameterMap.get("id"), 0, "", "", "");
             if (CollectionUtils.isEmpty(menuList)) {
-                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单ID错误！");
+                return new ResponseData(CodeEnum.SUCCESS.getCode(), "菜单ID错误！");
             }
             loginService.delMenu(parameterMap.get("id"));
             List<SystemPermission> list = loginService.getSystemPermission(parameterMap.get("id"),"","");
@@ -240,7 +254,7 @@ public class SystemController extends BaseController {
             PageUtil.getPage(parameterMap.get("page"));
             List<SystemUser> menuList = loginService.getSystemUser(parameterMap.get("status"), parameterMap.get("systemName"),parameterMap.get("loginName"),"");
             if (CollectionUtils.isEmpty(menuList)){
-                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "搜索的不存在！");
+                return new ResponseData(CodeEnum.SUCCESS.getCode(), "搜索的不存在！");
             }
             PageUtil pageUtil = new PageUtil(menuList);
             return new ResponseData(pageUtil);
@@ -275,7 +289,11 @@ public class SystemController extends BaseController {
         }
         List<SystemUser> loginName = loginService.getSystemUser("", "", parameterMap.get("loginName"),"");
         if (CollectionUtils.isNotEmpty(loginName)){
-            return new ResponseData(CodeEnum.E_10009.getCode(), "登录名已经存在！");
+            for (SystemUser user:loginName) {
+                if (parameterMap.get("loginName").equals(user.getLoginName())){
+                    return new ResponseData(CodeEnum.SUCCESS.getCode(), "登录名已经存在！");
+                }
+            }
         }
         SystemUser user = new SystemUser();
         try {
@@ -331,12 +349,16 @@ public class SystemController extends BaseController {
 
         List<SystemUser> list = loginService.getSystemUser("", "", "",parameterMap.get("id"));
         if (CollectionUtils.isEmpty(list)) {
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "修改的用户不存在！");
+            return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改的用户不存在！");
         }
         if (!parameterMap.get("loginName").equals(list.get(0).getLoginName())) {
-            List<SystemUser> loginName = loginService.getSystemUser("", "", parameterMap.get("loginName"),"");
-            if (CollectionUtils.isNotEmpty(loginName)) {
-                return new ResponseData(CodeEnum.E_10009.getCode(), "登录名已经存在！");
+            List<SystemUser> userList = loginService.getSystemUser("", "", parameterMap.get("loginName"),"");
+            if (CollectionUtils.isNotEmpty(userList)) {
+                for (SystemUser user:userList) {
+                    if (parameterMap.get("loginName").equals(user.getLoginName())){
+                        return new ResponseData(CodeEnum.SUCCESS.getCode(), "登录名已经存在！");
+                    }
+                }
             }
         }
         try {
@@ -369,7 +391,7 @@ public class SystemController extends BaseController {
         if (StringUtils.isNotEmpty(parameterMap.get("id"))) {
             List<SystemUser> list = loginService.getSystemUser("", "", "",parameterMap.get("id"));
             if (CollectionUtils.isEmpty(list)) {
-                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "搜索的不存在！");
+                return new ResponseData(CodeEnum.SUCCESS.getCode(), "搜索的不存在！");
             }
         }
         try {
@@ -404,12 +426,12 @@ public class SystemController extends BaseController {
         try {
             List<SystemUser> userList = loginService.getSystemUser("", "", "", parameterMap.get("id"));
             if (CollectionUtils.isEmpty(userList)){
-                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "用户不存在！");
+                return new ResponseData(CodeEnum.SUCCESS.getCode(), "用户不存在！");
             }
             PageUtil.getPage(parameterMap.get("page"));
             List<SystemUserVO> systemUserVO = loginService.getAppUserMsg(userList.get(0).getLoginName(),userList.get(0).getPassword());
             if (CollectionUtils.isEmpty(systemUserVO)){
-                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "搜索的不存在！");
+                return new ResponseData(CodeEnum.SUCCESS.getCode(), "搜索的不存在！");
             }
             PageUtil pageUtil = new PageUtil(systemUserVO);
             return new ResponseData(pageUtil);
@@ -471,7 +493,7 @@ public class SystemController extends BaseController {
             PageUtil.getPage(parameterMap.get("page"));
             List<LookupCde> menuList = loginService.getLookupCdeSystem(parameterMap.get("status"), parameterMap.get("typeName"),"");
             if (CollectionUtils.isEmpty(menuList)){
-                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "搜索的不存在！");
+                return new ResponseData(CodeEnum.SUCCESS.getCode(), "搜索的不存在！");
             }
             PageUtil pageUtil = new PageUtil(menuList);
             return new ResponseData(pageUtil);
@@ -498,13 +520,17 @@ public class SystemController extends BaseController {
         if (StringUtils.isEmpty(parameterMap.get("typeName"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典名称不可以为空！");
         }
-        List<LookupCde> menuList = loginService.getLookupCdeSystem("", parameterMap.get("typeName"),"");
-        if (CollectionUtils.isNotEmpty(menuList)){
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典名称已经存在！");
+        List<LookupCde> LookupCdeList = loginService.getLookupCdeSystem("", parameterMap.get("typeName"),"");
+        if (CollectionUtils.isNotEmpty(LookupCdeList)){
+            for (LookupCde lookupCde:LookupCdeList) {
+                if (parameterMap.get("typeName").equals(lookupCde.getTypeName())){
+                    return new ResponseData(CodeEnum.SUCCESS.getCode(), "字典名称已经存在！");
+                }
+            }
         }
         try {
             List<LookupCde> list = loginService.getLookupCdeSystem("", "","");
-            int sort = list.get(0).getSort();
+            int sort = list.get(list.size()-1).getSort();
             sort += 1;
             LookupCde lookupCde = new LookupCde();
             lookupCde.setId(RandomSaltUtil.generetRandomSaltCode(32));
@@ -541,12 +567,16 @@ public class SystemController extends BaseController {
         }
         List<LookupCde> list = loginService.getLookupCdeSystem("", "", parameterMap.get("id"));
         if (CollectionUtils.isEmpty(list)){
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "修改字典不存在！");
+            return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改字典不存在！");
         }
         if (!parameterMap.get("typeName").equals(list.get(0).getTypeName())) {
-            List<LookupCde> menuList = loginService.getLookupCdeSystem("", parameterMap.get("typeName"),"");
-            if (CollectionUtils.isNotEmpty(menuList)){
-                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典名称已经存在！");
+            List<LookupCde> LookupCdeList = loginService.getLookupCdeSystem("", parameterMap.get("typeName"),"");
+            if (CollectionUtils.isNotEmpty(LookupCdeList)){
+                for (LookupCde lookupCde:LookupCdeList) {
+                    if (parameterMap.get("typeName").equals(lookupCde.getTypeName())){
+                        return new ResponseData(CodeEnum.SUCCESS.getCode(), "字典名称已经存在！");
+                    }
+                }
             }
         }
         try {
@@ -555,6 +585,168 @@ public class SystemController extends BaseController {
         } catch (Exception e) {
             log.info("===========>>>>>>修改系统字典失败！");
             return new ResponseData(CodeEnum.E_400.getCode(),"修改系统字典失败！");
+        }
+    }
+
+    /**
+     * 删除系统字典
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/delLookupCde")
+    @ResponseBody
+    @RequiresPermissions("LookupCdeManager:remove")
+    @LoginRequired
+    public ResponseData delLookupCde(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("删除系统字典---------->>/system/delLookupCde");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        if (StringUtils.isEmpty(parameterMap.get("id"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典id不可以为空！");
+        }
+        try {
+            List<LookupCde> list = loginService.getLookupCdeSystem("", "", parameterMap.get("id"));
+            if (CollectionUtils.isEmpty(list)){
+                return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改字典不存在！");
+            }
+            loginService.delLookupCdeSystem(parameterMap.get("id"));
+            List<LookupCdeConfig> menuList = loginService.getLookupCdeList(parameterMap.get("id"),"");
+            if (CollectionUtils.isNotEmpty(menuList)){
+                for (LookupCdeConfig lookupCdeConfig: menuList) {
+                    loginService.delLookupCdeList(lookupCdeConfig.getId());
+                }
+            }
+            return new ResponseData(CodeEnum.SUCCESS);
+        } catch (Exception e) {
+            log.info("===========>>>>>>删除系统字典失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"删除系统字典失败！");
+        }
+    }
+
+    /**
+     * 获取系统字典下级
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/getLookupCdeList")
+    @ResponseBody
+    @RequiresPermissions("LookupCdeManager:menu")
+    @LoginRequired
+    public ResponseData getLookupCdeList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("获取系统字典下级----------->>/system/getLookupCdeList");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        if (StringUtils.isEmpty(parameterMap.get("id"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典id不可以为空！");
+        }
+        try {
+            PageUtil.getPage(parameterMap.get("page"));
+            List<LookupCdeConfig> menuList = loginService.getLookupCdeList(parameterMap.get("id"),"");
+            if (CollectionUtils.isEmpty(menuList)){
+                return new ResponseData(CodeEnum.SUCCESS.getCode(), "搜索的不存在！");
+            }
+            PageUtil pageUtil = new PageUtil(menuList);
+            return new ResponseData(pageUtil);
+        } catch (Exception e) {
+            log.info("===========>>>>>>获取系统字典下级失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"获取系统字典下级失败！");
+        }
+    }
+
+    /**
+     * 添加系统字典下级
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/addLookupCdeList")
+    @ResponseBody
+    @RequiresPermissions("LookupCdeManager:save")
+    @LoginRequired
+    public ResponseData addLookupCdeList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("添加系统字典下级----------->>/system/addLookupCdeList");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        if (StringUtils.isEmpty(parameterMap.get("type"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典类型不可以为空！");
+        } else if (StringUtils.isEmpty(parameterMap.get("status"))) {
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典状态不可以为空！");
+        } else if (StringUtils.isEmpty(parameterMap.get("systemId"))) {
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典systemId不可以为空！");
+        }
+        try {
+            LookupCdeConfig lookupCdeConfig = new LookupCdeConfig();
+            lookupCdeConfig.setId(RandomSaltUtil.generetRandomSaltCode(32));
+            lookupCdeConfig.setStatus(parameterMap.get("status"));
+            lookupCdeConfig.setType(parameterMap.get("type"));
+            lookupCdeConfig.setSystemId(parameterMap.get("systemId"));
+            loginService.insertLookupCdeConfig(lookupCdeConfig);
+            return new ResponseData(CodeEnum.SUCCESS);
+        } catch (Exception e) {
+            log.info("===========>>>>>>添加系统字典下级失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"添加系统字典下级失败！");
+        }
+    }
+
+    /**
+     * 修改系统字典下级
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/editLookupCdeList")
+    @ResponseBody
+    @RequiresPermissions("LookupCdeManager:save")
+    @LoginRequired
+    public ResponseData editLookupCdeList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("修改系统字典下级----------->>/system/editLookupCdeList");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        if (StringUtils.isEmpty(parameterMap.get("type"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典类型不可以为空！");
+        } else if (StringUtils.isEmpty(parameterMap.get("status"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典状态不可以为空！");
+        } else if (StringUtils.isEmpty(parameterMap.get("id"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典ID不可以为空！");
+        }
+        try {
+            loginService.updateLookupCdeList(parameterMap.get("id"),parameterMap.get("type"),parameterMap.get("status"));
+            return new ResponseData(CodeEnum.SUCCESS);
+        } catch (Exception e) {
+            log.info("===========>>>>>>修改系统字典下级失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"修改系统字典下级失败！");
+        }
+    }
+
+    /**
+     * 删除系统字典下级
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/delLookupCdeList")
+    @ResponseBody
+    @RequiresPermissions("LookupCdeManager:remove")
+    @LoginRequired
+    public ResponseData delLookupCdeList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("删除系统字典下级----------->>/system/delLookupCdeList");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        if (StringUtils.isEmpty(parameterMap.get("id"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典id不可以为空！");
+        }
+        List<LookupCdeConfig> menuList = loginService.getLookupCdeList("",parameterMap.get("id"));
+        if (CollectionUtils.isEmpty(menuList)){
+            return new ResponseData(CodeEnum.SUCCESS.getCode(), "搜索的不存在！");
+        }
+        try {
+            loginService.delLookupCdeList(parameterMap.get("id"));
+            return new ResponseData(CodeEnum.SUCCESS);
+        } catch (Exception e) {
+            log.info("===========>>>>>>删除系统字典下级失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"删除系统字典下级失败！");
         }
     }
 }
