@@ -46,44 +46,44 @@ public class SendController extends BaseController{
     //极光推送类型
     private static final Map<String, Object> iosMap = new HashMap<>();
     static {
-        iosMap.put("1","艺人审核的通知");//未接，不需要参数
         iosMap.put("2","广告商审核的通知");//不需要参数
-        iosMap.put("3","关注人发视频的通知");//未接，需要参数
-        iosMap.put("4","现场详情的通知");//未接，需要参数
+        iosMap.put("4","现场详情的通知");//需要参数
         iosMap.put("5","视频审核的通知");//不需要参数
-        iosMap.put("6","广告审核的通知");//未接，不需要参数
+//        iosMap.put("1","艺人审核的通知");//不需要参数
+//        iosMap.put("3","关注人发视频的通知");//需要参数
+//        iosMap.put("6","广告审核的通知");//不需要参数
     }
 
     /**
-     * 极光推送，全部
+     * 全部，现场详情的通知
      */
     @RequestMapping("/sendJPush")
     @ResponseBody
 //    @Async // 异步方法
     @LoginRequired
-    public ResponseData sendJPush(@CurrentUser SystemUser systemUser,HttpServletRequest request, HttpServletResponse response){
+    public ResponseData sendJPush(HttpServletRequest request, HttpServletResponse response){
         log.info("极光推送-------------->>/sendJPush/sendJPush");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("id"))) {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "标题ID不可以为空！");
         }
-        List<YuYueSite> idList = yuYueSiteService.getYuYueSiteInfo(parameterMap.get("id"), "");
+        List<YuYueSite> idList = yuYueSiteService.getYuYueSiteInfo(parameterMap.get("id"));
         JPush jPush = new JPush();
         try {
             if (CollectionUtils.isNotEmpty(idList)) {
                 Map<String, String> map = Maps.newHashMap();
-                map.put("type","1");
-                map.put("notice","艺人审核的通知");
-
+                map.put("type","4");
+                map.put("notice","现场详情的通知");
+                map.put("id",parameterMap.get("id"));
                 jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
                 jPush.setNotificationTitle(idList.get(0).getTitle());
                 jPush.setMsgTitle(idList.get(0).getSiteAddr());
                 jPush.setMsgContent(idList.get(0).getImageUrl());
-                jPush.setExtras(map.toString());
+                jPush.setExtras("4");
 
                 List<JPush> list = sendService.getValid(jPush.getId());
                 if (CollectionUtils.isNotEmpty(list)) {
-                    return new ResponseData(CodeEnum.SUCCESS.getCode(),"请不要重复点击发布！");
+                    return new ResponseData(CodeEnum.SUCCESS.getCode(),"请不要重复点击！");
                 }
                 sendService.insertJPush(jPush);
                 jPushClients.sendToAll(jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), map);

@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -124,22 +125,25 @@ public class AdReviewController extends BaseController {
         }
         try {
             log.info("极光广告商审核的通知开始-------------->>start");
-            Map<String, String> map = Maps.newHashMap();
-            map.put("type","2");
-            map.put("notice","广告商审核的通知");
             List<Advertisement> adReviewList = adReviewService.getAdReviewList(id,"", "", "", "", "", "");
             if (CollectionUtils.isNotEmpty(adReviewList)){
+                Map<String, String> map = Maps.newHashMap();
+                map.put("type","2");
+                map.put("notice","广告商审核的通知");
                 jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
                 jPush.setNotificationTitle("您好！"+adReviewList.get(0).getPhone()+"广告商审核"+str);
                 jPush.setMsgTitle(adReviewList.get(0).getMerchantName());
                 jPush.setMsgContent(adReviewList.get(0).getBusinessLicense());
                 jPush.setExtras("2");
+
                 List<JPush> list = sendService.getValid(jPush.getId());
                 if (CollectionUtils.isNotEmpty(list)) {
                     return new ResponseData(CodeEnum.SUCCESS.getCode(),"请不要重复点击！");
                 }
                 sendService.insertJPush(jPush);
-                jPushClients.sendToAll(jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), map);
+                List<String> stringList = new ArrayList<>();
+                stringList.add(userId);
+                jPushClients.sendToAliasList(stringList,jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), map);
                 sendService.updateValid("10B",jPush.getId());
                 log.info("极光广告商审核的通知结束-------------->>SUCCESS");
             }

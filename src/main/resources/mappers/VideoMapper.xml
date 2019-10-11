@@ -36,7 +36,7 @@
         b.id ,DATE_FORMAT(b.UPLOAD_TIME,'%Y-%m-%d %H:%i:%s') UPLOAD_TIME,b.filesName,b.filesPath,
         b.filesType,b.fileSize,b.authorId,b.description,b.playAmount,b.commentAmount,b.likeAmount,b.attentionAmount,
         b.duration,b.title,b.videoAddress,b.categoryId,b.status,
-        m.ID "userId",m.USER_NICK_NAME,m.HEADP_URL,m.ATTENTION_TOTAL,m.LIKE_TOTAL,m.COMMENT_TOTAL
+        m.ID userId,m.USER_NICK_NAME,m.HEADP_URL,m.ATTENTION_TOTAL,m.LIKE_TOTAL,m.COMMENT_TOTAL
         from ${tableName} b
         left join yuyue_merchant m on b.authorId = m.ID
         WHERE  1=1 and b.filesType = 'video' and b.status ='10A'

@@ -30,11 +30,11 @@
     <!-- 获取全部现场信息  或  查询 现场详情 -->
     <select id="getYuYueSiteInfo" parameterType="String" resultMap="myYuYueSite">
         SELECT
-        site.id "sid",site.title,site.imageUrl,site.siteAddr,site.mainPerson,site.personTotal,site.personSum,
+        site.id sid,site.title,site.imageUrl,site.siteAddr,site.mainPerson,site.personTotal,site.personSum,
         site.qrCodePath,site.jPushStatus,site.status
 
       <if test="id != null and id != ''">
-            ,shows.id "showsId",shows.showName,shows.category,shows.showPersons,shows.SHOW_TIME
+            ,shows.id showsId,shows.showName,shows.category,shows.showPersons,shows.SHOW_TIME
             FROM
             yuyue_site site
             LEFT JOIN yuyue_site_show shows ON site.id = shows.siteId
