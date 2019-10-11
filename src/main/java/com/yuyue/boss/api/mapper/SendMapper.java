@@ -1,9 +1,7 @@
 package com.yuyue.boss.api.mapper;
 
 import com.yuyue.boss.api.domain.JPush;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,4 +16,10 @@ public interface SendMapper extends MyBaseMapper<JPush> {
     @Transactional
     @Update("UPDATE yuyue_jpush c SET c.valid = #{status} WHERE c.id = #{id} ")
     void updateValid(@Param("status") String status, @Param("id") String id);
+
+    @Transactional
+    @Insert("INSERT into yuyue_jpush (id,notificationTitle,msgTitle,msgContent,extras) values " +
+            " (#{id},#{notificationTitle},#{msgTitle},#{msgContent},#{extras})")
+    @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
+    void insertJPush(JPush jPush);
 }

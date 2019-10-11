@@ -20,4 +20,7 @@ public class SendServiceImpl implements SendService {
     @Override
     public void updateValid(String status, String id) { sendMapper.updateValid(status,id); }
 
+    @Override
+    public void insertJPush(JPush jPush) { sendMapper.insertJPush(jPush); }
+
 }
