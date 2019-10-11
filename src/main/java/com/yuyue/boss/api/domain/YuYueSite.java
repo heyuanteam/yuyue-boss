@@ -40,10 +40,4 @@ public class YuYueSite implements Serializable {
     //现场节目
     private List<SiteShow> siteShow;
 
-
-
-
-
-
-
 }

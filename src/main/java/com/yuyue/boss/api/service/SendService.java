@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface SendService {
     //极光获取
-    List<JPush> getValid();
+    List<JPush> getValid(String id);
 
     //极光更新
     void updateValid(String status, String id);

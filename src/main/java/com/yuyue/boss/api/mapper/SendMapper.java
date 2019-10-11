@@ -10,8 +10,8 @@ import java.util.List;
 @Repository
 public interface SendMapper extends MyBaseMapper<JPush> {
 
-    @Select("SELECT * FROM yuyue_jpush b WHERE b.valid = '10A' ")
-    List<JPush> getValid();
+    @Select("SELECT * FROM yuyue_jpush b WHERE b.valid = '10B' and b.id = #{id} ")
+    List<JPush> getValid(@Param("id") String id);
 
     @Transactional
     @Update("UPDATE yuyue_jpush c SET c.valid = #{status} WHERE c.id = #{id} ")

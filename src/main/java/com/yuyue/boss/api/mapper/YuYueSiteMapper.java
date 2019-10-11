@@ -14,8 +14,6 @@ public interface YuYueSiteMapper extends MyBaseMapper<YuYueSite> {
 
     List<YuYueSite> getYuYueSiteInfo(@Param("id") String id);
 
-
-
     List<YuYueSite> searchYuYueSiteInfo(@Param(value = "siteAddr")String siteAddr,
                                         @Param(value = "status")String status,
                                         @Param(value = "jPushStatus")String jPushStatus,

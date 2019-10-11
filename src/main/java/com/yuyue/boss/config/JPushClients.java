@@ -14,9 +14,11 @@ import cn.jpush.api.push.model.notification.IosNotification;
 import cn.jpush.api.push.model.notification.Notification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 极光推送客户端
@@ -32,6 +34,18 @@ public class JPushClients {
 
     private static JPushClient jPushClient = null;
     private static final int RESPONSE_OK = 200;
+    /** 一次推送最大数量 (极光限制1000) */
+    private static final int max_size = 800;
+
+    //极光推送
+    @Value("${jpush.appKey}")
+    private String appKey;
+
+    @Value("${jpush.masterSecret}")
+    private String masterSecret;
+
+    @Value("${jpush.apnsProduction}")
+    private boolean apnsProduction;
 
     public JPushClient getJPushClient(String masterSecret, String appKey) {
         if (jPushClient == null) {
@@ -49,7 +63,7 @@ public class JPushClients {
      * @param msgContent        消息内容
      * @param extras            扩展字段
      */
-    public void sendToAliasList(List<String> alias, String notificationTitle, String msgTitle, String msgContent, String extras,boolean apnsProduction,String masterSecret,String appKey) {
+    public void sendToAliasList(List<String> alias, String notificationTitle, String msgTitle, String msgContent, Map<String,String> extras) {
         PushPayload pushPayload = buildPushObject_all_aliasList_alertWithTitle(alias, notificationTitle, msgTitle, msgContent, extras,apnsProduction);
         this.sendPush(pushPayload,masterSecret,appKey);
     }
@@ -63,7 +77,7 @@ public class JPushClients {
      * @param msgContent        消息内容
      * @param extras            扩展字段
      */
-    public void sendToTagsList(List<String> tagsList, String notificationTitle, String msgTitle, String msgContent, String extras,boolean apnsProduction,String masterSecret,String appKey) {
+    public void sendToTagsList(List<String> tagsList, String notificationTitle, String msgTitle, String msgContent, Map<String,String> extras) {
         PushPayload pushPayload = buildPushObject_all_tagList_alertWithTitle(tagsList, notificationTitle, msgTitle, msgContent, extras,apnsProduction);
         this.sendPush(pushPayload,masterSecret,appKey);
     }
@@ -76,7 +90,7 @@ public class JPushClients {
      * @param msgContent        消息内容
      * @param extras        扩展字段
      */
-    public void sendToAllAndroid(String notificationTitle, String msgTitle, String msgContent, String extras,boolean apnsProduction,String masterSecret,String appKey) {
+    public void sendToAllAndroid(String notificationTitle, String msgTitle, String msgContent, Map<String,String> extras) {
         PushPayload pushPayload = buildPushObject_android_all_alertWithTitle(notificationTitle, msgTitle, msgContent, extras,apnsProduction);
         this.sendPush(pushPayload,masterSecret,appKey);
     }
@@ -89,7 +103,7 @@ public class JPushClients {
      * @param msgContent        消息内容
      * @param extras        扩展字段
      */
-    public void sendToAllIOS(String notificationTitle, String msgTitle, String msgContent, String extras,boolean apnsProduction,String masterSecret,String appKey) {
+    public void sendToAllIOS(String notificationTitle, String msgTitle, String msgContent, Map<String,String> extras) {
         PushPayload pushPayload = buildPushObject_ios_all_alertWithTitle(notificationTitle, msgTitle, msgContent, extras,apnsProduction);
         this.sendPush(pushPayload,masterSecret,appKey);
     }
@@ -102,7 +116,7 @@ public class JPushClients {
      * @param msgContent        消息内容
      * @param extras        扩展字段
      */
-    public void sendToAll(String notificationTitle, String msgTitle, String msgContent, String extras,boolean apnsProduction,String masterSecret,String appKey) {
+    public void sendToAll(String notificationTitle, String msgTitle, String msgContent, Map<String,String> extras) {
         PushPayload pushPayload = buildPushObject_android_and_ios(notificationTitle, msgTitle, msgContent, extras,apnsProduction);
         this.sendPush(pushPayload,masterSecret,appKey);
     }
@@ -134,7 +148,8 @@ public class JPushClients {
      * @param extras
      * @return
      */
-    public PushPayload buildPushObject_android_and_ios(String notificationTitle, String msgTitle, String msgContent, String extras, boolean apnsProduction) {
+    public PushPayload buildPushObject_android_and_ios(String notificationTitle, String msgTitle, String msgContent,
+                                                       Map<String,String> extras, boolean apnsProduction) {
         return PushPayload.newBuilder()
                 .setPlatform(Platform.android_ios())
                 .setAudience(Audience.all())
@@ -144,7 +159,8 @@ public class JPushClients {
                                 .setAlert(notificationTitle)
                                 .setTitle(notificationTitle)
                                 // 此字段为透传字段，不会显示在通知栏。用户可以通过此字段来做一些定制需求，如特定的key传要指定跳转的页面（value）
-                                .addExtra("androidNotification extras key", extras)
+                                //androidNotification extras key
+                                .addExtras(extras)
                                 .build()
                         )
                         .addPlatformNotification(IosNotification.newBuilder()
@@ -157,7 +173,8 @@ public class JPushClients {
                                 // 如果系统没有此音频则以系统默认声音提醒；此字段如果传空字符串，iOS9及以上的系统是无声音提醒，以下的系统是默认声音
                                 .setSound("default")
                                 // 此字段为透传字段，不会显示在通知栏。用户可以通过此字段来做一些定制需求，如特定的key传要指定跳转的页面（value）
-                                .addExtra("iosNotification extras key", extras)
+                                //iosNotification extras key
+                                .addExtras(extras)
                                 // 此项说明此推送是一个background推送，想了解background看：http://docs.jpush.io/client/ios_tutorials/#ios-7-background-remote-notification
                                 // .setContentAvailable(true)
                                 .build()
@@ -170,7 +187,8 @@ public class JPushClients {
                 .setMessage(Message.newBuilder()
                         .setMsgContent(msgContent)
                         .setTitle(msgTitle)
-                        .addExtra("message extras key", extras)
+                        //message extras key
+                        .addExtras(extras)
                         .build())
                 .setOptions(Options.newBuilder()
                         // 此字段的值是用来指定本推送要推送的apns环境，false表示开发，true表示生产；对android和自定义消息无意义
@@ -194,7 +212,7 @@ public class JPushClients {
      * @return
      */
     private PushPayload buildPushObject_all_aliasList_alertWithTitle(List<String> aliasList, String notificationTitle, String msgTitle,
-                                                                     String msgContent, String extras, boolean apnsProduction) {
+                                                                     String msgContent, Map<String,String> extras, boolean apnsProduction) {
         // 创建一个IosAlert对象，可指定APNs的alert、title等字段
         // IosAlert iosAlert =  IosAlert.newBuilder().setTitleAndBody("title", "alert body").build();
         return PushPayload.newBuilder()
@@ -209,7 +227,8 @@ public class JPushClients {
                                 .setAlert(notificationTitle)
                                 .setTitle(notificationTitle)
                                 // 此字段为透传字段，不会显示在通知栏。用户可以通过此字段来做一些定制需求，如特定的key传要指定跳转的页面（value）
-                                .addExtra("androidNotification extras key", extras)
+                                //androidNotification extras key
+                                .addExtras(extras)
                                 .build())
                         // 指定当前推送的iOS通知
                         .addPlatformNotification(IosNotification.newBuilder()
@@ -222,7 +241,8 @@ public class JPushClients {
                                 // 如果系统没有此音频则以系统默认声音提醒；此字段如果传空字符串，iOS9及以上的系统是无声音提醒，以下的系统是默认声音
                                 .setSound("default")
                                 // 此字段为透传字段，不会显示在通知栏。用户可以通过此字段来做一些定制需求，如特定的key传要指定跳转的页面（value）
-                                .addExtra("iosNotification extras key", extras)
+                                //iosNotification extras key
+                                .addExtras(extras)
                                 // 此项说明此推送是一个background推送，想了解background看：http://docs.jpush.io/client/ios_tutorials/#ios-7-background-remote-notification
                                 // 取消此注释，消息推送时ios将无法在锁屏情况接收
                                 // .setContentAvailable(true)
@@ -234,7 +254,8 @@ public class JPushClients {
                 .setMessage(Message.newBuilder()
                         .setMsgContent(msgContent)
                         .setTitle(msgTitle)
-                        .addExtra("message extras key", extras)
+                        //message extras key
+                        .addExtras(extras)
                         .build())
                 .setOptions(Options.newBuilder()
                         // 此字段的值是用来指定本推送要推送的apns环境，false表示开发，true表示生产；对android和自定义消息无意义
@@ -257,7 +278,8 @@ public class JPushClients {
      * @param extras
      * @return
      */
-    private PushPayload buildPushObject_all_tagList_alertWithTitle(List<String> tagsList, String notificationTitle, String msgTitle, String msgContent, String extras, boolean apnsProduction) {
+    private PushPayload buildPushObject_all_tagList_alertWithTitle(List<String> tagsList, String notificationTitle, String msgTitle,
+                                                                   String msgContent, Map<String,String> extras, boolean apnsProduction) {
         //创建一个IosAlert对象，可指定APNs的alert、title等字段
         //IosAlert iosAlert =  IosAlert.newBuilder().setTitleAndBody("title", "alert body").build();
         return PushPayload.newBuilder()
@@ -272,7 +294,8 @@ public class JPushClients {
                                 .setAlert(notificationTitle)
                                 .setTitle(notificationTitle)
                                 //此字段为透传字段，不会显示在通知栏。用户可以通过此字段来做一些定制需求，如特定的key传要指定跳转的页面（value）
-                                .addExtra("androidNotification extras key", extras)
+                                //androidNotification extras key
+                                .addExtras(extras)
                                 .build())
                         // 指定当前推送的iOS通知
                         .addPlatformNotification(IosNotification.newBuilder()
@@ -285,7 +308,8 @@ public class JPushClients {
                                 // 如果系统没有此音频则以系统默认声音提醒；此字段如果传空字符串，iOS9及以上的系统是无声音提醒，以下的系统是默认声音
                                 .setSound("default")
                                 // 此字段为透传字段，不会显示在通知栏。用户可以通过此字段来做一些定制需求，如特定的key传要指定跳转的页面（value）
-                                .addExtra("iosNotification extras key", extras)
+                                //iosNotification extras key
+                                .addExtras(extras)
                                 // 此项说明此推送是一个background推送，想了解background看：http://docs.jpush.io/client/ios_tutorials/#ios-7-background-remote-notification
                                 // 取消此注释，消息推送时ios将无法在锁屏情况接收
                                 // .setContentAvailable(true)
@@ -297,7 +321,8 @@ public class JPushClients {
                 .setMessage(Message.newBuilder()
                         .setMsgContent(msgContent)
                         .setTitle(msgTitle)
-                        .addExtra("message extras key", extras)
+                        //message extras key
+                        .addExtras(extras)
                         .build())
                 .setOptions(Options.newBuilder()
                         // 此字段的值是用来指定本推送要推送的apns环境，false表示开发，true表示生产；对android和自定义消息无意义
@@ -320,7 +345,8 @@ public class JPushClients {
      * @param extras
      * @return
      */
-    private PushPayload buildPushObject_android_all_alertWithTitle(String notificationTitle, String msgTitle, String msgContent, String extras, boolean apnsProduction) {
+    private PushPayload buildPushObject_android_all_alertWithTitle(String notificationTitle, String msgTitle, String msgContent,
+                                                                   Map<String,String> extras, boolean apnsProduction) {
         return PushPayload.newBuilder()
                 // 指定要推送的平台，all代表当前应用配置了的所有平台，也可以传android等具体平台
                 .setPlatform(Platform.android())
@@ -333,7 +359,8 @@ public class JPushClients {
                                 .setAlert(notificationTitle)
                                 .setTitle(notificationTitle)
                                 // 此字段为透传字段，不会显示在通知栏。用户可以通过此字段来做一些定制需求，如特定的key传要指定跳转的页面（value）
-                                .addExtra("androidNotification extras key", extras)
+                                //androidNotification extras key
+                                .addExtras(extras)
                                 .build())
                         .build()
                 )
@@ -343,7 +370,8 @@ public class JPushClients {
                 .setMessage(Message.newBuilder()
                         .setMsgContent(msgContent)
                         .setTitle(msgTitle)
-                        .addExtra("message extras key", extras)
+                        //message extras key
+                        .addExtras(extras)
                         .build())
 
                 .setOptions(Options.newBuilder()
@@ -367,7 +395,8 @@ public class JPushClients {
      * @param extras
      * @return
      */
-    private PushPayload buildPushObject_ios_all_alertWithTitle(String notificationTitle, String msgTitle, String msgContent, String extras, boolean apnsProduction) {
+    private PushPayload buildPushObject_ios_all_alertWithTitle(String notificationTitle, String msgTitle, String msgContent,
+                                                               Map<String,String> extras, boolean apnsProduction) {
         return PushPayload.newBuilder()
                 // 指定要推送的平台，all代表当前应用配置了的所有平台，也可以传android等具体平台
                 .setPlatform(Platform.ios())
@@ -386,7 +415,8 @@ public class JPushClients {
                                 // 如果系统没有此音频则以系统默认声音提醒；此字段如果传空字符串，iOS9及以上的系统是无声音提醒，以下的系统是默认声音
                                 .setSound("default")
                                 // 此字段为透传字段，不会显示在通知栏。用户可以通过此字段来做一些定制需求，如特定的key传要指定跳转的页面（value）
-                                .addExtra("iosNotification extras key", extras)
+                                //iosNotification extras key
+                                .addExtras(extras)
                                 // 此项说明此推送是一个background推送，想了解background看：http://docs.jpush.io/client/ios_tutorials/#ios-7-background-remote-notification
                                 // .setContentAvailable(true)
                                 .build())
@@ -398,7 +428,8 @@ public class JPushClients {
                 .setMessage(Message.newBuilder()
                         .setMsgContent(msgContent)
                         .setTitle(msgTitle)
-                        .addExtra("message extras key", extras)
+                        //message extras key
+                        .addExtras(extras)
                         .build())
                 .setOptions(Options.newBuilder()
                         // 此字段的值是用来指定本推送要推送的apns环境，false表示开发，true表示生产；对android和自定义消息无意义

@@ -15,7 +15,7 @@ public class SendServiceImpl implements SendService {
     private SendMapper sendMapper;
 
     @Override
-    public List<JPush> getValid() { return sendMapper.getValid(); }
+    public List<JPush> getValid(String id) { return sendMapper.getValid(id); }
 
     @Override
     public void updateValid(String status, String id) { sendMapper.updateValid(status,id); }

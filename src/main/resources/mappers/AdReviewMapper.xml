@@ -49,10 +49,11 @@
             and   APPLICATION_TIME  between  #{applicationStartTime} and #{applicationEndTime}
         </if>
 
+        <if test="id != null and id != '' ">
+            and   id = #{id}
+        </if>
 
         ORDER BY APPLICATION_TIME DESC
-
-
 
     </select>
 
