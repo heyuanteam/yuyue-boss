@@ -16,8 +16,8 @@ public class AdReviewServiceImpl implements AdReviewService {
      * 修改广告商审核状态
      */
     @Override
-    public List<Advertisement> getAdReviewList(String merchantName, String phone, String status, String applicationStartTime,String applicationEndTime) {
-        return adReviewMapper.getAdReviewList(merchantName,phone,status, applicationStartTime,applicationEndTime);
+    public List<Advertisement> getAdReviewList(String merchantName, String merchantAddr,String phone, String status, String applicationStartTime,String applicationEndTime) {
+        return adReviewMapper.getAdReviewList(merchantName,merchantAddr,phone,status, applicationStartTime,applicationEndTime);
     }
     /**
      * 修改广告商审核状态

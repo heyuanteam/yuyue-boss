@@ -32,8 +32,8 @@ public class VideoController extends BaseController {
 
     @Autowired
     private VideoService videoService;
-    /**
-     * 获取现场信息
+    /** 视频审核
+     * 获取视频列表
      * @param
      * @param request
      */
@@ -46,8 +46,8 @@ public class VideoController extends BaseController {
         //交集参数
         String type=request.getParameter("type");
         String page=request.getParameter("page");
-        if (StringUtils.isEmpty(page))
-            return new ResponseData(CodeEnum.E_90003.getCode(),"page不可为空");
+        if (StringUtils.isEmpty(page) || !page.matches("[0-9]+"))
+            page = "1";
 
         List<UploadFile> uploadFiles=null;
         if ("get".equals(type)){
@@ -58,7 +58,6 @@ public class VideoController extends BaseController {
             else {
                 PageHelper.startPage(Integer.parseInt(page), 10);
                 uploadFiles = videoService.getVideoInfoList("","","10A");
-
             }
 
 
@@ -84,69 +83,15 @@ public class VideoController extends BaseController {
 
 
     /**
-     * 添加现场
+     * 视频审核
+     * 修改视频状态
      * @param request
      * @param response
      * @return
      */
- /*   @RequestMapping("/insertYuYueSite")
-    @ResponseBody
-    @RequiresPermissions("release:save")//具有 user:save 权限的用户才能访问此方法
-    @LoginRequired
-    public ResponseData insertYuYueSite(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response){
-        getParameterMap(request,response);
-        String id = UUID.randomUUID().toString().replace("-", "").toUpperCase().toString();
-        String title = request.getParameter("title");
-        String imageUrl = request.getParameter("imageUrl");
-        String siteAddr = request.getParameter("siteAddr");
-        String mainPerson = request.getParameter("mainPerson");
-        String personTotal = request.getParameter("personTotal");
-        String qrCodePath = request.getParameter("qrCodePath");
-        String admissionTime = request.getParameter("admissionTime");
-        String startTime=request.getParameter("startTime");
-        String endTime=request.getParameter("endTime");
-        String status=request.getParameter("status");
-        String jPushStatus=request.getParameter("jPushStatus");
-        //YuYueSite yuYueSite=new YuYueSite(id,title,imageUrl,siteAddr,mainPerson,personTotal,"",qrCodePath,admissionTime,startTime,endTime,status,jPushStatus);
-        videoService.insertVideo(new UploadFile());
-
-        return new ResponseData(CodeEnum.SUCCESS);
-    }*/
-    /**
-     * 视频更新
-     * @param uploadFile
-     * @param request
-     * @param response
-     * @return
-     */
-    @RequestMapping("/updateVideo")
+    @RequestMapping("/updateVideoStatus")
     @ResponseBody
     @RequiresPermissions("release:save")//具有 user:detail 权限的用户才能访问此方法
-    @LoginRequired
-    public ResponseData updateVideo(UploadFile uploadFile,HttpServletRequest request, HttpServletResponse response){
-        getParameterMap(request,response);
-        log.info("视频更新------------>>/video/updateVideo");
-        if (StringUtils.isEmpty(uploadFile.getId()))
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"现场id为空！！");
-        else if (StringUtils.isEmpty(uploadFile.getAuthorId()))
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"艺人id为空！！");
-        else if (StringUtils.isEmpty(uploadFile.getStatus()))
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"视频状态为空！！");
-        /*videoService.updateVideo(uploadFile);*/
-        videoService.updateVideo(uploadFile.getId(),uploadFile.getAuthorId(),uploadFile.getStatus());
-        return new ResponseData(CodeEnum.SUCCESS);
-    }
-
-
-    /**
-     * 视频删除
-     * @param request
-     * @param response
-     * @return
-     */
-    @RequestMapping("/deleteVideoById")
-    @ResponseBody
-    @RequiresPermissions("release:remove")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
     public ResponseData deleteVideoById(HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
@@ -162,14 +107,10 @@ public class VideoController extends BaseController {
         List<UploadFile> videoInfoList = videoService.getVideoInfoList(id, authorId,"");
         if (StringUtils.isEmpty(videoInfoList))return new ResponseData(CodeEnum.SUCCESS.getCode(),"未查询该视频！！");
         if ("10B".equals(status) || "10C".equals(status)){
-            /*UploadFile uploadFile = videoInfoList.get(0);
-            uploadFile.setStatus(status);
-            videoService.updateVideo(uploadFile);*/
+
             videoService.updateVideo(id,authorId,status);
         }
-        /*else if ("10C".equals(status)){
-            videoService.deleteVideoById(id,authorId);
-        }*/
+
         else {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"现场状态类型错误！！");
         }
@@ -177,4 +118,32 @@ public class VideoController extends BaseController {
         return new ResponseData(CodeEnum.SUCCESS);
 
     }
+
+
+    /**
+     * 视频审核
+     * 删除视频
+     * @param uploadFile
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/deleteVideoById")
+    @ResponseBody
+    @RequiresPermissions("release:remove")//具有 user:detail 权限的用户才能访问此方法
+    @LoginRequired
+    public ResponseData updateVideo(UploadFile uploadFile,HttpServletRequest request, HttpServletResponse response){
+        getParameterMap(request,response);
+        log.info("视频更新------------>>/video/updateVideo");
+        if (StringUtils.isEmpty(uploadFile.getId()))
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"现场id为空！！");
+        else if (StringUtils.isEmpty(uploadFile.getAuthorId()))
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"艺人id为空！！");
+        List<UploadFile> videoInfoList = videoService.getVideoInfoList(uploadFile.getId(),uploadFile.getAuthorId(),"");
+        if (StringUtils.isEmpty(videoInfoList))return new ResponseData(CodeEnum.SUCCESS.getCode(),"未查询该视频！！");
+
+        videoService.deleteVideoById(uploadFile.getId(),uploadFile.getAuthorId());
+        return new ResponseData(CodeEnum.SUCCESS);
+    }
+
 }

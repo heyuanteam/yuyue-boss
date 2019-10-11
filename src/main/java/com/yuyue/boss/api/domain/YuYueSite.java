@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -36,6 +37,8 @@ public class YuYueSite implements Serializable {
     private String status;
     //极光状态
     private String jPushStatus;
+    //现场节目
+    private List<SiteShow> siteShow;
 
 
 

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
+import com.yuyue.boss.api.domain.SiteShow;
 import com.yuyue.boss.api.domain.SystemUser;
 import com.yuyue.boss.api.domain.YuYueSite;
 import com.yuyue.boss.api.service.YuYueSiteService;
@@ -57,8 +58,13 @@ public class YuYueSiteController extends BaseController{
         if ("get".equals(type)){
             log.info("获取现场信息------------>>/site/getYuYueSiteInfo");
             String id=request.getParameter("id");
-            PageHelper.startPage(Integer.parseInt(page), 10);
-            yuYueSiteInfo = yuYueSiteService.getYuYueSiteInfo(id,"");
+            if (StringUtils.isEmpty(id)){
+                PageHelper.startPage(Integer.parseInt(page), 10);
+                yuYueSiteInfo = yuYueSiteService.getYuYueSiteInfo("");
+            }else {
+                yuYueSiteInfo = yuYueSiteService.getYuYueSiteInfo(id);
+            }
+
         }else if ("search".equals(type)){
             log.info("现场搜索------------>>/site/searchYuYueSiteInfo");
             String siteAddr=request.getParameter("siteAddr");
@@ -107,7 +113,8 @@ public class YuYueSiteController extends BaseController{
         String endTime=request.getParameter("endTime");
         String status=request.getParameter("status");
         String jPushStatus=request.getParameter("jPushStatus");
-        YuYueSite yuYueSite=new YuYueSite(id,title,imageUrl,siteAddr,mainPerson,personTotal,"",qrCodePath,admissionTime,startTime,endTime,status,jPushStatus);
+        List<SiteShow> siteShows = null;
+        YuYueSite yuYueSite=new YuYueSite(id,title,imageUrl,siteAddr,mainPerson,personTotal,"",qrCodePath,admissionTime,startTime,endTime,status,jPushStatus,siteShows);
 
         yuYueSiteService.insertYuYueSite(yuYueSite);
 
