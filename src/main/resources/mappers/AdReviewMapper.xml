@@ -53,10 +53,7 @@
             and   id = #{id}
         </if>
 
-
         ORDER BY APPLICATION_TIME DESC
-
-
 
     </select>
 

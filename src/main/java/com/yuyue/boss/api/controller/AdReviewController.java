@@ -66,8 +66,7 @@ public class AdReviewController extends BaseController {
         String applicationEndTime = request.getParameter("applicationEndTime");
 
         PageHelper.startPage(Integer.parseInt(page), 10);
-        List<Advertisement> adReviewList = adReviewService.getAdReviewList(merchantName,merchantAddr, phone, status, applicationStartTime,applicationEndTime);
-        List<Advertisement> adReviewList = adReviewService.getAdReviewList("",merchantName, phone, status, applicationStartTime,applicationEndTime);
+        List<Advertisement> adReviewList = adReviewService.getAdReviewList("",merchantName,merchantAddr, phone, status, applicationStartTime,applicationEndTime);
         PageInfo<Advertisement> pageInfo=new PageInfo<>(adReviewList);
         long total = pageInfo.getTotal();
         int pages = pageInfo.getPages();
@@ -117,15 +116,21 @@ public class AdReviewController extends BaseController {
         }
 
         JPush jPush = new JPush();
+        String str = "";
+        if("10B".equals(status)){
+            str = "通过！";
+        } else {
+            str = "拒绝！";
+        }
         try {
             log.info("极光广告商审核的通知开始-------------->>start");
             Map<String, String> map = Maps.newHashMap();
             map.put("type","2");
             map.put("notice","广告商审核的通知");
-            List<Advertisement> adReviewList = adReviewService.getAdReviewList(id, "", "", "", "", "");
+            List<Advertisement> adReviewList = adReviewService.getAdReviewList(id,"", "", "", "", "", "");
             if (CollectionUtils.isNotEmpty(adReviewList)){
                 jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
-                jPush.setNotificationTitle("恭喜"+adReviewList.get(0).getPhone()+"广告商审核通过！");
+                jPush.setNotificationTitle("您好！"+adReviewList.get(0).getPhone()+"广告商审核"+str);
                 jPush.setMsgTitle(adReviewList.get(0).getMerchantName());
                 jPush.setMsgContent(adReviewList.get(0).getBusinessLicense());
                 jPush.setExtras("2");
