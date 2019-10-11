@@ -2,22 +2,52 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yuyue.boss.api.mapper.YuYueSiteMapper">
 
+    <resultMap type="com.yuyue.boss.api.domain.YuYueSite" id="myYuYueSite">
+        <id column="sid" property="id"/>
+        <result column="title" property="title"/>
+        <result column="imageUrl" property="imageUrl"/>
+        <result column="siteAddr" property="siteAddr"/>
+        <result column="mainPerson" property="mainPerson"/>
+        <result column="personTotal" property="personTotal"/>
+        <result column="personSum" property="personSum"/>
+        <result column="ADMISSION_TIME" property="admissionTime"/>
+        <result column="START_TIME" property="startTime"/>
+        <result column="END_TIME" property="endTime"/>
+        <result column="jPushStatus" property="jPushStatus"/>
+        <result column="qrCodePath" property="qrCodePath"/>
+        <result column="status" property="status"/>
+        <collection property="siteShow" ofType="com.yuyue.boss.api.domain.SiteShow">
+            <!-- 关联条件Employee的dept_id对应着Department的id -->
+            <id column="showsId" property="id"/>
+            <result column="showName" property="showName"/>
+            <result column="category" property="category"/>
+            <result column="showPersons" property="showPersons"/>
+            <result column="SHOW_TIME" property="showTime"/>
 
+        </collection>
+    </resultMap>
 
     <!-- 获取全部现场信息  或  查询 现场详情 -->
-    <select id="getYuYueSiteInfo" parameterType="String" resultType="com.yuyue.boss.api.domain.YuYueSite">
-        SELECT *,
-        DATE_FORMAT(ADMISSION_TIME ,'%Y-%m-%d %H:%i:%s') admissionTime,
-        DATE_FORMAT(START_TIME ,'%Y-%m-%d %H:%i:%s') startTime,
-        DATE_FORMAT(END_TIME ,'%Y-%m-%d %H:%i:%s') endTime
-        FROM yuyue_site where 1=1
-        <if test="id != null and id != ''">
-            and id = #{id}
+    <select id="getYuYueSiteInfo" parameterType="String" resultMap="myYuYueSite">
+        SELECT
+        site.id "sid",site.title,site.imageUrl,site.siteAddr,site.mainPerson,site.personTotal,site.personSum,
+        site.qrCodePath,site.jPushStatus,site.status
+
+      <if test="id != null and id != ''">
+            ,shows.id "showsId",shows.showName,shows.category,shows.showPersons,shows.SHOW_TIME
+            FROM
+            yuyue_site site
+            LEFT JOIN yuyue_site_show shows ON site.id = shows.siteId
+            WHERE
+            site.id =  #{id}
         </if>
-        <if test="status != null and status != ''">
-            and status = #{status}
+        <if test="id == null or id == ''">
+            FROM
+            yuyue_site site
+
         </if>
-        ORDER BY START_TIME DESC
+
+        ORDER BY site.START_TIME DESC
 
 
     </select>

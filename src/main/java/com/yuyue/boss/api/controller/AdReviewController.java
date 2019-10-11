@@ -59,12 +59,14 @@ public class AdReviewController extends BaseController {
         getParameterMap(request,response);
         String page=request.getParameter("page");
         String merchantName =request.getParameter("merchantName");
+        String merchantAddr =request.getParameter("merchantAddr");
         String phone = request.getParameter("phone");
         String status = request.getParameter("status");
         String applicationStartTime = request.getParameter("applicationStartTime");
         String applicationEndTime = request.getParameter("applicationEndTime");
 
         PageHelper.startPage(Integer.parseInt(page), 10);
+        List<Advertisement> adReviewList = adReviewService.getAdReviewList(merchantName,merchantAddr, phone, status, applicationStartTime,applicationEndTime);
         List<Advertisement> adReviewList = adReviewService.getAdReviewList("",merchantName, phone, status, applicationStartTime,applicationEndTime);
         PageInfo<Advertisement> pageInfo=new PageInfo<>(adReviewList);
         long total = pageInfo.getTotal();
@@ -96,6 +98,7 @@ public class AdReviewController extends BaseController {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"参数status为空！！");
         }
         AppUser appUserMsg = appUserService.getAppUserMsg(userId);
+        System.out.println(appUserMsg);
         if (StringUtils.isNull(appUserMsg)){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"参数userId错误！！");
         }
@@ -107,6 +110,7 @@ public class AdReviewController extends BaseController {
                 appUserMsg.setUserType("4");
             else
                 return new ResponseData(CodeEnum.E_400);
+            System.out.println(appUserMsg);
             appUserService.updateAppUser(appUserMsg);
         } else {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "type参数错误！！");

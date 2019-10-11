@@ -12,7 +12,7 @@ import java.util.List;
 public interface YuYueSiteMapper extends MyBaseMapper<YuYueSite> {
 
 
-    List<YuYueSite> getYuYueSiteInfo(@Param("id") String id,@Param("status") String status);
+    List<YuYueSite> getYuYueSiteInfo(@Param("id") String id);
 
     List<YuYueSite> searchYuYueSiteInfo(@Param(value = "siteAddr")String siteAddr,
                                         @Param(value = "status")String status,

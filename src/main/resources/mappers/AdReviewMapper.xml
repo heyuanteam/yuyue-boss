@@ -34,6 +34,9 @@
             and CONCAT(merchantName) like concat('%', #{merchantName}, '%')
         </if>
 
+        <if test="merchantAddr != null and merchantAddr != ''">
+            and CONCAT(merchantAddr) like concat('%', #{merchantAddr}, '%')
+        </if>
         <if test="phone != null and phone != ''">
             and   phone = #{phone}
         </if>

@@ -17,13 +17,13 @@ public class YuYueSiteServiceImpl implements YuYueSiteService {
     private YuYueSiteMapper yuYueSiteMapper;
 
     /**
-     * 获取现场信息(id可为空查所有；不为空查唯一)
+     * 获取现场信息(id可为空查所有；不为空查详情)
      * @param id;begin;limit
      *
      */
     @Override
-    public List<YuYueSite> getYuYueSiteInfo(String id,String status) {
-        return yuYueSiteMapper.getYuYueSiteInfo(id,status);
+    public List<YuYueSite> getYuYueSiteInfo(String id) {
+        return yuYueSiteMapper.getYuYueSiteInfo(id);
     }
     /**
      * 通过搜索信息获取现场

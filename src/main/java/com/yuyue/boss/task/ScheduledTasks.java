@@ -59,7 +59,7 @@ public class ScheduledTasks {
     @Scheduled(cron = "0 0 8 * * ?")
     private void updateYuYueSiteStartStatus(){
         log.info("执行娱悦现场定时任务：---------->");
-        List<YuYueSite> yuYueSites = yuYueSiteService.getYuYueSiteInfo("","10A");
+        List<YuYueSite> yuYueSites = yuYueSiteService.searchYuYueSiteInfo("","10A","","","","");
         int times=0;
         if (StringUtils.isEmpty(yuYueSites)) return;
         log.info("查出的数据："+yuYueSites.size());
@@ -86,10 +86,10 @@ public class ScheduledTasks {
     /**
      * 8小时执行一次（执行娱悦现场定时任务）
      */
-    @Scheduled(cron = "0 0 8 * * ?")
+    @Scheduled(cron = "0 0 7 * * ?")
     private void updateYuYueSiteEndStatus(){
         log.info("执行娱悦现场定时任务：---------->结束状态");
-        List<YuYueSite> yuYueSites = yuYueSiteService.getYuYueSiteInfo("","10B");
+        List<YuYueSite> yuYueSites = yuYueSiteService.searchYuYueSiteInfo("","10A","","","","");
         int times=0;
         if (StringUtils.isEmpty(yuYueSites)) return;
         log.info("查出的数据："+yuYueSites.size());
