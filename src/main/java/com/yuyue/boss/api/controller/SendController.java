@@ -1,5 +1,6 @@
 package com.yuyue.boss.api.controller;
 
+import com.google.common.collect.Maps;
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.JPush;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,15 +43,16 @@ public class SendController extends BaseController{
     @Autowired
     private YuYueSiteService yuYueSiteService;
 
-    //极光推送
-    @Value("${jpush.appKey}")
-    private String appKey;
-
-    @Value("${jpush.masterSecret}")
-    private String masterSecret;
-
-    @Value("${jpush.apnsProduction}")
-    private boolean apnsProduction;
+    //极光推送类型
+    private static final Map<String, Object> iosMap = new HashMap<>();
+    static {
+        iosMap.put("1","艺人审核的通知");//未接，不需要参数
+        iosMap.put("2","广告商审核的通知");//不需要参数
+        iosMap.put("3","关注人发视频的通知");//未接，需要参数
+        iosMap.put("4","现场详情的通知");//未接，需要参数
+        iosMap.put("5","视频审核的通知");//不需要参数
+        iosMap.put("6","广告审核的通知");//未接，不需要参数
+    }
 
     /**
      * 极光推送，全部
@@ -67,14 +71,22 @@ public class SendController extends BaseController{
         JPush jPush = new JPush();
         try {
             if (CollectionUtils.isNotEmpty(idList)) {
+                Map<String, String> map = Maps.newHashMap();
+                map.put("type","1");
+                map.put("notice","艺人审核的通知");
+
                 jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
                 jPush.setNotificationTitle(idList.get(0).getTitle());
                 jPush.setMsgTitle(idList.get(0).getSiteAddr());
                 jPush.setMsgContent(idList.get(0).getImageUrl());
-                jPush.setExtras("1");
+                jPush.setExtras(map.toString());
+
+                List<JPush> list = sendService.getValid(jPush.getId());
+                if (CollectionUtils.isNotEmpty(list)) {
+                    return new ResponseData(CodeEnum.SUCCESS.getCode(),"请不要重复点击发布！");
+                }
                 sendService.insertJPush(jPush);
-                jPushClients.sendToAll(jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), jPush.getExtras(),
-                        apnsProduction,masterSecret,appKey);
+                jPushClients.sendToAll(jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), map);
                 sendService.updateValid("10B",jPush.getId());
                 log.info("极光推送结束-------------->>SUCCESS");
                 return new ResponseData(CodeEnum.SUCCESS);
@@ -90,6 +102,5 @@ public class SendController extends BaseController{
 //        String notificationTitle = "通知内容标题";
 //        String msgTitle = "消息内容标题";
 //        String msgContent = "消息内容";
-//        List<JPush> list = sendService.getValid();
     }
 }

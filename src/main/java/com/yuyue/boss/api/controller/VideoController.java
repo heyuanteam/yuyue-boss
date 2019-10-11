@@ -2,16 +2,23 @@ package com.yuyue.boss.api.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
+import com.yuyue.boss.api.domain.Advertisement;
+import com.yuyue.boss.api.domain.JPush;
 import com.yuyue.boss.api.domain.SystemUser;
 import com.yuyue.boss.api.domain.UploadFile;
+import com.yuyue.boss.api.service.SendService;
 import com.yuyue.boss.api.service.VideoService;
+import com.yuyue.boss.config.JPushClients;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.PageUtil;
+import com.yuyue.boss.utils.RandomSaltUtil;
 import com.yuyue.boss.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -32,6 +40,11 @@ public class VideoController extends BaseController {
 
     @Autowired
     private VideoService videoService;
+    @Autowired
+    private SendService sendService;
+    @Autowired
+    private JPushClients jPushClients;
+
     /**
      * 获取现场信息
      * @param
@@ -60,8 +73,6 @@ public class VideoController extends BaseController {
                 uploadFiles = videoService.getVideoInfoList("","","10A");
 
             }
-
-
         }else if("search".equals(type)){
             log.info("视频搜索------------>>/video/searchVideoInfo");
             String categoryId=request.getParameter("categoryId");
@@ -79,7 +90,6 @@ public class VideoController extends BaseController {
         int pages = pageInfo.getPages();
         int currentPage = Integer.parseInt(page);
         return new ResponseData(uploadFiles,currentPage,(int)total,pages);
-
     }
 
 
@@ -134,6 +144,35 @@ public class VideoController extends BaseController {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"视频状态为空！！");
         /*videoService.updateVideo(uploadFile);*/
         videoService.updateVideo(uploadFile.getId(),uploadFile.getAuthorId(),uploadFile.getStatus());
+
+        JPush jPush = new JPush();
+        try {
+            log.info("极光视频审核的通知开始-------------->>start");
+            Map<String, String> map = Maps.newHashMap();
+            map.put("type","5");
+            map.put("notice","视频审核的通知");
+//            List<Advertisement> adReviewList = adReviewService.getAdReviewList(id, "", "", "", "", "");
+//            if (CollectionUtils.isNotEmpty(adReviewList)){
+                jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
+//                jPush.setNotificationTitle("恭喜"+adReviewList.get(0).getPhone()+"视频审核通过！");
+//                jPush.setMsgTitle(adReviewList.get(0).getMerchantName());
+//                jPush.setMsgContent(adReviewList.get(0).getBusinessLicense());
+
+                jPush.setExtras("5");
+                List<JPush> list = sendService.getValid(jPush.getId());
+                if (CollectionUtils.isNotEmpty(list)) {
+                    return new ResponseData(CodeEnum.SUCCESS.getCode(),"请不要重复点击！");
+                }
+                sendService.insertJPush(jPush);
+                jPushClients.sendToAll(jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), map);
+                sendService.updateValid("10B",jPush.getId());
+                log.info("极光视频审核的通知结束-------------->>SUCCESS");
+//            }
+        } catch (Exception e) {
+            log.info("极光视频审核的通知失败！");
+            sendService.updateValid("10C",jPush.getId());
+            return new ResponseData(CodeEnum.E_400.getCode(),"极光视频审核的通知失败！");
+        }
         return new ResponseData(CodeEnum.SUCCESS);
     }
 
