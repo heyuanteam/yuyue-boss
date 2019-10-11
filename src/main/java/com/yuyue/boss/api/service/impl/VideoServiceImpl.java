@@ -21,12 +21,12 @@ public class VideoServiceImpl implements VideoService {
 
 
     @Override
-    public List<UploadFile> getVideoInfoList(String id, String status,String authorId) {
+    public List<UploadFile> getVideoInfoList(String id,String authorId, String status) {
         if (StringUtils.isNotEmpty(id)){
+            System.out.println(ResultJSONUtils.getHashValue("yuyue_upload_file_", authorId));
             return videoMapper.getVideoInfoList(ResultJSONUtils.getHashValue("yuyue_upload_file_", authorId), id,status);
-        }
-
-        else{
+        } else{
+            System.out.println(ResultJSONUtils.getHashValue("yuyue_upload_file_", authorId));
             List<UploadFile> uploadFiles = videoMapper.getVideoInfoList("yuyue_upload_file_0", "", status);
             uploadFiles.addAll(videoMapper.getVideoInfoList("yuyue_upload_file_1", "", status));
             return uploadFiles;
@@ -55,6 +55,7 @@ public class VideoServiceImpl implements VideoService {
     }
     @Override
     public void deleteVideoById(String id, String authorId) {
+        System.out.println(ResultJSONUtils.getHashValue("yuyue_upload_file_", authorId));
         List<UploadFile> uploadFile = videoMapper.getVideoInfoList(ResultJSONUtils.getHashValue("yuyue_upload_file_", authorId), id, "");
         if (StringUtils.isEmpty(uploadFile))return;
         else{

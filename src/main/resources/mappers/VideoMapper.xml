@@ -47,7 +47,7 @@
         </choose>
         <choose>
             <when test="status!=null and status!=''">
-                and   b.USER_STATUS = #{status}
+                and   b.status = #{status}
             </when>
         </choose>
 

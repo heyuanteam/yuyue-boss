@@ -58,7 +58,10 @@ public class AdReviewController extends BaseController {
     @LoginRequired
     public ResponseData getAdReviewList(HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
+        log.info("广告商审核列表-------------->>/adReview/getAdReviewList");
         String page=request.getParameter("page");
+        if (StringUtils.isEmpty(page) || !page.matches("[0-9]+"))
+            page = "1";
         String merchantName =request.getParameter("merchantName");
         String merchantAddr =request.getParameter("merchantAddr");
         String phone = request.getParameter("phone");
@@ -87,6 +90,7 @@ public class AdReviewController extends BaseController {
     @LoginRequired
     public ResponseData updateAdReviewStatus(HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
+        log.info("修改广告商审核状态-------------->>/adReview/updateAdReviewStatus");
         String id = request.getParameter("id");
         String userId = request.getParameter("userId");
         String status = request.getParameter("status");

@@ -51,9 +51,9 @@ public class YuYueSiteController extends BaseController{
         //交集参数
         String page=request.getParameter("page");
         String type=request.getParameter("type");
-        if (StringUtils.isEmpty(page))
-            return new ResponseData(CodeEnum.E_90003.getCode(),"page不可为空");
 
+        if (StringUtils.isEmpty(page) || !page.matches("[0-9]+"))
+            page = "1";
         List<YuYueSite> yuYueSiteInfo =null;
         if ("get".equals(type)){
             log.info("获取现场信息------------>>/site/getYuYueSiteInfo");
