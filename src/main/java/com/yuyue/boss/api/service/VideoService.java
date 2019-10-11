@@ -5,7 +5,7 @@ import com.yuyue.boss.api.domain.UploadFile;
 import java.util.List;
 
 public interface VideoService {
-    List<UploadFile> getVideoInfoList(String id,String authorId,String status);
+    List<UploadFile> getVideoInfoList(String id,String authorId, String status);
 
 
     List<UploadFile> searchVideoInfo(String categoryId, String startTime,String endTime,

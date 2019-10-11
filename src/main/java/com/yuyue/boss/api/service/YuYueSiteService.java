@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface YuYueSiteService {
 
-    List<YuYueSite> getYuYueSiteInfo(String id,String status);
+    List<YuYueSite> getYuYueSiteInfo(String id);
 
     List<YuYueSite> searchYuYueSiteInfo(String siteAddr, String status,String jPushStatus,
                                         String mainPerson,String startTime,String endTime);

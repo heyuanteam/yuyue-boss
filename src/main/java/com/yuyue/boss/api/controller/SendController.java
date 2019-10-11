@@ -67,7 +67,7 @@ public class SendController extends BaseController{
         if (StringUtils.isEmpty(parameterMap.get("id"))) {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "标题ID不可以为空！");
         }
-        List<YuYueSite> idList = yuYueSiteService.getYuYueSiteInfo(parameterMap.get("id"), "");
+        List<YuYueSite> idList = yuYueSiteService.getYuYueSiteInfo(parameterMap.get("id"));
         JPush jPush = new JPush();
         try {
             if (CollectionUtils.isNotEmpty(idList)) {
