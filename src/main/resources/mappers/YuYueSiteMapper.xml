@@ -37,7 +37,7 @@
         DATE_FORMAT(site.END_TIME ,'%Y-%m-%d %H:%i:%s') END_TIME
 
       <if test="id != null and id != ''">
-            ,shows.id "showsId",shows.showName,shows.category,shows.showPersons,shows.SHOW_TIME
+            ,shows.id showsId,shows.showName,shows.category,shows.showPersons,shows.SHOW_TIME
             FROM
             yuyue_site site
             LEFT JOIN yuyue_site_show shows ON site.id = shows.siteId

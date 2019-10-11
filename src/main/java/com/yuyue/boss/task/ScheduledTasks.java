@@ -54,9 +54,9 @@ public class ScheduledTasks {
     }
 
     /**
-     * 8小时执行一次（执行娱悦现场定时任务）
+     * 6小时执行一次（执行娱悦现场定时任务）
      */
-    @Scheduled(cron = "0 0 8 * * ?")
+    @Scheduled(cron = "0 0 6 * * ?")
     private void updateYuYueSiteStartStatus(){
         log.info("执行娱悦现场定时任务：---------->");
         List<YuYueSite> yuYueSites = yuYueSiteService.searchYuYueSiteInfo("","10A","","","","");

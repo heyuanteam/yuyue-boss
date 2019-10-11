@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -132,26 +133,28 @@ public class VideoController extends BaseController {
         }
         try {
             log.info("极光视频审核的通知开始-------------->>start");
-            Map<String, String> map = Maps.newHashMap();
-            map.put("type","5");
-            map.put("notice","视频审核的通知");
-//            List<Advertisement> adReviewList = adReviewService.getAdReviewList(id, "", "", "", "", "");
-//            if (CollectionUtils.isNotEmpty(adReviewList)){
-            jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
-//            jPush.setNotificationTitle("您好！"+adReviewList.get(0).getPhone()+"视频审核"+str);
-//                jPush.setMsgTitle(adReviewList.get(0).getMerchantName());
-//                jPush.setMsgContent(adReviewList.get(0).getBusinessLicense());
+            List<UploadFile> videoList = videoService.getVideoInfoList(id, authorId, "");
+            if (CollectionUtils.isNotEmpty(videoList)){
+                Map<String, String> map = Maps.newHashMap();
+                map.put("type","5");
+                map.put("notice","视频审核的通知");
+                jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
+                jPush.setNotificationTitle("您好！"+videoList.get(0).getFilesName()+"视频审核"+str);
+                jPush.setMsgTitle(videoList.get(0).getTitle());
+                jPush.setMsgContent(videoList.get(0).getDescription());
+                jPush.setExtras("5");
 
-            jPush.setExtras("5");
-            List<JPush> list = sendService.getValid(jPush.getId());
-            if (CollectionUtils.isNotEmpty(list)) {
-                return new ResponseData(CodeEnum.SUCCESS.getCode(),"请不要重复点击！");
+                List<JPush> list = sendService.getValid(jPush.getId());
+                if (CollectionUtils.isNotEmpty(list)) {
+                    return new ResponseData(CodeEnum.SUCCESS.getCode(),"请不要重复点击！");
+                }
+                sendService.insertJPush(jPush);
+                List<String> stringList = new ArrayList<>();
+                stringList.add(authorId);
+                jPushClients.sendToAliasList(stringList,jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), map);
+                sendService.updateValid("10B",jPush.getId());
+                log.info("极光视频审核的通知结束-------------->>SUCCESS");
             }
-            sendService.insertJPush(jPush);
-            jPushClients.sendToAll(jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), map);
-            sendService.updateValid("10B",jPush.getId());
-            log.info("极光视频审核的通知结束-------------->>SUCCESS");
-//            }
         } catch (Exception e) {
             log.info("极光视频审核的通知失败！");
             sendService.updateValid("10C",jPush.getId());
