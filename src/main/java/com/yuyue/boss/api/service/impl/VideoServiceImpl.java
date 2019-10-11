@@ -22,7 +22,7 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     public List<UploadFile> getVideoInfoList(String id, String status,String authorId) {
-        if (StringUtils.isEmpty(id)){
+        if (StringUtils.isNotEmpty(id)){
             return videoMapper.getVideoInfoList(ResultJSONUtils.getHashValue("yuyue_upload_file_", authorId), id,status);
         }
 

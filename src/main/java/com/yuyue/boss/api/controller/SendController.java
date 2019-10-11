@@ -74,7 +74,7 @@ public class SendController extends BaseController{
                 Map<String, String> map = Maps.newHashMap();
                 map.put("type","4");
                 map.put("notice","现场详情的通知");
-                map.put("id",parameterMap.get("id"));
+                map.put("sceneId",parameterMap.get("id"));
                 jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
                 jPush.setNotificationTitle(idList.get(0).getTitle());
                 jPush.setMsgTitle(idList.get(0).getSiteAddr());
