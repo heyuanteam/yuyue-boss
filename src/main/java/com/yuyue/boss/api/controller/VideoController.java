@@ -119,8 +119,6 @@ public class VideoController extends BaseController {
         List<UploadFile> videoInfoList = videoService.getVideoInfoList(id, authorId,"");
         if (StringUtils.isEmpty(videoInfoList))return new ResponseData(CodeEnum.SUCCESS.getCode(),"未查询该视频！！");
         if ("10B".equals(status) || "10C".equals(status)){
-            videoService.updateVideo(id,authorId,status);
-
             JPush jPush = new JPush();
             String str = "";
             if("10B".equals(status)){
@@ -137,8 +135,8 @@ public class VideoController extends BaseController {
                     map.put("notice","视频审核的通知");
                     jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
                     jPush.setNotificationTitle("您好! "+videoList.get(0).getFilesName()+"视频审核"+str);
-                    jPush.setMsgTitle(videoList.get(0).getTitle());
-                    jPush.setMsgContent(videoList.get(0).getDescription());
+                    jPush.setMsgTitle("视频审核的通知");
+                    jPush.setMsgContent(videoList.get(0).getTitle());
                     jPush.setExtras("5");
 
                     List<JPush> list = sendService.getValid(jPush.getId());
@@ -160,6 +158,7 @@ public class VideoController extends BaseController {
                 return new ResponseData(CodeEnum.E_400.getCode(),"极光视频审核的通知失败！");
             }
 
+            videoService.updateVideo(id,authorId,status);
         } else {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"现场状态类型错误！！");
         }
