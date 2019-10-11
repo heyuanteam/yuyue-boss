@@ -31,7 +31,10 @@
     <select id="getYuYueSiteInfo" parameterType="String" resultMap="myYuYueSite">
         SELECT
         site.id "sid",site.title,site.imageUrl,site.siteAddr,site.mainPerson,site.personTotal,site.personSum,
-        site.qrCodePath,site.jPushStatus,site.status
+        site.qrCodePath,site.jPushStatus,site.status,
+        DATE_FORMAT(site.ADMISSION_TIME ,'%Y-%m-%d %H:%i:%s') ADMISSION_TIME,
+        DATE_FORMAT(site.START_TIME ,'%Y-%m-%d %H:%i:%s') START_TIME,
+        DATE_FORMAT(site.END_TIME ,'%Y-%m-%d %H:%i:%s') END_TIME
 
       <if test="id != null and id != ''">
             ,shows.id "showsId",shows.showName,shows.category,shows.showPersons,shows.SHOW_TIME
@@ -52,12 +55,14 @@
 
     </select>
 
-    <select id="searchYuYueSiteInfo" parameterType="String" resultType="com.yuyue.boss.api.domain.YuYueSite">
-        SELECT *,
-        DATE_FORMAT(ADMISSION_TIME ,'%Y-%m-%d %H:%i:%s') admissionTime,
-        DATE_FORMAT(START_TIME ,'%Y-%m-%d %H:%i:%s') startTime,
-        DATE_FORMAT(END_TIME ,'%Y-%m-%d %H:%i:%s') endTime
-        FROM yuyue_site where 1=1
+    <select id="searchYuYueSiteInfo" parameterType="String" resultMap="myYuYueSite">
+        SELECT
+        site.id "sid",site.title,site.imageUrl,site.siteAddr,site.mainPerson,site.personTotal,site.personSum,
+        site.qrCodePath,site.jPushStatus,site.status,
+        DATE_FORMAT(site.ADMISSION_TIME ,'%Y-%m-%d %H:%i:%s') ADMISSION_TIME,
+        DATE_FORMAT(site.START_TIME ,'%Y-%m-%d %H:%i:%s') START_TIME,
+        DATE_FORMAT(site.END_TIME ,'%Y-%m-%d %H:%i:%s') END_TIME
+        FROM yuyue_site site where 1=1
         <if test="siteAddr != null and siteAddr != ''">
             and CONCAT(siteAddr) like concat('%', #{siteAddr}, '%')
         </if>
