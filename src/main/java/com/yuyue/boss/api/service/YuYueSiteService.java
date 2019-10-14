@@ -1,5 +1,6 @@
 package com.yuyue.boss.api.service;
 
+import com.yuyue.boss.api.domain.SiteShow;
 import com.yuyue.boss.api.domain.YuYueSite;
 
 
@@ -21,4 +22,5 @@ public interface YuYueSiteService {
 
     void deleteYuYueSiteById(String id);
 
+    void insertSiteShow(SiteShow siteShow);
 }
