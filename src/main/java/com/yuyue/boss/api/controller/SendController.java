@@ -176,7 +176,7 @@ public class SendController extends BaseController{
         String str = "10B" == status?"通过! ":"拒绝! ";
         try {
             log.info("极光视频审核的通知开始-------------->>start");
-            List<UploadFile> videoList = videoService.getVideoInfoList(id, authorId, "");
+            List<UploadFile> videoList = videoService.getVideoInfoList();
             if (CollectionUtils.isNotEmpty(videoList)){
                 Map<String, String> map = Maps.newHashMap();
                 map.put("type","5");

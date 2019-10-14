@@ -21,23 +21,15 @@ public class VideoServiceImpl implements VideoService {
 
 
     @Override
-    public List<UploadFile> getVideoInfoList(String id,String authorId, String status) {
-        if (StringUtils.isNotEmpty(id)){
-            System.out.println(ResultJSONUtils.getHashValue("yuyue_upload_file_", authorId));
-            return videoMapper.getVideoInfoList(ResultJSONUtils.getHashValue("yuyue_upload_file_", authorId), id,status);
-        } else{
-            System.out.println(ResultJSONUtils.getHashValue("yuyue_upload_file_", authorId));
-            List<UploadFile> uploadFiles = videoMapper.getVideoInfoList("yuyue_upload_file_0", "", status);
-            uploadFiles.addAll(videoMapper.getVideoInfoList("yuyue_upload_file_1", "", status));
-            return uploadFiles;
-        }
+    public List<UploadFile> getVideoInfoList() {
+
+            return  videoMapper.getVideoInfoList();
     }
 
     @Override
-    public List<UploadFile> searchVideoInfo(String categoryId, String startTime, String endTime, String title, String status) {
-        List<UploadFile> uploadFiles = videoMapper.searchVideoInfo("yuyue_upload_file_0",categoryId, startTime, endTime, title, status);
-        uploadFiles.addAll( videoMapper.searchVideoInfo("yuyue_upload_file_1",categoryId, startTime, endTime, title, status));
-        return uploadFiles;
+    public List<UploadFile> searchVideoInfo(String id,String categoryId, String startTime, String endTime, String title, String status) {
+
+        return  videoMapper.searchVideoInfo(id,categoryId, startTime, endTime, title, status);
     }
 
     @Override
@@ -56,7 +48,7 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public void deleteVideoById(String id, String authorId) {
         System.out.println(ResultJSONUtils.getHashValue("yuyue_upload_file_", authorId));
-        List<UploadFile> uploadFile = videoMapper.getVideoInfoList(ResultJSONUtils.getHashValue("yuyue_upload_file_", authorId), id, "");
+        List<UploadFile> uploadFile = videoMapper.searchVideoInfo(id,"","","","","");
         if (StringUtils.isEmpty(uploadFile))return;
         else{
             try {
