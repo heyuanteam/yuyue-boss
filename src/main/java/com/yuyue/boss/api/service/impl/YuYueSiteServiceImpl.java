@@ -1,8 +1,11 @@
 package com.yuyue.boss.api.service.impl;
 
+import com.yuyue.boss.api.domain.SiteShow;
 import com.yuyue.boss.api.domain.YuYueSite;
 import com.yuyue.boss.api.mapper.YuYueSiteMapper;
+import com.yuyue.boss.api.mapper.YuYueSiteShowMapper;
 import com.yuyue.boss.api.service.YuYueSiteService;
+import com.yuyue.boss.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,8 @@ public class YuYueSiteServiceImpl implements YuYueSiteService {
 
     @Autowired
     private YuYueSiteMapper yuYueSiteMapper;
+    @Autowired
+    private YuYueSiteShowMapper yuYueSiteShowMapper;
 
     /**
      * 获取现场信息(id可为空查所有；不为空查详情)
@@ -50,7 +55,20 @@ public class YuYueSiteServiceImpl implements YuYueSiteService {
      */
     @Override
     public void insertYuYueSite(YuYueSite yuYueSite) {
-        yuYueSiteMapper.insertYuYueSite(yuYueSite);
+        try {
+            yuYueSiteMapper.insertYuYueSite(yuYueSite);
+            List<SiteShow> siteShows = yuYueSite.getSiteShow();
+            if (StringUtils.isNotEmpty(siteShows)){
+                for (SiteShow siteShow : siteShows
+                ) {
+                    yuYueSiteShowMapper.insertSiteShow(siteShow);
+                }
+            }
+        }catch (Exception e){
+            return;
+        }
+
+
     }
 
     /**
@@ -59,7 +77,20 @@ public class YuYueSiteServiceImpl implements YuYueSiteService {
      */
     @Override
     public void updateYuYueSite(YuYueSite yuYueSite) {
-        yuYueSiteMapper.updateYuYueSite(yuYueSite);
+        try {
+            yuYueSiteMapper.updateYuYueSite(yuYueSite);
+            List<SiteShow> siteShows = yuYueSite.getSiteShow();
+            if (StringUtils.isNotEmpty(siteShows)){
+                for (SiteShow siteShow : siteShows
+                ) {
+                    yuYueSiteShowMapper.updateSiteShow(siteShow);
+                }
+            }
+        }catch (Exception e){
+            return;
+        }
+
+
     }
 
     /**
@@ -69,6 +100,7 @@ public class YuYueSiteServiceImpl implements YuYueSiteService {
     @Override
     public void deleteYuYueSiteById(String id) {
         yuYueSiteMapper.deleteYuYueSiteById(id);
+        yuYueSiteShowMapper.deleteSiteShow(id);
     }
 
 
