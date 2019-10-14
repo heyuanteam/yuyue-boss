@@ -49,14 +49,14 @@ public class SendController extends BaseController{
     private AdReviewService adReviewService;
 
     //极光推送类型
-    private static final Map<String, Object> iosMap = new HashMap<>();
+    private static final Map<String, Object> sendMap = new HashMap<>();
     static {
-        iosMap.put("1","艺人审核的通知");//不需要参数
-        iosMap.put("2","广告商审核的通知");//不需要参数
-        iosMap.put("4","现场详情的通知");//需要参数
-        iosMap.put("5","视频审核的通知");//不需要参数
-        iosMap.put("6","广告审核的通知");//不需要参数
-//        iosMap.put("3","关注人发视频的通知");//需要参数
+        sendMap.put("1","艺人审核的通知");//不需要参数
+        sendMap.put("2","广告商审核的通知");//不需要参数
+        sendMap.put("4","现场详情的通知");//需要参数
+        sendMap.put("5","视频审核的通知");//不需要参数
+        sendMap.put("6","广告审核的通知");//不需要参数
+//        sendMap.put("3","关注人发视频的通知");//需要参数
     }
 
     /**
@@ -65,16 +65,20 @@ public class SendController extends BaseController{
      */
     public ResponseData sendShowJPush(ArtistReview artistReview,AppUser appUserMsg,String status){
         JPush jPush = new JPush();
-        String str = "10B" == status?"通过! ":"拒绝! ";
+        String str = "拒绝!";
+        if ("10B".equals(status)){
+            str = "通过!";
+        }
         try {
             log.info("极光艺人审核的通知开始-------------->>start");
             if (StringUtils.isNotNull(artistReview)){
                 Map<String, String> map = Maps.newHashMap();
                 map.put("type","1");
                 map.put("notice","艺人审核的通知");
-                jPush.setNotificationTitle("您好! "+artistReview.getTeamName()+"艺人审核"+str);
+                jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
+                jPush.setNotificationTitle("您好!"+artistReview.getTeamName()+"艺人审核"+str);
                 jPush.setMsgTitle(artistReview.getDescription());
-                jPush.setMsgContent("艺人审核通知！");
+                jPush.setMsgContent("艺人审核通知!");
                 jPush.setExtras("1");
                 return getJPush(jPush,appUserMsg,map,0);
             }
@@ -95,7 +99,10 @@ public class SendController extends BaseController{
      */
     public ResponseData sendAdReviewJPush(String id,AppUser appUserMsg,String status){
         JPush jPush = new JPush();
-        String str = "10B" == status?"通过! ":"拒绝! ";
+        String str = "拒绝!";
+        if ("10B".equals(status)){
+            str = "通过!";
+        }
         try {
             log.info("极光广告商审核的通知开始-------------->>start");
             List<Advertisement> adReviewList = adReviewService.getAdReviewList(id,"", "", "", "", "", "");
@@ -103,7 +110,8 @@ public class SendController extends BaseController{
                 Map<String, String> map = Maps.newHashMap();
                 map.put("type","2");
                 map.put("notice","广告商审核的通知");
-                jPush.setNotificationTitle("您好! "+adReviewList.get(0).getPhone()+"广告商审核"+str);
+                jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
+                jPush.setNotificationTitle("您好!"+adReviewList.get(0).getPhone()+"广告商审核"+str);
                 jPush.setMsgTitle(adReviewList.get(0).getMerchantName());
                 jPush.setMsgContent(adReviewList.get(0).getBusinessLicense());
                 jPush.setExtras("2");
@@ -173,7 +181,10 @@ public class SendController extends BaseController{
      */
     public ResponseData sendVideoJPush(String id,String authorId,String status){
         JPush jPush = new JPush();
-        String str = "10B" == status?"通过! ":"拒绝! ";
+        String str = "拒绝!";
+        if ("10B".equals(status)){
+            str = "通过!";
+        }
         try {
             log.info("极光视频审核的通知开始-------------->>start");
             List<UploadFile> videoList = videoService.getVideoInfoList();
@@ -182,7 +193,7 @@ public class SendController extends BaseController{
                 map.put("type","5");
                 map.put("notice","视频审核的通知");
                 jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
-                jPush.setNotificationTitle("您好! "+videoList.get(0).getFilesName()+"视频审核"+str);
+                jPush.setNotificationTitle("您好!"+videoList.get(0).getFilesName()+"视频审核"+str);
                 jPush.setMsgTitle("视频审核的通知");
                 jPush.setMsgContent(videoList.get(0).getTitle());
                 jPush.setExtras("5");
@@ -206,7 +217,10 @@ public class SendController extends BaseController{
      */
     public ResponseData sendCommodityInfoJPush(Commodity commodity,String status){
         JPush jPush = new JPush();
-        String str = "10C" == status?"通过! ":"拒绝! ";
+        String str = "拒绝!";
+        if ("10B".equals(status)){
+            str = "通过!";
+        }
         try {
             log.info("极光广告审核的通知开始-------------->>start");
             AppUser appUserMsg = appUserService.getAppUserMsg(commodity.getMerchantId());
@@ -215,7 +229,7 @@ public class SendController extends BaseController{
                 map.put("type","6");
                 map.put("notice","广告审核的通知");
                 jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
-                jPush.setNotificationTitle("您好! "+commodity.getCommodityName()+"广告审核"+str);
+                jPush.setNotificationTitle("您好!"+commodity.getCommodityName()+"广告审核"+str);
                 jPush.setMsgTitle(commodity.getCommodityName());
                 jPush.setMsgContent(commodity.getPayUrl());
                 jPush.setExtras("6");

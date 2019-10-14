@@ -101,5 +101,20 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     @Delete("DELETE FROM yuyue_system WHERE id =#{id} ")
     void delLookupCdeSystem(@Param("id") String id);
 
-    List<AppVersion> getVersionList(@Param("systemType")String systemType,@Param("versionNo") String versionNo);
+    List<AppVersion> getVersionList(@Param("systemType")String systemType,@Param("versionNo") String versionNo,
+                                    @Param("appVersionId")String appVersionId);
+
+    @Transactional
+    @Insert("INSERT into yuyue_app_version (id,system_type,version_no,update_user,program_description,number) values " +
+            "(#{appVersionId},#{systemType},#{versionNo},#{updateUser},#{programDescription},#{number})")
+    @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
+    void insertAppVersion(AppVersion appVersion);
+
+    void updateAppVersion(@Param("appVersionId")String appVersionId,@Param("versionNo") String versionNo,
+                          @Param("systemType") String systemType,@Param("programDescription") String programDescription,
+                          @Param("status")String status);
+
+    @Transactional
+    @Delete("DELETE FROM yuyue_app_version WHERE id =#{appVersionId} ")
+    void delVersion(@Param("appVersionId")String appVersionId);
 }
