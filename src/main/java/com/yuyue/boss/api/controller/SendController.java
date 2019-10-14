@@ -180,7 +180,7 @@ public class SendController extends BaseController{
         }
         try {
             log.info("极光视频审核的通知开始-------------->>start");
-            List<UploadFile> videoList = videoService.getVideoInfoList(id, authorId, "");
+            List<UploadFile> videoList = videoService.getVideoInfoList();
             if (CollectionUtils.isNotEmpty(videoList)){
                 Map<String, String> map = Maps.newHashMap();
                 map.put("type","5");

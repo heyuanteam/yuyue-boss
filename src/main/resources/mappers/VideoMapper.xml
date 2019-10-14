@@ -32,55 +32,80 @@
     </resultMap>
 
     <select id="getVideoInfoList" resultMap="myUploadFile" parameterType="String">
-        select
-        b.id ,DATE_FORMAT(b.UPLOAD_TIME,'%Y-%m-%d %H:%i:%s') UPLOAD_TIME,b.filesName,b.filesPath,
-        b.filesType,b.fileSize,b.authorId,b.description,b.playAmount,b.commentAmount,b.likeAmount,b.attentionAmount,
-        b.duration,b.title,b.videoAddress,b.categoryId,b.status,
-        m.ID userId,m.USER_NICK_NAME,m.HEADP_URL,m.ATTENTION_TOTAL,m.LIKE_TOTAL,m.COMMENT_TOTAL
-        from ${tableName} b
-        left join yuyue_merchant m on b.authorId = m.ID
-        WHERE  1=1 and b.filesType = 'video' and b.status ='10A'
-        <choose>
-            <when test="id!=null and id!=''">
-                and b.id=#{id}
-            </when>
-        </choose>
-        <choose>
-            <when test="status!=null and status!=''">
-                and   b.status = #{status}
-            </when>
-        </choose>
+        SELECT total.* FROM
+        (
+        SELECT
+                b.id , UPLOAD_TIME,b.filesName,b.filesPath,
+                b.filesType,b.fileSize,b.authorId,b.description,b.playAmount,b.commentAmount,b.likeAmount,b.attentionAmount,
+                b.duration,b.title,b.videoAddress,b.categoryId,b.status,
+                m.ID "userId",m.USER_NICK_NAME,m.HEADP_URL,m.ATTENTION_TOTAL,m.LIKE_TOTAL,m.COMMENT_TOTAL
+                from yuyue_upload_file_0 b
+                left join yuyue_merchant m on b.authorId = m.ID
 
-        ORDER BY b.UPLOAD_TIME DESC
+        WHERE
+              1=1 and b.filesType = 'video'
 
+        UNION
+        SELECT
+                b1.id ,b1.UPLOAD_TIME,b1.filesName,b1.filesPath,
+                b1.filesType,b1.fileSize,b1.authorId,b1.description,b1.playAmount,b1.commentAmount,b1.likeAmount,b1.attentionAmount,
+                b1.duration,b1.title,b1.videoAddress,b1.categoryId,b1.status,
+                m1.ID "userId",m1.USER_NICK_NAME,m1.HEADP_URL,m1.ATTENTION_TOTAL,m1.LIKE_TOTAL,m1.COMMENT_TOTAL
+                from yuyue_upload_file_1 b1
+                left join yuyue_merchant  m1 on b1.authorId = m1.ID
 
+        WHERE
+             1=1 and b1.filesType = 'video'  ) total
+
+        WHERE 1=1 and total.`status` = '10A'
+        ORDER BY playAmount DESC
 
     </select>
 
 
     <select id="searchVideoInfo" parameterType="String" resultMap="myUploadFile">
+        SELECT total.* FROM
+        (
         SELECT
-        b.id ,DATE_FORMAT(b.UPLOAD_TIME,'%Y-%m-%d %H:%i:%s') UPLOAD_TIME,b.filesName,b.filesPath,
+        b.id , UPLOAD_TIME,b.filesName,b.filesPath,
         b.filesType,b.fileSize,b.authorId,b.description,b.playAmount,b.commentAmount,b.likeAmount,b.attentionAmount,
-        b.duration,b.title,b.videoAddress,b.categoryId,b.status
-        m.ID userId,m.USER_NICK_NAME,m.HEADP_URL,m.ATTENTION_TOTAL,m.LIKE_TOTAL,m.COMMENT_TOTAL
-        from ${tableName} b
+        b.duration,b.title,b.videoAddress,b.categoryId,b.status,
+        m.ID "userId",m.USER_NICK_NAME,m.HEADP_URL,m.ATTENTION_TOTAL,m.LIKE_TOTAL,m.COMMENT_TOTAL
+        from yuyue_upload_file_0 b
         left join yuyue_merchant m on b.authorId = m.ID
 
-        where 1=1
+        WHERE
+        1=1 and b.filesType = 'video'
+
+        UNION
+        SELECT
+        b1.id ,b1.UPLOAD_TIME,b1.filesName,b1.filesPath,
+        b1.filesType,b1.fileSize,b1.authorId,b1.description,b1.playAmount,b1.commentAmount,b1.likeAmount,b1.attentionAmount,
+        b1.duration,b1.title,b1.videoAddress,b1.categoryId,b1.status,
+        m1.ID "userId",m1.USER_NICK_NAME,m1.HEADP_URL,m1.ATTENTION_TOTAL,m1.LIKE_TOTAL,m1.COMMENT_TOTAL
+        from yuyue_upload_file_1 b1
+        left join yuyue_merchant  m1 on b1.authorId = m1.ID
+
+        WHERE
+        1=1 and b1.filesType = 'video'  ) total
+
+        WHERE  1=1
+        <if test="id != null and id != ''">
+            and total.id = #{id}
+        </if>
         <if test="categoryId != null and categoryId != ''">
-            and b.categoryId = #{categoryId}
+            and total.categoryId = #{categoryId}
         </if>
         <if test="status != null and status != ''">
-            and  b.status = #{status}
+            and  total.status = #{status}
         </if>
         <if test="title != null and title != ''">
-            and CONCAT(b.title) like concat('%', #{title}, '%')
+            and CONCAT(total.title) like concat('%', #{title}, '%')
         </if>
         <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
             and  UPLOAD_TIME BETWEEN  #{startTime}  AND  #{endTime}
         </if>
-        ORDER BY b.UPLOAD_TIME DESC
+        ORDER BY total.UPLOAD_TIME DESC
 
     </select>
 
