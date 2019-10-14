@@ -17,9 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -94,13 +93,14 @@ public class YuYueSiteController extends BaseController{
      * @param response
      * @return
      */
-    @RequestMapping("/insertYuYueSite")
+    @RequestMapping(value = "/insertYuYueSite" , method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("scene:save")//具有 user:save 权限的用户才能访问此方法
     @LoginRequired
-    public ResponseData insertYuYueSite(YuYueSite yuYueSite1,HttpServletRequest request, HttpServletResponse response){
+    public ResponseData insertYuYueSite(@RequestBody YuYueSite yuYueSite, HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
-        log.info("添加现场------------>>/site/insertYuYueSite");
+        log.info("添加现场------------>>/site/insertYuYueSite"+yuYueSite);
+
         String id = UUID.randomUUID().toString().replace("-", "").toUpperCase().toString();
         String title = request.getParameter("title");
         String imageUrl = request.getParameter("imageUrl");
@@ -113,7 +113,7 @@ public class YuYueSiteController extends BaseController{
         String endTime=request.getParameter("endTime");
         String status=request.getParameter("status");
         String jPushStatus=request.getParameter("jPushStatus");
-        List<SiteShow> siteShows = yuYueSite1.getSiteShow();
+        List<SiteShow> siteShows = yuYueSite.getSiteShow();
         if (StringUtils.isNotEmpty(siteShows)){
             for (SiteShow siteShow : siteShows
             ) {
@@ -121,9 +121,8 @@ public class YuYueSiteController extends BaseController{
             }
         }
 
-        YuYueSite yuYueSite = new YuYueSite(id,title,imageUrl,siteAddr,mainPerson,personTotal,"",qrCodePath,admissionTime,startTime,endTime,status,jPushStatus,siteShows);
 
-        yuYueSiteService.insertYuYueSite(yuYueSite);
+        yuYueSiteService.insertYuYueSite(new YuYueSite(id,title,imageUrl,siteAddr,mainPerson,personTotal,"",qrCodePath,admissionTime,startTime,endTime,status,jPushStatus,siteShows));
 
         return new ResponseData();
     }
@@ -134,12 +133,13 @@ public class YuYueSiteController extends BaseController{
      * @param response
      * @return
      */
-    @RequestMapping("/updateYuYueSite")
+    @RequestMapping(value = "/updateYuYueSite" , method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("scene:save")//具有 user:save 权限的用户才能访问此方法
     @LoginRequired
-    public ResponseData updateYuYueSite(YuYueSite yuYueSite,HttpServletRequest request, HttpServletResponse response){
+    public ResponseData updateYuYueSite( @RequestBody YuYueSite yuYueSite,HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
+        log.info("接受的参数yuyueSite:"+yuYueSite.toString());
         log.info("更新娱悦现场信息------------>>/site/updateYuYueSite");
         if (StringUtils.isEmpty(yuYueSite.getId()))
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"现场id为空！！");
