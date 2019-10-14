@@ -30,7 +30,8 @@ public class ArtistReviewController extends BaseController {
     private ArtistReviewService artistReviewService;
     @Autowired
     private AppUserService appUserService;
-
+    @Autowired
+    private SendController sendController;
 
     /**
      * 获取艺人申请
@@ -87,9 +88,11 @@ public class ArtistReviewController extends BaseController {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"参数：id不合法！！");
         }
         if("10B".equals(status) || "10C".equals(status)){
+            AppUser appUserMsg = appUserService.getAppUserMsg(artistReviewList.get(0).getUserId());
+            sendController.sendShowJPush(artistReviewList.get(0),appUserMsg,status);
+
             artistReviewService.updateArtistReviewStatus(id,status);
             if ("10B".equals(status)){
-                AppUser appUserMsg = appUserService.getAppUserMsg(id);
                 if (StringUtils.isNull(appUserMsg))
                     return new ResponseData("该用户不存在");
 
@@ -99,8 +102,6 @@ public class ArtistReviewController extends BaseController {
                     appUserMsg.setUserType("4");
                 appUserService.updateAppUser(appUserMsg);
             }
-
-
         }else {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"参数：status不合法！！");
         }

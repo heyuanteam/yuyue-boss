@@ -453,11 +453,10 @@ public class SystemController extends BaseController {
     @ResponseBody
     @RequiresPermissions("PermissionManager:save")
     @LoginRequired
-    public ResponseData editSystemPermission(@CurrentUser SystemUser systemUser, HttpServletResponse response,
+    public ResponseData editSystemPermission(@CurrentUser SystemUser systemUser, HttpServletResponse response,HttpServletRequest request,
                                              @RequestBody List<SystemPermission> systemPermissionList) {
         log.info("修改用户分配系统权限详情----------->>/system/editSystemPermission");
-        //解决一下跨域问题
-        response.setHeader("Access-Control-Allow-Origin", "*");
+        getParameterMap(request, response);
         log.info("参数======>>>>>>"+JSON.toJSONString(systemPermissionList));
         try {
             for (SystemPermission systemPermission : systemPermissionList) {

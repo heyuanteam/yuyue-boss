@@ -137,8 +137,6 @@ public class CommodityController extends BaseController {
         else if("10E".equals(commodity.getStatus()))
             commodityService.updateCommodityInfo(commodity);
         else if("10C".equals(commodity.getStatus())){
-            sendController.sendCommodityInfoJPush(commodityInfoById,commodity.getStatus());
-
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             Calendar instance = Calendar.getInstance();
             instance.setTime(new Date());
@@ -166,6 +164,7 @@ public class CommodityController extends BaseController {
 
             commodityService.updateCommodityInfo(commodity);
         }
+        sendController.sendCommodityInfoJPush(commodityInfoById,commodity.getStatus());
         return new ResponseData();
     }
 
