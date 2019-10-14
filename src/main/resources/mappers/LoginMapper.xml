@@ -177,4 +177,16 @@
         </if>
     </update>
 
+    <!-- 获取版本列表 -->
+    <select id="getVersionList" resultType="com.yuyue.boss.api.domain.AppVersion" parameterType="String">
+        SELECT b.id appVersionId, b.system_type systemType,b.version_no versionNo,b.update_user updateUser,
+               b.status,b.number,b.program_description programDescription,
+        DATE_FORMAT(b.UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') updateTime,
+        DATE_FORMAT(b.CREATE_TIME ,'%Y-%m-%d %H:%i:%s') createTime
+        from yuyue_app_version b where 1=1
+        <if test="versionNo!=null and versionNo!=''">and b.version_no like concat('%', #{versionNo}, '%') </if>
+        <if test="systemType!=null and systemType!='' ">  and b.`system_type` = #{systemType}  </if>
+        order by b.CREATE_TIME
+    </select>
+
 </mapper>
