@@ -931,4 +931,63 @@ public class SystemController extends BaseController {
             return new ResponseData(CodeEnum.E_400.getCode(),"删除版本失败！");
         }
     }
+
+    /**
+     * 获取公告列表
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/getJPushList")
+    @ResponseBody
+    @RequiresPermissions("Announcement:menu")
+    @LoginRequired
+    public ResponseData getJPushList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("获取公告列表----------->>/system/getJPushList");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        try {
+            PageUtil.getPage(parameterMap.get("page"));
+            List<JPush> jPushList = loginService.getJPushList("",parameterMap.get("msgTitle"), parameterMap.get("extras"),
+                                    parameterMap.get("startTime"),parameterMap.get("endTime"));
+            if (CollectionUtils.isEmpty(jPushList)){
+                return new ResponseData(CodeEnum.SUCCESS.getCode(), "搜索的不存在！");
+            }
+            PageUtil pageUtil = new PageUtil(jPushList);
+            return new ResponseData(pageUtil);
+        } catch (Exception e) {
+            log.info("===========>>>>>>获取公告列表失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"获取公告列表失败！");
+        }
+    }
+
+    /**
+     * 删除公告
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/delJPush")
+    @ResponseBody
+    @RequiresPermissions("Announcement:remove")
+    @LoginRequired
+    public ResponseData delJPush(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("删除公告----------->>/system/delJPush");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        if (StringUtils.isEmpty(parameterMap.get("id"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "公告id不可以为空！");
+        }
+        List<JPush> jPushList = loginService.getJPushList(parameterMap.get("id"),"","","","");
+        if (CollectionUtils.isEmpty(jPushList)){
+            return new ResponseData(CodeEnum.SUCCESS.getCode(), "公告不存在！");
+        }
+        try {
+            loginService.delJPush(parameterMap.get("id"));
+            return new ResponseData(CodeEnum.SUCCESS.getCode(), "删除公告成功！");
+        } catch (Exception e) {
+            log.info("===========>>>>>>删除公告失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"删除公告失败！");
+        }
+    }
 }

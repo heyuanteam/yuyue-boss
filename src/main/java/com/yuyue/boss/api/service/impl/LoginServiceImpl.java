@@ -170,4 +170,12 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public void delVersion(String appVersionId) {
         loginMapper.delVersion(appVersionId); }
+
+    @Override
+    public List<JPush> getJPushList(String id,String msgTitle, String extras, String startTime, String endTime) {
+        return loginMapper.getJPushList(id,msgTitle,extras,startTime,endTime); }
+
+    @Override
+    public void delJPush(String id) {
+        loginMapper.delJPush(id); }
 }

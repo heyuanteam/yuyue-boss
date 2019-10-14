@@ -94,4 +94,10 @@ public interface LoginService {
 
     //删除版本
     void delVersion(String appVersionId);
+
+    //获取公告列表
+    List<JPush> getJPushList(String id,String msgTitle, String extras, String startTime, String endTime);
+
+    //删除公告
+    void delJPush(String id);
 }

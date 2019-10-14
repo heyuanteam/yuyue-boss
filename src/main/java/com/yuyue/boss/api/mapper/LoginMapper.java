@@ -117,4 +117,11 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     @Transactional
     @Delete("DELETE FROM yuyue_app_version WHERE id =#{appVersionId} ")
     void delVersion(@Param("appVersionId")String appVersionId);
+
+    List<JPush> getJPushList(@Param("id")String id,@Param("msgTitle")String msgTitle,@Param("extras") String extras,
+                             @Param("startTime") String startTime, @Param("endTime")String endTime);
+
+    @Transactional
+    @Delete("DELETE FROM yuyue_jpush WHERE id =#{id} ")
+    void delJPush(@Param("id")String id);
 }
