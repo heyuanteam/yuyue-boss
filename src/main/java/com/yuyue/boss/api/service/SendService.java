@@ -6,12 +6,12 @@ import com.yuyue.boss.api.domain.JPush;
 import java.util.List;
 
 public interface SendService {
-    //极光获取
-    List<JPush> getValid(String id);
-
     //极光更新
     void updateValid(String status, String id);
 
     //极光插入
     void insertJPush(JPush jPush);
+
+    //极光获取
+    List<JPush> getValid(String notificationTitle, String msgTitle, String msgContent, String extras, String valid);
 }
