@@ -80,7 +80,12 @@ public class ArtistReviewController extends BaseController {
 
         String id =request.getParameter("id");
         String status = request.getParameter("status");
-
+        ArtistReview artistReview = new ArtistReview();
+        artistReview.setId(id);
+        List<ArtistReview> artistReviewList = artistReviewService.searchArtistReviewList(artistReview);
+        if (StringUtils.isEmpty(artistReviewList)){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"参数：id不合法！！");
+        }
         if("10B".equals(status) || "10C".equals(status)){
             artistReviewService.updateArtistReviewStatus(id,status);
             if ("10B".equals(status)){
@@ -97,7 +102,7 @@ public class ArtistReviewController extends BaseController {
 
 
         }else {
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"参数：状态不合法！！");
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"参数：status不合法！！");
         }
         return new ResponseData();
 
