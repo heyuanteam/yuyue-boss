@@ -25,9 +25,7 @@ public class VideoServiceImpl implements VideoService {
         if (StringUtils.isNotEmpty(id)){
             System.out.println(ResultJSONUtils.getHashValue("yuyue_upload_file_", authorId));
             return videoMapper.getVideoInfoList(ResultJSONUtils.getHashValue("yuyue_upload_file_", authorId), id,status);
-        }
-
-        else{
+        } else{
             System.out.println(ResultJSONUtils.getHashValue("yuyue_upload_file_", authorId));
             List<UploadFile> uploadFiles = videoMapper.getVideoInfoList("yuyue_upload_file_0", "", status);
             uploadFiles.addAll(videoMapper.getVideoInfoList("yuyue_upload_file_1", "", status));

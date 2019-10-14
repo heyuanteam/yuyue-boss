@@ -5,10 +5,8 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
-import com.yuyue.boss.api.domain.Advertisement;
-import com.yuyue.boss.api.domain.JPush;
-import com.yuyue.boss.api.domain.SystemUser;
-import com.yuyue.boss.api.domain.UploadFile;
+import com.yuyue.boss.api.domain.*;
+import com.yuyue.boss.api.service.AppUserService;
 import com.yuyue.boss.api.service.SendService;
 import com.yuyue.boss.api.service.VideoService;
 import com.yuyue.boss.config.JPushClients;
@@ -42,9 +40,7 @@ public class VideoController extends BaseController {
     @Autowired
     private VideoService videoService;
     @Autowired
-    private SendService sendService;
-    @Autowired
-    private JPushClients jPushClients;
+    private SendController sendController;
 
     /**
      * 视频审核
@@ -119,46 +115,11 @@ public class VideoController extends BaseController {
         List<UploadFile> videoInfoList = videoService.getVideoInfoList(id, authorId,"");
         if (StringUtils.isEmpty(videoInfoList))return new ResponseData(CodeEnum.SUCCESS.getCode(),"未查询该视频！！");
         if ("10B".equals(status) || "10C".equals(status)){
+
+            sendController.sendVideoJPush(id,authorId,status);
             videoService.updateVideo(id,authorId,status);
         } else {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"现场状态类型错误！！");
-        }
-
-        JPush jPush = new JPush();
-        String str = "";
-        if("10B".equals(status)){
-            str = "通过！";
-        } else {
-            str = "拒绝！";
-        }
-        try {
-            log.info("极光视频审核的通知开始-------------->>start");
-            List<UploadFile> videoList = videoService.getVideoInfoList(id, authorId, "");
-            if (CollectionUtils.isNotEmpty(videoList)){
-                Map<String, String> map = Maps.newHashMap();
-                map.put("type","5");
-                map.put("notice","视频审核的通知");
-                jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
-                jPush.setNotificationTitle("您好！"+videoList.get(0).getFilesName()+"视频审核"+str);
-                jPush.setMsgTitle(videoList.get(0).getTitle());
-                jPush.setMsgContent(videoList.get(0).getDescription());
-                jPush.setExtras("5");
-
-                List<JPush> list = sendService.getValid(jPush.getId());
-                if (CollectionUtils.isNotEmpty(list)) {
-                    return new ResponseData(CodeEnum.SUCCESS.getCode(),"请不要重复点击！");
-                }
-                sendService.insertJPush(jPush);
-                List<String> stringList = new ArrayList<>();
-                stringList.add(authorId);
-                jPushClients.sendToAliasList(stringList,jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), map);
-                sendService.updateValid("10B",jPush.getId());
-                log.info("极光视频审核的通知结束-------------->>SUCCESS");
-            }
-        } catch (Exception e) {
-            log.info("极光视频审核的通知失败！");
-            sendService.updateValid("10C",jPush.getId());
-            return new ResponseData(CodeEnum.E_400.getCode(),"极光视频审核的通知失败！");
         }
         return new ResponseData(CodeEnum.SUCCESS);
 

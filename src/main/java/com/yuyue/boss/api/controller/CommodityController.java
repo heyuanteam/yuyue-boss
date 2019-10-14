@@ -36,6 +36,8 @@ public class CommodityController extends BaseController {
 
     @Autowired
     private CommodityService commodityService;
+    @Autowired
+    private SendController sendController;
 
     /**
      * 获取爆款列表及搜索
@@ -135,8 +137,9 @@ public class CommodityController extends BaseController {
         else if("10E".equals(commodity.getStatus()))
             commodityService.updateCommodityInfo(commodity);
         else if("10C".equals(commodity.getStatus())){
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            sendController.sendCommodityInfoJPush(commodityInfoById,commodity.getStatus());
 
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             Calendar instance = Calendar.getInstance();
             instance.setTime(new Date());
             String start = simpleDateFormat.format(instance.getTime());
