@@ -87,7 +87,8 @@ public class SendController extends BaseController{
                 jPush.setMsgContent(adReviewList.get(0).getBusinessLicense());
                 jPush.setExtras("2");
 
-                List<JPush> list = sendService.getValid(jPush.getId());
+                List<JPush> list = sendService.getValid(jPush.getNotificationTitle(),jPush.getMsgTitle(),
+                        jPush.getMsgContent(),jPush.getExtras(),jPush.getValid());
                 if (CollectionUtils.isEmpty(list)) {
                     return new ResponseData(CodeEnum.SUCCESS.getCode(),"请不要重复点击！");
                 }
@@ -138,7 +139,8 @@ public class SendController extends BaseController{
                 jPush.setMsgContent(idList.get(0).getImageUrl());
                 jPush.setExtras("4");
 
-                List<JPush> list = sendService.getValid(jPush.getId());
+                List<JPush> list = sendService.getValid(jPush.getNotificationTitle(),jPush.getMsgTitle(),
+                        jPush.getMsgContent(),jPush.getExtras(),jPush.getValid());
                 if (CollectionUtils.isNotEmpty(list)) {
                     return new ResponseData(CodeEnum.SUCCESS.getCode(),"请不要重复点击！");
                 }
@@ -189,7 +191,8 @@ public class SendController extends BaseController{
                 jPush.setMsgContent(videoList.get(0).getTitle());
                 jPush.setExtras("5");
 
-                List<JPush> list = sendService.getValid(jPush.getId());
+                List<JPush> list = sendService.getValid(jPush.getNotificationTitle(),jPush.getMsgTitle(),
+                        jPush.getMsgContent(),jPush.getExtras(),jPush.getValid());
                 if (CollectionUtils.isNotEmpty(list)) {
                     return new ResponseData(CodeEnum.SUCCESS.getCode(),"请不要重复点击！");
                 }
@@ -237,7 +240,8 @@ public class SendController extends BaseController{
                 jPush.setMsgContent(commodity.getPayUrl());
                 jPush.setExtras("6");
 
-                List<JPush> list = sendService.getValid(jPush.getId());
+                List<JPush> list = sendService.getValid(jPush.getNotificationTitle(),jPush.getMsgTitle(),
+                        jPush.getMsgContent(),jPush.getExtras(),jPush.getValid());
                 if (CollectionUtils.isEmpty(list)) {
                     return new ResponseData(CodeEnum.SUCCESS.getCode(),"请不要重复点击！");
                 }

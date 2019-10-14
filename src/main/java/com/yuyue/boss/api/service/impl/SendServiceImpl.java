@@ -15,12 +15,13 @@ public class SendServiceImpl implements SendService {
     private SendMapper sendMapper;
 
     @Override
-    public List<JPush> getValid(String id) { return sendMapper.getValid(id); }
-
-    @Override
     public void updateValid(String status, String id) { sendMapper.updateValid(status,id); }
 
     @Override
     public void insertJPush(JPush jPush) { sendMapper.insertJPush(jPush); }
 
+    @Override
+    public List<JPush> getValid(String notificationTitle, String msgTitle, String msgContent,
+                                String extras, String valid) {
+        return sendMapper.getValid(notificationTitle,msgTitle,msgContent,extras,valid); }
 }
