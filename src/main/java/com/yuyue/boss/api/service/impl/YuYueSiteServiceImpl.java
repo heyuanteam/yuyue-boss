@@ -103,7 +103,10 @@ public class YuYueSiteServiceImpl implements YuYueSiteService {
         yuYueSiteShowMapper.deleteSiteShow(id);
     }
 
-
+    @Override
+    public void insertSiteShow(SiteShow siteShow) {
+        yuYueSiteShowMapper.insertSiteShow(siteShow);
+    }
 
 
 }

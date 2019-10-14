@@ -1,30 +1,22 @@
 package com.yuyue.boss.api.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.SiteShow;
-import com.yuyue.boss.api.domain.SystemUser;
 import com.yuyue.boss.api.domain.YuYueSite;
 import com.yuyue.boss.api.service.YuYueSiteService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
-import com.yuyue.boss.utils.PageUtil;
-import com.yuyue.boss.utils.QRCodeUtil;
 import com.yuyue.boss.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,6 +27,9 @@ public class YuYueSiteController extends BaseController{
 
     @Autowired
     private YuYueSiteService yuYueSiteService;
+
+
+
     /**
      * 获取现场信息
      * @param
@@ -113,16 +108,42 @@ public class YuYueSiteController extends BaseController{
         String endTime=request.getParameter("endTime");
         String status=request.getParameter("status");
         String jPushStatus=request.getParameter("jPushStatus");
-        List<SiteShow> siteShows = yuYueSite.getSiteShow();
-        if (StringUtils.isNotEmpty(siteShows)){
+        /*List<SiteShow> siteShows = yuYueSite.getSiteShow();
+         if (StringUtils.isNotEmpty(siteShows)){
             for (SiteShow siteShow : siteShows
             ) {
                 siteShow.setId(UUID.randomUUID().toString().replace("-", "").toUpperCase().toString());
             }
+        }*/
+
+
+        yuYueSiteService.insertYuYueSite(new YuYueSite(id,title,imageUrl,siteAddr,mainPerson,personTotal,"",qrCodePath,admissionTime,startTime,endTime,status,jPushStatus,null));
+
+        return new ResponseData();
+    }
+
+
+    /**
+     * 添加现场节目
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/insertSiteShow" , method = RequestMethod.POST)
+    @ResponseBody
+    @RequiresPermissions("scene:save")//具有 user:save 权限的用户才能访问此方法
+    @LoginRequired
+    public ResponseData insertSiteShow(@RequestBody List<SiteShow> siteShows, HttpServletRequest request, HttpServletResponse response){
+        getParameterMap(request,response);
+        log.info("添加现场------------>>/site/insertYuYueSite"+JSON.toJSONString(siteShows));
+
+        if (StringUtils.isNotEmpty(siteShows)){
+            for (SiteShow siteShow : siteShows
+            ) {
+                siteShow.setId(UUID.randomUUID().toString().replace("-", "").toUpperCase().toString());
+                yuYueSiteService.insertSiteShow(siteShow);
+            }
         }
-
-
-        yuYueSiteService.insertYuYueSite(new YuYueSite(id,title,imageUrl,siteAddr,mainPerson,personTotal,"",qrCodePath,admissionTime,startTime,endTime,status,jPushStatus,siteShows));
 
         return new ResponseData();
     }
