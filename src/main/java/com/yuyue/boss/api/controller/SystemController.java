@@ -792,13 +792,14 @@ public class SystemController extends BaseController {
      */
     @RequestMapping(value = "/getVersionList")
     @ResponseBody
+    @RequiresPermissions("appversion:menu")
     @LoginRequired
     public ResponseData getVersionList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
         log.info("获取版本列表----------->>/system/getVersionList");
         Map<String, String> parameterMap = getParameterMap(request, response);
         try {
             PageUtil.getPage(parameterMap.get("page"));
-            List<AppVersion> appVersionList = loginService.getVersionList(parameterMap.get("systemType"), parameterMap.get("versionNo"));
+            List<AppVersion> appVersionList = loginService.getVersionList(parameterMap.get("systemType"), parameterMap.get("versionNo"),"");
             if (CollectionUtils.isEmpty(appVersionList)){
                 return new ResponseData(CodeEnum.SUCCESS.getCode(), "搜索的不存在！");
             }
@@ -807,6 +808,127 @@ public class SystemController extends BaseController {
         } catch (Exception e) {
             log.info("===========>>>>>>获取版本列表失败！");
             return new ResponseData(CodeEnum.E_400.getCode(),"获取版本列表失败！");
+        }
+    }
+
+    /**
+     * 添加版本
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/addVersion")
+    @ResponseBody
+    @RequiresPermissions("appversion:save")
+    @LoginRequired
+    public ResponseData addVersion(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("添加版本----------->>/system/addVersion");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        if (StringUtils.isEmpty(parameterMap.get("versionNo"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "版本号不可以为空！");
+        } else if (StringUtils.isEmpty(parameterMap.get("systemType"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "版本类型不可以为空！");
+        } else if (StringUtils.isEmpty(parameterMap.get("programDescription"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "版本介绍不可以为空！");
+        }
+        List<AppVersion> appVersionList = loginService.getVersionList(parameterMap.get("systemType"), parameterMap.get("versionNo"),"");
+        if (CollectionUtils.isNotEmpty(appVersionList)){
+            for (AppVersion appVersion:appVersionList) {
+                if (parameterMap.get("versionNo").equals(appVersion.getVersionNo())){
+                    return new ResponseData(CodeEnum.SUCCESS.getCode(), "版本号已经存在！");
+                }
+            }
+        }
+        try {
+            List<AppVersion> list = loginService.getVersionList(parameterMap.get("systemType"), "","");
+            int sort = list.get(list.size()-1).getNumber();
+            sort += 1;
+            AppVersion appVersion = new AppVersion();
+            appVersion.setAppVersionId(RandomSaltUtil.generetRandomSaltCode(32));
+            appVersion.setSystemType(parameterMap.get("systemType"));
+            appVersion.setVersionNo(parameterMap.get("versionNo"));
+            appVersion.setUpdateUser(systemUser.getLoginName());
+            appVersion.setProgramDescription(parameterMap.get("programDescription"));
+            appVersion.setNumber(sort);
+            loginService.insertAppVersion(appVersion);
+            return new ResponseData(CodeEnum.SUCCESS.getCode(), "添加版本成功！");
+        } catch (Exception e) {
+            log.info("===========>>>>>>添加版本失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"添加版本失败！");
+        }
+    }
+
+    /**
+     * 修改版本
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/editVersion")
+    @ResponseBody
+    @RequiresPermissions("appversion:save")
+    @LoginRequired
+    public ResponseData editVersion(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("修改版本----------->>/system/editVersion");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        if (StringUtils.isEmpty(parameterMap.get("versionNo"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "版本号不可以为空！");
+        } else if (StringUtils.isEmpty(parameterMap.get("systemType"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "版本类型不可以为空！");
+        } else if (StringUtils.isEmpty(parameterMap.get("programDescription"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "版本介绍不可以为空！");
+        } else if (StringUtils.isEmpty(parameterMap.get("status"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "强制更新状态不可以为空！");
+        } else if (StringUtils.isEmpty(parameterMap.get("appVersionId"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "版本appVersionId不可以为空！");
+        }
+        List<AppVersion> appVersionList = loginService.getVersionList(parameterMap.get("systemType"), parameterMap.get("versionNo"),"");
+        if (CollectionUtils.isNotEmpty(appVersionList)){
+            for (AppVersion appVersion:appVersionList) {
+                if (parameterMap.get("versionNo").equals(appVersion.getVersionNo())){
+                    return new ResponseData(CodeEnum.SUCCESS.getCode(), "版本号已经存在！");
+                }
+            }
+        }
+        try {
+            loginService.updateAppVersion(parameterMap.get("appVersionId"),parameterMap.get("versionNo"),
+                    parameterMap.get("systemType"),parameterMap.get("programDescription"),parameterMap.get("status"));
+            return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改版本成功！");
+        } catch (Exception e) {
+            log.info("===========>>>>>>修改版本失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"修改版本失败！");
+        }
+    }
+
+    /**
+     * 删除版本
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/delVersion")
+    @ResponseBody
+    @RequiresPermissions("appversion:remove")
+    @LoginRequired
+    public ResponseData delVersion(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("删除版本----------->>/system/delVersion");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        if (StringUtils.isEmpty(parameterMap.get("appVersionId"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "版本appVersionId不可以为空！");
+        }
+        List<AppVersion> appVersionList = loginService.getVersionList("","",parameterMap.get("appVersionId"));
+        if (CollectionUtils.isEmpty(appVersionList)){
+            return new ResponseData(CodeEnum.SUCCESS.getCode(), "版本不存在！");
+        }
+        try {
+            loginService.delVersion(parameterMap.get("appVersionId"));
+            return new ResponseData(CodeEnum.SUCCESS.getCode(), "删除版本成功！");
+        } catch (Exception e) {
+            log.info("===========>>>>>>删除版本失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"删除版本失败！");
         }
     }
 }

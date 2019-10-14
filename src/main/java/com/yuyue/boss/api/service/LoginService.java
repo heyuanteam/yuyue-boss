@@ -84,5 +84,14 @@ public interface LoginService {
     void delLookupCdeSystem(String id);
 
     //获取版本列表
-    List<AppVersion> getVersionList(String systemType, String versionNo);
+    List<AppVersion> getVersionList(String systemType, String versionNo,String appVersionId);
+
+    //添加版本
+    void insertAppVersion(AppVersion appVersion);
+
+    //修改版本
+    void updateAppVersion(String appVersionId, String versionNo, String systemType, String programDescription, String status);
+
+    //删除版本
+    void delVersion(String appVersionId);
 }

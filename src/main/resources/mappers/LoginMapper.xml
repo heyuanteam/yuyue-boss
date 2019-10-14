@@ -186,7 +186,31 @@
         from yuyue_app_version b where 1=1
         <if test="versionNo!=null and versionNo!=''">and b.version_no like concat('%', #{versionNo}, '%') </if>
         <if test="systemType!=null and systemType!='' ">  and b.`system_type` = #{systemType}  </if>
-        order by b.CREATE_TIME
+        <if test="appVersionId!=null and appVersionId!='' ">  and b.id = #{appVersionId}  </if>
+        order by b.number
     </select>
+
+    <!-- 修改版本 -->
+    <update id="updateAppVersion" parameterType="String">
+        UPDATE yuyue_app_version b
+        <set>
+            <if test="versionNo!=null and versionNo!=''">
+                b.version_no = #{versionNo},
+            </if>
+            <if test="systemType!=null and systemType!=''">
+                b.system_type = #{systemType},
+            </if>
+            <if test="programDescription!=null and programDescription!=''">
+                b.program_description = #{programDescription},
+            </if>
+            <if test="status!=null and status!=''">
+                b.status = #{status},
+            </if>
+        </set>
+        WHERE 1=1
+        <if test="appVersionId!=null and appVersionId!=''">
+            and b.id = #{appVersionId}
+        </if>
+    </update>
 
 </mapper>

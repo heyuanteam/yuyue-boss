@@ -156,6 +156,18 @@ public class LoginServiceImpl implements LoginService {
         loginMapper.delLookupCdeSystem(id); }
 
     @Override
-    public List<AppVersion> getVersionList(String systemType, String versionNo) {
-        return loginMapper.getVersionList(systemType,versionNo); }
+    public List<AppVersion> getVersionList(String systemType, String versionNo,String appVersionId){
+        return loginMapper.getVersionList(systemType,versionNo,appVersionId); }
+
+    @Override
+    public void insertAppVersion(AppVersion appVersion) {
+        loginMapper.insertAppVersion(appVersion); }
+
+    @Override
+    public void updateAppVersion(String appVersionId, String versionNo, String systemType, String programDescription, String status) {
+        loginMapper.updateAppVersion(appVersionId,versionNo,systemType,programDescription,status); }
+
+    @Override
+    public void delVersion(String appVersionId) {
+        loginMapper.delVersion(appVersionId); }
 }
