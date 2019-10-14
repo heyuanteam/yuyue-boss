@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yuyue.boss.api.mapper.YuYueSiteShowMapper" >
+    <resultMap type="com.yuyue.boss.api.domain.YuYueSite" id="SiteShow">
+        <id column="id" property="id"/>
+        <result column="showName" property="showName"/>
+        <result column="category" property="category"/>
+        <result column="showPersons" property="showPersons"/>
+        <result column="siteId" property="siteId"/>
+        <result column="SHOW_TIME" property="showTime"/>
+    </resultMap>
+
+    <select id="getSiteShowList" resultMap="SiteShow" parameterType="String">
+        select
+        DATE_FORMAT(SHOW_TIME,'%Y-%m-%d %H:%i:%s') SHOW_TIME,
+        id,showName,category,showPersons,siteId
+        from
+            yuyue_site_show
+        where
+            siteId = {siteId}
+        ORDER BY
+            SHOW_TIME
+
+    </select>
+
+    <insert id="insertSiteShow" parameterType="com.yuyue.boss.api.mapper.YuYueSiteShowMapper">
+         INSERT INTO
+             yuyue_site_show
+            (id,showName,category,showPersons,SHOW_TIME,siteId)
+         VALUES
+            (#{id},#{showName},#{category},#{showPersons},#{showTime},#{siteId})
+    </insert>
+
+
+    <update id="updateSiteShow"  parameterType="com.yuyue.boss.api.mapper.YuYueSiteShowMapper">
+        UPDATE
+            yuyue_site_show
+        SET
+        <if test="showName != null and showName != ''">
+            showName = #{showName},
+        </if>
+        <if test="category != null and category != ''">
+            category = #{category},
+        </if>
+        <if test="showPersons != null and showPersons != ''">
+            showPersons = #{showPersons},
+        </if>
+        <if test="showTime != null and showTime != ''">
+            SHOW_TIME = #{showTime},
+        </if>
+        <if test="siteId != null and siteId != ''">
+            siteId = #{siteId},
+        </if>
+        id = #{id}
+
+        WHERE id = #{id};
+    </update>
+
+    <delete id="deleteSiteShow" parameterType="String">
+        DELETE FROM yuyue_site_show WHERE siteId = #{siteId}
+    </delete>
+
+
+</mapper>
