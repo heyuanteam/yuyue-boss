@@ -783,4 +783,31 @@ public class SystemController extends BaseController {
             return new ResponseData(CodeEnum.E_400.getCode(),"获取全部字典失败！");
         }
     }
+
+    /**
+     * 获取版本列表
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/getVersionList")
+    @ResponseBody
+    @LoginRequired
+    public ResponseData getVersionList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("获取版本列表----------->>/system/getVersionList");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        try {
+            PageUtil.getPage(parameterMap.get("page"));
+            List<AppVersion> appVersionList = loginService.getVersionList(parameterMap.get("systemType"), parameterMap.get("versionNo"));
+            if (CollectionUtils.isEmpty(appVersionList)){
+                return new ResponseData(CodeEnum.SUCCESS.getCode(), "搜索的不存在！");
+            }
+            PageUtil pageUtil = new PageUtil(appVersionList);
+            return new ResponseData(pageUtil);
+        } catch (Exception e) {
+            log.info("===========>>>>>>获取版本列表失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"获取版本列表失败！");
+        }
+    }
 }

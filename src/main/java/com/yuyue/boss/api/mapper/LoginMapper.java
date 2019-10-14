@@ -100,4 +100,6 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     @Transactional
     @Delete("DELETE FROM yuyue_system WHERE id =#{id} ")
     void delLookupCdeSystem(@Param("id") String id);
+
+    List<AppVersion> getVersionList(@Param("systemType")String systemType,@Param("versionNo") String versionNo);
 }

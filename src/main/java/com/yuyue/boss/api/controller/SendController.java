@@ -68,12 +68,7 @@ public class SendController extends BaseController{
      */
     public ResponseData sendAdReviewJPush(String id,AppUser appUserMsg,String status){
         JPush jPush = new JPush();
-        String str = "";
-        if("10B".equals(status)){
-            str = "通过! ";
-        } else {
-            str = "拒绝! ";
-        }
+        String str = "10B" == status?"通过! ":"拒绝! ";
         try {
             log.info("极光广告商审核的通知开始-------------->>start");
             List<Advertisement> adReviewList = adReviewService.getAdReviewList(id,"", "", "", "", "", "");
@@ -81,24 +76,11 @@ public class SendController extends BaseController{
                 Map<String, String> map = Maps.newHashMap();
                 map.put("type","2");
                 map.put("notice","广告商审核的通知");
-                jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
                 jPush.setNotificationTitle("您好! "+adReviewList.get(0).getPhone()+"广告商审核"+str);
                 jPush.setMsgTitle(adReviewList.get(0).getMerchantName());
                 jPush.setMsgContent(adReviewList.get(0).getBusinessLicense());
                 jPush.setExtras("2");
-
-                List<JPush> list = sendService.getValid(jPush.getNotificationTitle(),jPush.getMsgTitle(),
-                        jPush.getMsgContent(),jPush.getExtras(),jPush.getValid());
-                if (CollectionUtils.isEmpty(list)) {
-                    return new ResponseData(CodeEnum.SUCCESS.getCode(),"请不要重复点击！");
-                }
-                sendService.insertJPush(jPush);
-                List<String> stringList = new ArrayList<>();
-                log.info("极光别名=========="+appUserMsg.getJpushName());
-                stringList.add(appUserMsg.getJpushName());
-                jPushClients.sendToAliasList(stringList,jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), map);
-                sendService.updateValid("10B",jPush.getId());
-                log.info("极光广告商审核的通知结束-------------->>SUCCESS");
+                return getJPush(jPush,appUserMsg,map,0);
             }
         } catch (Exception e) {
             log.info("极光广告商审核的通知失败！");
@@ -139,16 +121,8 @@ public class SendController extends BaseController{
                 jPush.setMsgContent(idList.get(0).getImageUrl());
                 jPush.setExtras("4");
 
-                List<JPush> list = sendService.getValid(jPush.getNotificationTitle(),jPush.getMsgTitle(),
-                        jPush.getMsgContent(),jPush.getExtras(),jPush.getValid());
-                if (CollectionUtils.isNotEmpty(list)) {
-                    return new ResponseData(CodeEnum.SUCCESS.getCode(),"请不要重复点击！");
-                }
-                sendService.insertJPush(jPush);
-                jPushClients.sendToAll(jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), map);
-                sendService.updateValid("10B",jPush.getId());
-                log.info("极光推送结束-------------->>SUCCESS");
-                return new ResponseData(CodeEnum.SUCCESS);
+                AppUser appUserMsg = appUserService.getAppUserMsg("");
+                return getJPush(jPush,appUserMsg,map,1);
             }
             return new ResponseData(CodeEnum.E_400.getCode(),"极光推送参数错误！");
         } catch (Exception e) {
@@ -172,12 +146,7 @@ public class SendController extends BaseController{
      */
     public ResponseData sendVideoJPush(String id,String authorId,String status){
         JPush jPush = new JPush();
-        String str = "";
-        if("10B".equals(status)){
-            str = "通过! ";
-        } else {
-            str = "拒绝! ";
-        }
+        String str = "10B" == status?"通过! ":"拒绝! ";
         try {
             log.info("极光视频审核的通知开始-------------->>start");
             List<UploadFile> videoList = videoService.getVideoInfoList();
@@ -191,19 +160,8 @@ public class SendController extends BaseController{
                 jPush.setMsgContent(videoList.get(0).getTitle());
                 jPush.setExtras("5");
 
-                List<JPush> list = sendService.getValid(jPush.getNotificationTitle(),jPush.getMsgTitle(),
-                        jPush.getMsgContent(),jPush.getExtras(),jPush.getValid());
-                if (CollectionUtils.isNotEmpty(list)) {
-                    return new ResponseData(CodeEnum.SUCCESS.getCode(),"请不要重复点击！");
-                }
-                sendService.insertJPush(jPush);
                 AppUser appUserMsg = appUserService.getAppUserMsg(authorId);
-                log.info("极光别名=========="+appUserMsg.getJpushName());
-                List<String> stringList = new ArrayList<>();
-                stringList.add(appUserMsg.getJpushName());
-                jPushClients.sendToAliasList(stringList,jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), map);
-                sendService.updateValid("10B",jPush.getId());
-                log.info("极光视频审核的通知结束-------------->>SUCCESS");
+                return getJPush(jPush,appUserMsg,map,0);
             }
         } catch (Exception e) {
             log.info("极光视频审核的通知失败！");
@@ -221,12 +179,7 @@ public class SendController extends BaseController{
      */
     public ResponseData sendCommodityInfoJPush(Commodity commodity,String status){
         JPush jPush = new JPush();
-        String str = "";
-        if("10B".equals(status)){
-            str = "通过! ";
-        } else {
-            str = "拒绝! ";
-        }
+        String str = "10B" == status?"通过! ":"拒绝! ";
         try {
             log.info("极光广告审核的通知开始-------------->>start");
             AppUser appUserMsg = appUserService.getAppUserMsg(commodity.getMerchantId());
@@ -239,24 +192,31 @@ public class SendController extends BaseController{
                 jPush.setMsgTitle(commodity.getCommodityName());
                 jPush.setMsgContent(commodity.getPayUrl());
                 jPush.setExtras("6");
-
-                List<JPush> list = sendService.getValid(jPush.getNotificationTitle(),jPush.getMsgTitle(),
-                        jPush.getMsgContent(),jPush.getExtras(),jPush.getValid());
-                if (CollectionUtils.isEmpty(list)) {
-                    return new ResponseData(CodeEnum.SUCCESS.getCode(),"请不要重复点击！");
-                }
-                sendService.insertJPush(jPush);
-                List<String> stringList = new ArrayList<>();
-                log.info("极光别名=========="+appUserMsg.getJpushName());
-                stringList.add(appUserMsg.getJpushName());
-                jPushClients.sendToAliasList(stringList,jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), map);
-                sendService.updateValid("10B",jPush.getId());
-                log.info("极光广告审核的通知结束-------------->>SUCCESS");
+                return getJPush(jPush,appUserMsg,map,0);
             }
         } catch (Exception e) {
             log.info("极光广告审核的通知失败！");
             sendService.updateValid("10C",jPush.getId());
             return new ResponseData(CodeEnum.E_400.getCode(),"极光广告审核的通知失败！");
+        }
+        return new ResponseData(CodeEnum.SUCCESS);
+    }
+
+    public ResponseData getJPush(JPush jPush,AppUser appUserMsg,Map<String, String> map,int num){
+        List<JPush> list = sendService.getValid(jPush.getNotificationTitle(),jPush.getMsgTitle(),
+                jPush.getMsgContent(),jPush.getExtras(),jPush.getValid());
+        if (CollectionUtils.isNotEmpty(list)) {
+            sendService.insertJPush(jPush);
+            if (0 == num) {
+                List<String> stringList = new ArrayList<>();
+                log.info("极光别名=========="+appUserMsg.getJpushName());
+                stringList.add(appUserMsg.getJpushName());
+                jPushClients.sendToAliasList(stringList,jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), map);
+            } else {
+                jPushClients.sendToAll(jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), map);
+            }
+            sendService.updateValid("10B",jPush.getId());
+            log.info("极光视频审核的通知结束-------------->>SUCCESS");
         }
         return new ResponseData(CodeEnum.SUCCESS);
     }

@@ -82,4 +82,7 @@ public interface LoginService {
 
     //删除字典
     void delLookupCdeSystem(String id);
+
+    //获取版本列表
+    List<AppVersion> getVersionList(String systemType, String versionNo);
 }
