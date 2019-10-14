@@ -28,4 +28,9 @@ public class ArtistReviewServiceImpl implements ArtistReviewService {
     public void updateArtistReviewStatus(String id, String status) {
         artistReviewMapper.updateArtistReviewStatus(id,status);
     }
+
+    @Override
+    public void deleteArtistReviewById(String id) {
+        artistReviewMapper.deleteArtistReviewById(id);
+    }
 }

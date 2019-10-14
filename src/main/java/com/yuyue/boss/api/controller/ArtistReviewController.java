@@ -1,9 +1,13 @@
 package com.yuyue.boss.api.controller;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.yuyue.boss.annotation.LoginRequired;
+import com.yuyue.boss.api.domain.AppUser;
 import com.yuyue.boss.api.domain.ArtistReview;
+import com.yuyue.boss.api.service.AppUserService;
 import com.yuyue.boss.api.service.ArtistReviewService;
+import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +28,8 @@ public class ArtistReviewController extends BaseController {
 
     @Autowired
     private ArtistReviewService artistReviewService;
+    @Autowired
+    private AppUserService appUserService;
 
 
     /**
@@ -47,18 +53,25 @@ public class ArtistReviewController extends BaseController {
         List<ArtistReview> artistReviewList = null ;
         if (StringUtils.isNull(artistReview)){
             PageHelper.startPage(Integer.parseInt(page), 10);
-           artistReviewList = artistReviewService.getArtistReviewList();
+            artistReviewList = artistReviewService.getArtistReviewList();
 
         }else {
+            PageHelper.startPage(Integer.parseInt(page), 10);
             artistReviewList = artistReviewService.searchArtistReviewList(artistReview);
         }
+        PageInfo<ArtistReview> pageInfo=new PageInfo<>(artistReviewList);
+        long total = pageInfo.getTotal();
+        int pages = pageInfo.getPages();
+        int currentPage = Integer.parseInt(page);
+        return new ResponseData(artistReviewList, currentPage,(int) total,pages);
 
-
-
-
-        return new ResponseData(artistReviewList);
     }
-
+    /**
+     * 修改审核
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping("/updateArtistReviewInfo")
     @ResponseBody
     @RequiresPermissions("show:save")//具有 user:detail 权限的用户才能访问此方法
@@ -67,19 +80,42 @@ public class ArtistReviewController extends BaseController {
 
         String id =request.getParameter("id");
         String status = request.getParameter("status");
-        artistReviewService.updateArtistReviewStatus(id,status);
+
+        if("10B".equals(status) || "10C".equals(status)){
+            artistReviewService.updateArtistReviewStatus(id,status);
+            if ("10B".equals(status)){
+                AppUser appUserMsg = appUserService.getAppUserMsg(id);
+                if (StringUtils.isNull(appUserMsg))
+                    return new ResponseData("该用户不存在");
+
+                if ("1".equals(appUserMsg.getUserType()))
+                    appUserMsg.setUserType("2");
+                if ("3".equals(appUserMsg.getUserType()))
+                    appUserMsg.setUserType("4");
+                appUserService.updateAppUser(appUserMsg);
+            }
+
+
+        }else {
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"参数：状态不合法！！");
+        }
         return new ResponseData();
+
     }
 
-
-    @RequestMapping("/deleteArtistReviewInfo")
+    /**
+     * 删除审核
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/deleteArtistReviewById")
     @ResponseBody
     @RequiresPermissions("show:remove")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
-    public ResponseData deleteArtistReviewInfo(HttpServletRequest request, HttpServletResponse response){
-
-
-
+    public ResponseData deleteArtistReviewById(HttpServletRequest request, HttpServletResponse response){
+        String id =request.getParameter("id");
+        artistReviewService.deleteArtistReviewById(id);
         return new ResponseData();
     }
 
