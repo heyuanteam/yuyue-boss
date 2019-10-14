@@ -42,9 +42,7 @@ public class AdReviewController extends BaseController {
     @Autowired
     private AppUserService appUserService;
     @Autowired
-    private SendService sendService;
-    @Autowired
-    private JPushClients jPushClients;
+    private SendController sendController;
 
     /**
      * 广告商审核列表
@@ -107,44 +105,7 @@ public class AdReviewController extends BaseController {
         }
         if ("10C".equals(status) || "10B".equals(status)){
 
-            JPush jPush = new JPush();
-            String str = "";
-            if("10B".equals(status)){
-                str = "通过! ";
-            } else {
-                str = "拒绝! ";
-            }
-            try {
-                log.info("极光广告商审核的通知开始-------------->>start");
-                List<Advertisement> adReviewList = adReviewService.getAdReviewList(id,"", "", "", "", "", "");
-                if (CollectionUtils.isNotEmpty(adReviewList)){
-                    Map<String, String> map = Maps.newHashMap();
-                    map.put("type","2");
-                    map.put("notice","广告商审核的通知");
-                    jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
-                    jPush.setNotificationTitle("您好! "+adReviewList.get(0).getPhone()+"广告商审核"+str);
-                    jPush.setMsgTitle(adReviewList.get(0).getMerchantName());
-                    jPush.setMsgContent(adReviewList.get(0).getBusinessLicense());
-                    jPush.setExtras("2");
-
-                    List<JPush> list = sendService.getValid(jPush.getId());
-                    if (CollectionUtils.isNotEmpty(list)) {
-                        return new ResponseData(CodeEnum.SUCCESS.getCode(),"请不要重复点击！");
-                    }
-                    sendService.insertJPush(jPush);
-                    List<String> stringList = new ArrayList<>();
-                    log.info("极光别名=========="+appUserMsg.getJpushName());
-                    stringList.add(appUserMsg.getJpushName());
-                    jPushClients.sendToAliasList(stringList,jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), map);
-                    sendService.updateValid("10B",jPush.getId());
-                    log.info("极光广告商审核的通知结束-------------->>SUCCESS");
-                }
-            } catch (Exception e) {
-                log.info("极光广告商审核的通知失败！");
-                sendService.updateValid("10C",jPush.getId());
-                return new ResponseData(CodeEnum.E_400.getCode(),"极光广告商审核的通知失败！");
-            }
-
+            sendController.sendAdReviewJPush(id,appUserMsg,status);
             adReviewService.updateAdReviewStatus(id,status);
             if("1".equals(appUserMsg.getUserType()))
                 appUserMsg.setUserType("3");

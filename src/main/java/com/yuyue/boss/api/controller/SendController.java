@@ -3,11 +3,8 @@ package com.yuyue.boss.api.controller;
 import com.google.common.collect.Maps;
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
-import com.yuyue.boss.api.domain.JPush;
-import com.yuyue.boss.api.domain.SystemUser;
-import com.yuyue.boss.api.domain.YuYueSite;
-import com.yuyue.boss.api.service.SendService;
-import com.yuyue.boss.api.service.YuYueSiteService;
+import com.yuyue.boss.api.domain.*;
+import com.yuyue.boss.api.service.*;
 import com.yuyue.boss.config.JPushClients;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
@@ -27,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +40,12 @@ public class SendController extends BaseController{
     private SendService sendService;
     @Autowired
     private YuYueSiteService yuYueSiteService;
+    @Autowired
+    private AppUserService appUserService;
+    @Autowired
+    private VideoService videoService;
+    @Autowired
+    private AdReviewService adReviewService;
 
     //极光推送类型
     private static final Map<String, Object> iosMap = new HashMap<>();
@@ -49,13 +53,66 @@ public class SendController extends BaseController{
         iosMap.put("2","广告商审核的通知");//不需要参数
         iosMap.put("4","现场详情的通知");//需要参数
         iosMap.put("5","视频审核的通知");//不需要参数
+        iosMap.put("6","广告审核的通知");//不需要参数
 //        iosMap.put("1","艺人审核的通知");//不需要参数
 //        iosMap.put("3","关注人发视频的通知");//需要参数
-//        iosMap.put("6","广告审核的通知");//不需要参数
+    }
+
+
+    /**
+     * 极光广告商审核的通知 : 2
+     * @param id           广告商id
+     * @param appUserMsg
+     * @param status
+     * @return
+     */
+    public ResponseData sendAdReviewJPush(String id,AppUser appUserMsg,String status){
+        JPush jPush = new JPush();
+        String str = "";
+        if("10B".equals(status)){
+            str = "通过! ";
+        } else {
+            str = "拒绝! ";
+        }
+        try {
+            log.info("极光广告商审核的通知开始-------------->>start");
+            List<Advertisement> adReviewList = adReviewService.getAdReviewList(id,"", "", "", "", "", "");
+            if (CollectionUtils.isNotEmpty(adReviewList)){
+                Map<String, String> map = Maps.newHashMap();
+                map.put("type","2");
+                map.put("notice","广告商审核的通知");
+                jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
+                jPush.setNotificationTitle("您好! "+adReviewList.get(0).getPhone()+"广告商审核"+str);
+                jPush.setMsgTitle(adReviewList.get(0).getMerchantName());
+                jPush.setMsgContent(adReviewList.get(0).getBusinessLicense());
+                jPush.setExtras("2");
+
+                List<JPush> list = sendService.getValid(jPush.getId());
+                if (CollectionUtils.isEmpty(list)) {
+                    return new ResponseData(CodeEnum.SUCCESS.getCode(),"请不要重复点击！");
+                }
+                sendService.insertJPush(jPush);
+                List<String> stringList = new ArrayList<>();
+                log.info("极光别名=========="+appUserMsg.getJpushName());
+                stringList.add(appUserMsg.getJpushName());
+                jPushClients.sendToAliasList(stringList,jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), map);
+                sendService.updateValid("10B",jPush.getId());
+                log.info("极光广告商审核的通知结束-------------->>SUCCESS");
+            }
+        } catch (Exception e) {
+            log.info("极光广告商审核的通知失败！");
+            sendService.updateValid("10C",jPush.getId());
+            return new ResponseData(CodeEnum.E_400.getCode(),"极光广告商审核的通知失败！");
+        }
+        return new ResponseData(CodeEnum.SUCCESS);
     }
 
     /**
-     * 全部，现场详情的通知
+     * 全部，现场详情的通知 4
+     * sceneId 现场ID
+     * @param request
+     * @param response
+     * @return
      */
     @RequestMapping("/sendJPush")
     @ResponseBody
@@ -102,5 +159,101 @@ public class SendController extends BaseController{
 //        String notificationTitle = "通知内容标题";
 //        String msgTitle = "消息内容标题";
 //        String msgContent = "消息内容";
+    }
+
+    /**
+     * 极光视频审核的通知 : 5
+     * @param id            现场id
+     * @param authorId      作者id
+     * @param status        现场状态
+     * @return
+     */
+    public ResponseData sendVideoJPush(String id,String authorId,String status){
+        JPush jPush = new JPush();
+        String str = "";
+        if("10B".equals(status)){
+            str = "通过! ";
+        } else {
+            str = "拒绝! ";
+        }
+        try {
+            log.info("极光视频审核的通知开始-------------->>start");
+            List<UploadFile> videoList = videoService.getVideoInfoList(id, authorId, "");
+            if (CollectionUtils.isNotEmpty(videoList)){
+                Map<String, String> map = Maps.newHashMap();
+                map.put("type","5");
+                map.put("notice","视频审核的通知");
+                jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
+                jPush.setNotificationTitle("您好! "+videoList.get(0).getFilesName()+"视频审核"+str);
+                jPush.setMsgTitle("视频审核的通知");
+                jPush.setMsgContent(videoList.get(0).getTitle());
+                jPush.setExtras("5");
+
+                List<JPush> list = sendService.getValid(jPush.getId());
+                if (CollectionUtils.isNotEmpty(list)) {
+                    return new ResponseData(CodeEnum.SUCCESS.getCode(),"请不要重复点击！");
+                }
+                sendService.insertJPush(jPush);
+                AppUser appUserMsg = appUserService.getAppUserMsg(authorId);
+                log.info("极光别名=========="+appUserMsg.getJpushName());
+                List<String> stringList = new ArrayList<>();
+                stringList.add(appUserMsg.getJpushName());
+                jPushClients.sendToAliasList(stringList,jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), map);
+                sendService.updateValid("10B",jPush.getId());
+                log.info("极光视频审核的通知结束-------------->>SUCCESS");
+            }
+        } catch (Exception e) {
+            log.info("极光视频审核的通知失败！");
+            sendService.updateValid("10C",jPush.getId());
+            return new ResponseData(CodeEnum.E_400.getCode(),"极光视频审核的通知失败！");
+        }
+        return new ResponseData(CodeEnum.SUCCESS);
+    }
+
+    /**
+     * 极光广告审核的通知 : 6
+     * @param commodity 广告
+     * @param status
+     * @return
+     */
+    public ResponseData sendCommodityInfoJPush(Commodity commodity,String status){
+        JPush jPush = new JPush();
+        String str = "";
+        if("10B".equals(status)){
+            str = "通过! ";
+        } else {
+            str = "拒绝! ";
+        }
+        try {
+            log.info("极光广告审核的通知开始-------------->>start");
+            AppUser appUserMsg = appUserService.getAppUserMsg(commodity.getMerchantId());
+            if (StringUtils.isNotNull(appUserMsg)){
+                Map<String, String> map = Maps.newHashMap();
+                map.put("type","6");
+                map.put("notice","广告审核的通知");
+                jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
+                jPush.setNotificationTitle("您好! "+commodity.getCommodityName()+"广告审核"+str);
+                jPush.setMsgTitle(commodity.getCommodityName());
+                jPush.setMsgContent(commodity.getPayUrl());
+                jPush.setExtras("6");
+
+                List<JPush> list = sendService.getValid(jPush.getId());
+                if (CollectionUtils.isEmpty(list)) {
+                    return new ResponseData(CodeEnum.SUCCESS.getCode(),"请不要重复点击！");
+                }
+                sendService.insertJPush(jPush);
+                List<String> stringList = new ArrayList<>();
+                log.info("极光别名=========="+appUserMsg.getJpushName());
+                stringList.add(appUserMsg.getJpushName());
+                jPushClients.sendToAliasList(stringList,jPush.getNotificationTitle(), jPush.getMsgTitle(), jPush.getMsgContent(), map);
+                sendService.updateValid("10B",jPush.getId());
+                log.info("极光广告审核的通知结束-------------->>SUCCESS");
+            }
+        } catch (Exception e) {
+            log.info("极光广告审核的通知失败！");
+            sendService.updateValid("10C",jPush.getId());
+            return new ResponseData(CodeEnum.E_400.getCode(),"极光广告审核的通知失败！");
+        }
+        return new ResponseData(CodeEnum.SUCCESS);
     }
 }
