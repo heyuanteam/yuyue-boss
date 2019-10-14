@@ -8,9 +8,9 @@ public interface ArtistReviewService {
 
     List<ArtistReview> searchArtistReviewList(ArtistReview artistReview);
 
-
     List<ArtistReview> getArtistReviewList();
 
-
     void updateArtistReviewStatus(String id,  String status);
+
+    void deleteArtistReviewById(String id);
 }
