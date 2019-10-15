@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -180,16 +181,16 @@ public class LoginServiceImpl implements LoginService {
         loginMapper.delJPush(id); }
 
     @Override
-    public List<VideoCategory> getAPPMenuList(String id,String category, String status) {
-        return loginMapper.getAPPMenuList(id,category,status); }
+    public List<VideoCategory> getAPPMenuList(String id,String category, String status,int number) {
+        return loginMapper.getAPPMenuList(id,category,status,number); }
 
     @Override
     public void insertVideoCategory(VideoCategory videoCategory) {
         loginMapper.insertVideoCategory(videoCategory); }
 
     @Override
-    public void updateAPPMenu(String id, int sort, String status, String category) {
-        loginMapper.updateAPPMenu(id,sort,status,category); }
+    public void updateAPPMenu(String id, int sort, String status, String category,String url) {
+        loginMapper.updateAPPMenu(id,sort,status,category,url); }
 
     @Override
     public void delAPPMenu(String id) {

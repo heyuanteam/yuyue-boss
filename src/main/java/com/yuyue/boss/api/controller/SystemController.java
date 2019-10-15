@@ -62,9 +62,6 @@ public class SystemController extends BaseController {
         try {
             PageUtil.getPage(parameterMap.get("page"));
             List<SystemMenu> menuList = loginService.getMenu("", 0, "", parameterMap.get("menuName"), parameterMap.get("status"));
-            if (CollectionUtils.isEmpty(menuList)){
-                return new ResponseData(CodeEnum.SUCCESS.getCode(), "搜索的不存在！");
-            }
             PageUtil pageUtil = new PageUtil(menuList);
             return new ResponseData(pageUtil);
         } catch (Exception e) {
@@ -183,7 +180,7 @@ public class SystemController extends BaseController {
 
             List<SystemMenu> list = loginService.getMenu(parameterMap.get("id"), 0, "","","");
             if (CollectionUtils.isEmpty(list)) {
-                return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改的菜单不存在！");
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "修改的菜单不存在！");
             }
             if (!parameterMap.get("menuName").equals(list.get(0).getMenuName())) {
                 List<SystemMenu> menuNameList = loginService.getMenu("", 0, "", parameterMap.get("menuName"), "");
@@ -221,7 +218,7 @@ public class SystemController extends BaseController {
         try {
             List<SystemMenu> menuList = loginService.getMenu(parameterMap.get("id"), 0, "", "", "");
             if (CollectionUtils.isEmpty(menuList)) {
-                return new ResponseData(CodeEnum.SUCCESS.getCode(), "菜单ID错误！");
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单ID错误！");
             }
             loginService.delMenu(parameterMap.get("id"));
             List<SystemPermission> list = loginService.getSystemPermission(parameterMap.get("id"),"","");
@@ -254,9 +251,6 @@ public class SystemController extends BaseController {
         try {
             PageUtil.getPage(parameterMap.get("page"));
             List<SystemUser> menuList = loginService.getSystemUser(parameterMap.get("status"), parameterMap.get("systemName"),parameterMap.get("loginName"),"");
-            if (CollectionUtils.isEmpty(menuList)){
-                return new ResponseData(CodeEnum.SUCCESS.getCode(), "搜索的不存在！");
-            }
             PageUtil pageUtil = new PageUtil(menuList);
             return new ResponseData(pageUtil);
         } catch (Exception e) {
@@ -350,7 +344,7 @@ public class SystemController extends BaseController {
 
         List<SystemUser> list = loginService.getSystemUser("", "", "",parameterMap.get("id"));
         if (CollectionUtils.isEmpty(list)) {
-            return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改的用户不存在！");
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "修改的用户不存在！");
         }
         if (!parameterMap.get("loginName").equals(list.get(0).getLoginName())) {
             List<SystemUser> userList = loginService.getSystemUser("", "", parameterMap.get("loginName"),"");
@@ -392,7 +386,7 @@ public class SystemController extends BaseController {
         if (StringUtils.isNotEmpty(parameterMap.get("id"))) {
             List<SystemUser> list = loginService.getSystemUser("", "", "",parameterMap.get("id"));
             if (CollectionUtils.isEmpty(list)) {
-                return new ResponseData(CodeEnum.SUCCESS.getCode(), "搜索的不存在！");
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "搜索的不存在！");
             }
         }
         try {
@@ -427,13 +421,10 @@ public class SystemController extends BaseController {
         try {
             List<SystemUser> userList = loginService.getSystemUser("", "", "", parameterMap.get("id"));
             if (CollectionUtils.isEmpty(userList)){
-                return new ResponseData(CodeEnum.SUCCESS.getCode(), "用户不存在！");
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "用户不存在！");
             }
             PageUtil.getPage(parameterMap.get("page"));
             List<SystemUserVO> systemUserVO = loginService.getAppUserMsg(userList.get(0).getLoginName(),userList.get(0).getPassword());
-            if (CollectionUtils.isEmpty(systemUserVO)){
-                return new ResponseData(CodeEnum.SUCCESS.getCode(), "搜索的不存在！");
-            }
             PageUtil pageUtil = new PageUtil(systemUserVO);
             return new ResponseData(pageUtil);
         } catch (Exception e) {
@@ -492,9 +483,6 @@ public class SystemController extends BaseController {
         try {
             PageUtil.getPage(parameterMap.get("page"));
             List<LookupCde> menuList = loginService.getLookupCdeSystem(parameterMap.get("status"), parameterMap.get("typeName"),"");
-            if (CollectionUtils.isEmpty(menuList)){
-                return new ResponseData(CodeEnum.SUCCESS.getCode(), "搜索的不存在！");
-            }
             PageUtil pageUtil = new PageUtil(menuList);
             return new ResponseData(pageUtil);
         } catch (Exception e) {
@@ -567,7 +555,7 @@ public class SystemController extends BaseController {
         }
         List<LookupCde> list = loginService.getLookupCdeSystem("", "", parameterMap.get("id"));
         if (CollectionUtils.isEmpty(list)){
-            return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改字典不存在！");
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "修改字典不存在！");
         }
         if (!parameterMap.get("typeName").equals(list.get(0).getTypeName())) {
             List<LookupCde> LookupCdeList = loginService.getLookupCdeSystem("", parameterMap.get("typeName"),"");
@@ -608,7 +596,7 @@ public class SystemController extends BaseController {
         try {
             List<LookupCde> list = loginService.getLookupCdeSystem("", "", parameterMap.get("id"));
             if (CollectionUtils.isEmpty(list)){
-                return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改字典不存在！");
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "修改字典不存在！");
             }
             loginService.delLookupCdeSystem(parameterMap.get("id"));
             List<LookupCdeConfig> menuList = loginService.getLookupCdeList(parameterMap.get("id"),"");
@@ -644,9 +632,6 @@ public class SystemController extends BaseController {
         try {
             PageUtil.getPage(parameterMap.get("page"));
             List<LookupCdeConfig> menuList = loginService.getLookupCdeList(parameterMap.get("id"),"");
-            if (CollectionUtils.isEmpty(menuList)){
-                return new ResponseData(CodeEnum.SUCCESS.getCode(), "搜索的不存在！");
-            }
             PageUtil pageUtil = new PageUtil(menuList);
             return new ResponseData(pageUtil);
         } catch (Exception e) {
@@ -739,7 +724,7 @@ public class SystemController extends BaseController {
         }
         List<LookupCdeConfig> menuList = loginService.getLookupCdeList("",parameterMap.get("id"));
         if (CollectionUtils.isEmpty(menuList)){
-            return new ResponseData(CodeEnum.SUCCESS.getCode(), "搜索的不存在！");
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "搜索的不存在！");
         }
         try {
             loginService.delLookupCdeList(parameterMap.get("id"));
@@ -800,9 +785,6 @@ public class SystemController extends BaseController {
         try {
             PageUtil.getPage(parameterMap.get("page"));
             List<AppVersion> appVersionList = loginService.getVersionList(parameterMap.get("systemType"), parameterMap.get("versionNo"),"");
-            if (CollectionUtils.isEmpty(appVersionList)){
-                return new ResponseData(CodeEnum.SUCCESS.getCode(), "搜索的不存在！");
-            }
             PageUtil pageUtil = new PageUtil(appVersionList);
             return new ResponseData(pageUtil);
         } catch (Exception e) {
@@ -921,7 +903,7 @@ public class SystemController extends BaseController {
         }
         List<AppVersion> appVersionList = loginService.getVersionList("","",parameterMap.get("appVersionId"));
         if (CollectionUtils.isEmpty(appVersionList)){
-            return new ResponseData(CodeEnum.SUCCESS.getCode(), "版本不存在！");
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "版本不存在！");
         }
         try {
             loginService.delVersion(parameterMap.get("appVersionId"));
@@ -950,9 +932,6 @@ public class SystemController extends BaseController {
             PageUtil.getPage(parameterMap.get("page"));
             List<JPush> jPushList = loginService.getJPushList("",parameterMap.get("msgTitle"), parameterMap.get("extras"),
                                     parameterMap.get("startTime"),parameterMap.get("endTime"));
-            if (CollectionUtils.isEmpty(jPushList)){
-                return new ResponseData(CodeEnum.SUCCESS.getCode(), "搜索的不存在！");
-            }
             PageUtil pageUtil = new PageUtil(jPushList);
             return new ResponseData(pageUtil);
         } catch (Exception e) {
@@ -980,7 +959,7 @@ public class SystemController extends BaseController {
         }
         List<JPush> jPushList = loginService.getJPushList(parameterMap.get("id"),"","","","");
         if (CollectionUtils.isEmpty(jPushList)){
-            return new ResponseData(CodeEnum.SUCCESS.getCode(), "公告不存在！");
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "公告不存在！");
         }
         try {
             loginService.delJPush(parameterMap.get("id"));
@@ -1007,10 +986,7 @@ public class SystemController extends BaseController {
         Map<String, String> parameterMap = getParameterMap(request, response);
         try {
             PageUtil.getPage(parameterMap.get("page"));
-            List<VideoCategory> videoCategoryList = loginService.getAPPMenuList("",parameterMap.get("category"), parameterMap.get("status"));
-            if (CollectionUtils.isEmpty(videoCategoryList)){
-                return new ResponseData(CodeEnum.SUCCESS.getCode(), "搜索的不存在！");
-            }
+            List<VideoCategory> videoCategoryList = loginService.getAPPMenuList("",parameterMap.get("category"), parameterMap.get("status"),0);
             PageUtil pageUtil = new PageUtil(videoCategoryList);
             return new ResponseData(pageUtil);
         } catch (Exception e) {
@@ -1038,7 +1014,7 @@ public class SystemController extends BaseController {
         } else if (StringUtils.isEmpty(parameterMap.get("url"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单图标不可以为空！");
         }
-        List<VideoCategory> videoCategoryList = loginService.getAPPMenuList("",parameterMap.get("category"), "");
+        List<VideoCategory> videoCategoryList = loginService.getAPPMenuList("",parameterMap.get("category"), "",0);
         if (CollectionUtils.isNotEmpty(videoCategoryList)){
             for (VideoCategory videoCategory:videoCategoryList) {
                 if (parameterMap.get("category").equals(videoCategory.getCategory())){
@@ -1047,7 +1023,7 @@ public class SystemController extends BaseController {
             }
         }
         try {
-            List<VideoCategory> list = loginService.getAPPMenuList("","", "");
+            List<VideoCategory> list = loginService.getAPPMenuList("","", "",0);
             int sort = list.get(list.size()-1).getCategoryNo();
             sort += 1;
             VideoCategory videoCategory = new VideoCategory();
@@ -1083,7 +1059,7 @@ public class SystemController extends BaseController {
         if (StringUtils.isNotEmpty(parameterMap.get("sort")) &&
                 (0 == Integer.valueOf(parameterMap.get("sort")) || 1 == Integer.valueOf(parameterMap.get("sort")))) {
             try {
-                List<VideoCategory> videoCategoryList = loginService.getAPPMenuList(parameterMap.get("id"),"", "");
+                List<VideoCategory> videoCategoryList = loginService.getAPPMenuList(parameterMap.get("id"),"", "",0);
                 if (CollectionUtils.isEmpty(videoCategoryList)) {
                     return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单ID错误！");
                 }
@@ -1094,25 +1070,25 @@ public class SystemController extends BaseController {
                 } else {
                     number = sort - 1;//向上
                 }
-                loginService.updateAPPMenu(videoCategoryList.get(0).getId(), number,"","");
-//                List<SystemMenu> list2 = loginService.getAPPMenuList("", number, "", "", "");
-//                loginService.updateSystemMenu(list2.get(0).getId(), sort, "", "");
-                loginService.updateAPPMenu(videoCategoryList.get(0).getId(), sort, "", "");
-                List<VideoCategory> list = loginService.getAPPMenuList("","","");
+                loginService.updateAPPMenu(videoCategoryList.get(0).getId(), number,"","","");
+                List<VideoCategory> list2 = loginService.getAPPMenuList("", "", "",number);
+                loginService.updateAPPMenu(list2.get(0).getId(), sort, "", "","");
+                List<VideoCategory> list = loginService.getAPPMenuList("","","",0);
                 return new ResponseData(list);
             } catch (Exception e) {
                 log.info("=======>>>>>>修改修改APP菜单失败！");
                 return new ResponseData(CodeEnum.SYSTEM_BUSY.getCode(), "修改APP菜单失败！");
             }
         } else if (StringUtils.isNotEmpty(parameterMap.get("status")) && ("10A".equals(parameterMap.get("status"))
-                || "10B".equals(parameterMap.get("status"))) && StringUtils.isNotEmpty(parameterMap.get("category"))) {
+                || "10B".equals(parameterMap.get("status"))) && StringUtils.isNotEmpty(parameterMap.get("category"))
+                && StringUtils.isNotEmpty(parameterMap.get("url"))) {
 
-            List<VideoCategory> videoCategoryList = loginService.getAPPMenuList(parameterMap.get("id"),"", "");
+            List<VideoCategory> videoCategoryList = loginService.getAPPMenuList(parameterMap.get("id"),"", "",0);
             if (CollectionUtils.isEmpty(videoCategoryList)) {
-                return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改的菜单不存在！");
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "修改的菜单不存在！");
             }
             if (!parameterMap.get("category").equals(videoCategoryList.get(0).getCategory())) {
-                List<VideoCategory> categoryList = loginService.getAPPMenuList("",parameterMap.get("category"), "");
+                List<VideoCategory> categoryList = loginService.getAPPMenuList("",parameterMap.get("category"), "",0);
                 if (CollectionUtils.isNotEmpty(categoryList)) {
                     for (VideoCategory videoCategory:categoryList) {
                         if (parameterMap.get("category").equals(videoCategory.getCategory())){
@@ -1121,7 +1097,8 @@ public class SystemController extends BaseController {
                     }
                 }
             }
-            loginService.updateAPPMenu(videoCategoryList.get(0).getId(), 0, parameterMap.get("status"), parameterMap.get("category"));
+            loginService.updateAPPMenu(videoCategoryList.get(0).getId(), 0, parameterMap.get("status"), parameterMap.get("category"),
+                    parameterMap.get("url"));
             return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改APP菜单成功！");
         }
         return new ResponseData(CodeEnum.SYSTEM_BUSY.getCode(), "参数错误！");
@@ -1144,9 +1121,9 @@ public class SystemController extends BaseController {
         if (StringUtils.isEmpty(parameterMap.get("id"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "APP菜单id不可以为空！");
         }
-        List<VideoCategory> categoryList = loginService.getAPPMenuList(parameterMap.get("id"),"", "");
+        List<VideoCategory> categoryList = loginService.getAPPMenuList(parameterMap.get("id"),"", "",0);
         if (CollectionUtils.isEmpty(categoryList)){
-            return new ResponseData(CodeEnum.SUCCESS.getCode(), "APP菜单不存在！");
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "APP菜单不存在！");
         }
         try {
             loginService.delAPPMenu(parameterMap.get("id"));

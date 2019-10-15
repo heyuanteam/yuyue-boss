@@ -102,13 +102,13 @@ public interface LoginService {
     void delJPush(String id);
 
     //获取APP菜单
-    List<VideoCategory> getAPPMenuList(String id,String category, String status);
+    List<VideoCategory> getAPPMenuList(String id,String category, String status,int number);
 
     //添加APP菜单
     void insertVideoCategory(VideoCategory videoCategory);
 
     //修改APP菜单
-    void updateAPPMenu(String id, int sort, String status, String category);
+    void updateAPPMenu(String id, int sort, String status, String category,String url);
 
     //删除APP菜单
     void delAPPMenu(String id);

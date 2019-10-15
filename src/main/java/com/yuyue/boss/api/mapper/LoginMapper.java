@@ -55,6 +55,7 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     List<SystemUser> getSystemUser(@Param("status") String status,@Param("systemName") String systemName,@Param("loginName") String loginName,
                                    @Param("id") String id);
 
+    @Transactional
     void updateSystemUser(@Param("id") String id,@Param("loginName") String loginName,@Param("password") String password,
                           @Param("systemName") String systemName,@Param("phone") String phone,@Param("status") String status);
 
@@ -82,6 +83,7 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
     void insertLookupCde(LookupCde lookupCde);
 
+    @Transactional
     void updateLookupCde(@Param("id")String id,@Param("typeName") String typeName,@Param("status") String status);
 
     List<LookupCdeConfig> getLookupCdeList(@Param("systemId")String systemId,@Param("id")String id);
@@ -110,6 +112,7 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
     void insertAppVersion(AppVersion appVersion);
 
+    @Transactional
     void updateAppVersion(@Param("appVersionId")String appVersionId,@Param("versionNo") String versionNo,
                           @Param("systemType") String systemType,@Param("programDescription") String programDescription,
                           @Param("status")String status);
@@ -125,7 +128,8 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     @Delete("DELETE FROM yuyue_jpush WHERE id =#{id} ")
     void delJPush(@Param("id")String id);
 
-    List<VideoCategory> getAPPMenuList(@Param("id")String id,@Param("category")String category,@Param("status") String status);
+    List<VideoCategory> getAPPMenuList(@Param("id")String id,@Param("category")String category,@Param("status") String status,
+                                       @Param("number")int number);
 
     @Transactional
     @Insert("INSERT into yuyue_category (id,category,url,category_no) values " +
@@ -133,7 +137,9 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
     void insertVideoCategory(VideoCategory videoCategory);
 
-    void updateAPPMenu(@Param("id")String id,@Param("sort") int sort,@Param("status") String status,@Param("category") String category);
+    @Transactional
+    void updateAPPMenu(@Param("id")String id,@Param("sort") int sort,@Param("status") String status,
+                       @Param("category") String category,@Param("url") String url);
 
     @Transactional
     @Delete("DELETE FROM yuyue_category WHERE id =#{id} ")

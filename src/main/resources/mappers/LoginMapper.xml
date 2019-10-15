@@ -242,6 +242,7 @@
         where 1=1 /*`status` = '10B' */
         <if test=" status !=null and status!='' ">  and d.`status` = #{status}  </if>
         <if test=" id !=null and id!='' ">  and d.`id` = #{id}  </if>
+        <if test=" number!=0 ">  and d.`category_no` = #{number}  </if>
         <if test=" category !=null and category!='' ">  and d.category like concat('%', #{category}, '%')  </if>
         ORDER BY category_no
     </select>
@@ -258,6 +259,9 @@
             </if>
             <if test=" sort!=0 ">
                 b.category_no = #{sort},
+            </if>
+            <if test="url!=null and url!=''">
+                b.url = #{url},
             </if>
         </set>
         WHERE 1=1
