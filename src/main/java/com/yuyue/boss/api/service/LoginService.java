@@ -100,4 +100,16 @@ public interface LoginService {
 
     //删除公告
     void delJPush(String id);
+
+    //获取APP菜单
+    List<VideoCategory> getAPPMenuList(String id,String category, String status);
+
+    //添加APP菜单
+    void insertVideoCategory(VideoCategory videoCategory);
+
+    //修改APP菜单
+    void updateAPPMenu(String id, int sort, String status, String category);
+
+    //删除APP菜单
+    void delAPPMenu(String id);
 }

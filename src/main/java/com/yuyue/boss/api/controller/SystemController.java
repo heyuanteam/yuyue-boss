@@ -990,4 +990,170 @@ public class SystemController extends BaseController {
             return new ResponseData(CodeEnum.E_400.getCode(),"删除公告失败！");
         }
     }
+
+    /**
+     * 获取APP菜单列表
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/getAPPMenuList")
+    @ResponseBody
+    @RequiresPermissions("appMenu:menu")
+    @LoginRequired
+    public ResponseData getAPPMenuList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("获取APP菜单列表----------->>/system/getAPPMenuList");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        try {
+            PageUtil.getPage(parameterMap.get("page"));
+            List<VideoCategory> videoCategoryList = loginService.getAPPMenuList("",parameterMap.get("category"), parameterMap.get("status"));
+            if (CollectionUtils.isEmpty(videoCategoryList)){
+                return new ResponseData(CodeEnum.SUCCESS.getCode(), "搜索的不存在！");
+            }
+            PageUtil pageUtil = new PageUtil(videoCategoryList);
+            return new ResponseData(pageUtil);
+        } catch (Exception e) {
+            log.info("===========>>>>>>获取APP菜单列表失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"获取APP菜单列表失败！");
+        }
+    }
+
+    /**
+     * 添加APP菜单
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/addAPPMenu")
+    @ResponseBody
+    @RequiresPermissions("appMenu:save")
+    @LoginRequired
+    public ResponseData addAPPMenu(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("添加APP菜单----------->>/system/addAPPMenu");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        if (StringUtils.isEmpty(parameterMap.get("category"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单名称不可以为空！");
+        } else if (StringUtils.isEmpty(parameterMap.get("url"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单图标不可以为空！");
+        }
+        List<VideoCategory> videoCategoryList = loginService.getAPPMenuList("",parameterMap.get("category"), "");
+        if (CollectionUtils.isNotEmpty(videoCategoryList)){
+            for (VideoCategory videoCategory:videoCategoryList) {
+                if (parameterMap.get("category").equals(videoCategory.getCategory())){
+                    return new ResponseData(CodeEnum.SUCCESS.getCode(), "菜单名称已经存在！");
+                }
+            }
+        }
+        try {
+            List<VideoCategory> list = loginService.getAPPMenuList("","", "");
+            int sort = list.get(list.size()-1).getCategoryNo();
+            sort += 1;
+            VideoCategory videoCategory = new VideoCategory();
+            videoCategory.setId(RandomSaltUtil.generetRandomSaltCode(32));
+            videoCategory.setCategory(parameterMap.get("category"));
+            videoCategory.setUrl(parameterMap.get("url"));
+            videoCategory.setCategoryNo(sort);
+            loginService.insertVideoCategory(videoCategory);
+            return new ResponseData(CodeEnum.SUCCESS.getCode(), "添加APP菜单成功！");
+        } catch (Exception e) {
+            log.info("===========>>>>>>添加APP菜单失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"添加APP菜单失败！");
+        }
+    }
+
+    /**
+     * 修改APP菜单
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/editAPPMenu")
+    @ResponseBody
+    @RequiresPermissions("appMenu:save")
+    @LoginRequired
+    public ResponseData editAPPMenu(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("修改APP菜单------------>>/system/editAPPMenu");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        if (StringUtils.isEmpty(parameterMap.get("id"))) {
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单ID不可以为空！");
+        }
+        if (StringUtils.isNotEmpty(parameterMap.get("sort")) &&
+                (0 == Integer.valueOf(parameterMap.get("sort")) || 1 == Integer.valueOf(parameterMap.get("sort")))) {
+            try {
+                List<VideoCategory> videoCategoryList = loginService.getAPPMenuList(parameterMap.get("id"),"", "");
+                if (CollectionUtils.isEmpty(videoCategoryList)) {
+                    return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单ID错误！");
+                }
+                int sort = videoCategoryList.get(0).getCategoryNo();
+                int number = 0;
+                if (0 == Integer.valueOf(parameterMap.get("sort"))) {
+                    number = sort + 1;//向下
+                } else {
+                    number = sort - 1;//向上
+                }
+                loginService.updateAPPMenu(videoCategoryList.get(0).getId(), number,"","");
+//                List<SystemMenu> list2 = loginService.getAPPMenuList("", number, "", "", "");
+//                loginService.updateSystemMenu(list2.get(0).getId(), sort, "", "");
+                loginService.updateAPPMenu(videoCategoryList.get(0).getId(), sort, "", "");
+                List<VideoCategory> list = loginService.getAPPMenuList("","","");
+                return new ResponseData(list);
+            } catch (Exception e) {
+                log.info("=======>>>>>>修改修改APP菜单失败！");
+                return new ResponseData(CodeEnum.SYSTEM_BUSY.getCode(), "修改APP菜单失败！");
+            }
+        } else if (StringUtils.isNotEmpty(parameterMap.get("status")) && ("10A".equals(parameterMap.get("status"))
+                || "10B".equals(parameterMap.get("status"))) && StringUtils.isNotEmpty(parameterMap.get("category"))) {
+
+            List<VideoCategory> videoCategoryList = loginService.getAPPMenuList(parameterMap.get("id"),"", "");
+            if (CollectionUtils.isEmpty(videoCategoryList)) {
+                return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改的菜单不存在！");
+            }
+            if (!parameterMap.get("category").equals(videoCategoryList.get(0).getCategory())) {
+                List<VideoCategory> categoryList = loginService.getAPPMenuList("",parameterMap.get("category"), "");
+                if (CollectionUtils.isNotEmpty(categoryList)) {
+                    for (VideoCategory videoCategory:categoryList) {
+                        if (parameterMap.get("category").equals(videoCategory.getCategory())){
+                            return new ResponseData(CodeEnum.SUCCESS.getCode(), "菜单名称已经存在！");
+                        }
+                    }
+                }
+            }
+            loginService.updateAPPMenu(videoCategoryList.get(0).getId(), 0, parameterMap.get("status"), parameterMap.get("category"));
+            return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改APP菜单成功！");
+        }
+        return new ResponseData(CodeEnum.SYSTEM_BUSY.getCode(), "参数错误！");
+    }
+
+    /**
+     * 删除APP菜单
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/delAPPMenu")
+    @ResponseBody
+    @RequiresPermissions("appMenu:remove")
+    @LoginRequired
+    public ResponseData delAPPMenu(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("删除APP菜单----------->>/system/delAPPMenu");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        if (StringUtils.isEmpty(parameterMap.get("id"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "APP菜单id不可以为空！");
+        }
+        List<VideoCategory> categoryList = loginService.getAPPMenuList(parameterMap.get("id"),"", "");
+        if (CollectionUtils.isEmpty(categoryList)){
+            return new ResponseData(CodeEnum.SUCCESS.getCode(), "APP菜单不存在！");
+        }
+        try {
+            loginService.delAPPMenu(parameterMap.get("id"));
+            return new ResponseData(CodeEnum.SUCCESS.getCode(), "删除APP菜单成功！");
+        } catch (Exception e) {
+            log.info("===========>>>>>>删除APP菜单失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"删除APP菜单失败！");
+        }
+    }
 }

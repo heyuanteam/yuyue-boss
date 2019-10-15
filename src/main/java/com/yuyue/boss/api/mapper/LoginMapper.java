@@ -124,4 +124,18 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     @Transactional
     @Delete("DELETE FROM yuyue_jpush WHERE id =#{id} ")
     void delJPush(@Param("id")String id);
+
+    List<VideoCategory> getAPPMenuList(@Param("id")String id,@Param("category")String category,@Param("status") String status);
+
+    @Transactional
+    @Insert("INSERT into yuyue_category (id,category,url,category_no) values " +
+            "(#{id},#{category},#{url},#{categoryNo})")
+    @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
+    void insertVideoCategory(VideoCategory videoCategory);
+
+    void updateAPPMenu(@Param("id")String id,@Param("sort") int sort,@Param("status") String status,@Param("category") String category);
+
+    @Transactional
+    @Delete("DELETE FROM yuyue_category WHERE id =#{id} ")
+    void delAPPMenu(@Param("id")String id);
 }
