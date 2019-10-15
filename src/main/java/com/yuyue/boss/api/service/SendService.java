@@ -14,4 +14,7 @@ public interface SendService {
 
     //极光获取
     List<JPush> getValid(String notificationTitle, String msgTitle, String msgContent, String extras, String valid);
+
+    //获取关注的人
+    List<String> getAttentionList(String authorId);
 }
