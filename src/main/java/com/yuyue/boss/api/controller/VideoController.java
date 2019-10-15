@@ -118,6 +118,7 @@ public class VideoController extends BaseController {
         if ("10B".equals(status) || "10C".equals(status)){
 
             sendController.sendVideoJPush(id,authorId,status);
+            sendController.sendFollowJPush(authorId,id);
             videoService.updateVideo(id,authorId,status);
         } else {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"现场状态类型错误！！");

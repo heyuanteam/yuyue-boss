@@ -24,4 +24,8 @@ public class SendServiceImpl implements SendService {
     public List<JPush> getValid(String notificationTitle, String msgTitle, String msgContent,
                                 String extras, String valid) {
         return sendMapper.getValid(notificationTitle,msgTitle,msgContent,extras,valid); }
+
+    @Override
+    public List<String> getAttentionList(String authorId) {
+        return sendMapper.getAttentionList(authorId); }
 }

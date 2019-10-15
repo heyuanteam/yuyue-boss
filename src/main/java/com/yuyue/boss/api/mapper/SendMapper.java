@@ -25,4 +25,7 @@ public interface SendMapper extends MyBaseMapper<JPush> {
             " (#{id},#{notificationTitle},#{msgTitle},#{msgContent},#{extras})")
     @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
     void insertJPush(JPush jPush);
+
+    @Select("SELECT userId FROM yuyue_attention b WHERE b.authorId = #{authorId} ")
+    List<String> getAttentionList(@Param("authorId")String authorId);
 }
