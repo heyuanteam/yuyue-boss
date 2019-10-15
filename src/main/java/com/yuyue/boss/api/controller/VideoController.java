@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
 
+import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.*;
 
@@ -14,6 +15,7 @@ import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
 
 
+import com.yuyue.boss.utils.ResultJSONUtils;
 import com.yuyue.boss.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,6 +42,8 @@ public class VideoController extends BaseController {
     private VideoService videoService;
     @Autowired
     private SendController sendController;
+    @Autowired
+    private FastFileStorageClient storageClient;
 
     /**
      * 视频审核
@@ -49,7 +53,7 @@ public class VideoController extends BaseController {
      */
     @RequestMapping("/getVideoInfoList")
     @ResponseBody
-    @RequiresPermissions("release:menu")//具有 user:detail 权限的用户才能访问此方法
+    @RequiresPermissions("video:menu")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
     public ResponseData getVideoInfoList(HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
@@ -96,7 +100,7 @@ public class VideoController extends BaseController {
      */
     @RequestMapping("/updateVideoStatus")
     @ResponseBody
-    @RequiresPermissions("release:save")//具有 user:detail 权限的用户才能访问此方法
+    @RequiresPermissions("video:save")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
     public ResponseData updateVideoStatus(HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
@@ -126,26 +130,36 @@ public class VideoController extends BaseController {
     /**
      * 视频审核
      * 删除视频
-     * @param uploadFile
+     * @param
      * @param request
      * @param response
      * @return
      */
     @RequestMapping("/deleteVideoById")
     @ResponseBody
-    @RequiresPermissions("release:remove")//具有 user:detail 权限的用户才能访问此方法
+    @RequiresPermissions("video:remove")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
-    public ResponseData updateVideo(UploadFile uploadFile,HttpServletRequest request, HttpServletResponse response){
+    public ResponseData deleteVideoById(HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
+        String id = request.getParameter("id");
+        String authorId = request.getParameter("authorId");
         log.info("视频更新------------>>/video/updateVideo");
-        if (StringUtils.isEmpty(uploadFile.getId()))
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"现场id为空！！");
-        else if (StringUtils.isEmpty(uploadFile.getAuthorId()))
+        if (StringUtils.isEmpty(id) )
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"视频id为空！！");
+        else if (StringUtils.isEmpty(authorId))
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"艺人id为空！！");
-        List<UploadFile> videoInfoList = videoService.searchVideoInfo(uploadFile.getId(),"","","","","");
-        if (StringUtils.isEmpty(videoInfoList))return new ResponseData(CodeEnum.SUCCESS.getCode(),"未查询该视频！！");
+        List<UploadFile> videoInfoList = videoService.searchVideoInfo(id,"","","","","");
+        if (StringUtils.isEmpty(videoInfoList))
+            return new ResponseData(CodeEnum.SUCCESS.getCode(),"未查询该视频！！");
+        else{
+            videoService.deleteVideoById(ResultJSONUtils.getHashValue("yuyue_upload_file_",authorId),id);
+            String[] split = videoInfoList.get(0).getFilesPath().split("8888");
+           // http://101.37.252.177:8888/group1/M00/00/04/rBDoeV2IWPqASGlcACTDBUNyDd8640.mp4
+            this.storageClient.deleteFile(split[1]);
+            log.info(split[1]);
 
-        videoService.deleteVideoById(uploadFile.getId(),uploadFile.getAuthorId());
+        }
+
         return new ResponseData(CodeEnum.SUCCESS);
     }
 

@@ -147,7 +147,7 @@ public class SimpleTest {
             System.out.println(Math.abs(s.hashCode()) % 10+"");
         }*/
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+      /*  SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String date ="2019-10-22 19:00:00";
         String date1="";
         String da=date1.split(" ")[0];
@@ -167,7 +167,12 @@ public class SimpleTest {
 
         Commodity commodity = new Commodity();
 
-        System.out.println(commodity.getStartDate());
+        System.out.println(commodity.getStartDate());*/
+
+        /*http://101.37.252.177:8888/group1/M00/00/04/rBDoeV2IWPqASGlcACTDBUNyDd8640.mp4*/
+        String s ="http://101.37.252.177:8888/group1/M00/00/04/rBDoeV2IWPqASGlcACTDBUNyDd8640.mp4";
+        String[] split = s.split("8888");
+        System.out.println("前端:"+split[0]+"     后段："+split[1]);
 
     }
 

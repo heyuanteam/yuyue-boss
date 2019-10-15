@@ -208,6 +208,24 @@ public class YuYueSiteController extends BaseController{
         return new ResponseData();
     }
 
+    @RequestMapping("/deleteSiteShowById")
+    @ResponseBody
+    @RequiresPermissions("scene:remove")//具有 user:remove 权限的用户才能访问此方法
+    @LoginRequired
+    public ResponseData deleteSiteShowById(HttpServletRequest request, HttpServletResponse response){
+        getParameterMap(request,response);
+        log.info("删除娱悦现场信息------------>>/site/deleteYuYueSiteById");
+        try {
+            String id = request.getParameter("id");
+            if (StringUtils.isEmpty(id))
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"节目id为空！！");
+            yuYueSiteService.deleteSiteShow(id);
+        }catch (Exception e){
+            e.printStackTrace();
+            log.info("删除失败");
+        }
 
+        return new ResponseData();
+    }
 
 }

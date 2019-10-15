@@ -22,5 +22,5 @@ public interface YuYueSiteShowMapper extends MyBaseMapper<SiteShow> {
     void insertSiteShow(SiteShow siteShow);
 
 
-    void deleteSiteShow(String siteId);
+    void deleteSiteShow(String showId);
 }

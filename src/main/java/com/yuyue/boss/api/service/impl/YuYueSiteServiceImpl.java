@@ -116,5 +116,10 @@ public class YuYueSiteServiceImpl implements YuYueSiteService {
         yuYueSiteShowMapper.updateSiteShow(siteShow);
     }
 
+    @Override
+    public void deleteSiteShow(String showId) {
+        yuYueSiteShowMapper.deleteSiteShow(showId);
+    }
+
 
 }
