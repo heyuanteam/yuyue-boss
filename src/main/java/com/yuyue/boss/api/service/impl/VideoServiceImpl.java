@@ -33,7 +33,7 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     public void insertVideo(UploadFile uploadFile) {
-
+        videoMapper.insertVideo(uploadFile);
     }
 
     /* @Override

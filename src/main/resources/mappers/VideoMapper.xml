@@ -57,7 +57,7 @@
         WHERE
              1=1 and b1.filesType = 'video'  ) total
 
-        WHERE 1=1 and total.`status` = '10A'
+        WHERE 1=1
         ORDER BY playAmount DESC
 
     </select>
@@ -109,8 +109,13 @@
 
     </select>
 
-
-    <update id="updateVideo"  parameterType="com.yuyue.boss.api.domain.UploadFile">
+    <insert id="insertVideo" parameterType="com.yuyue.boss.api.domain.UploadFile">
+        INSERT INTO ${tableName}
+            (id,authorId,categoryId,title,filesName,filesPath,description,videoAddress,filesType,status)
+        value
+            (#{id},#{authorId},#{categoryId},#{title},#{filesName},#{filesPath},#{description},#{videoAddress},"video","10B")
+    </insert>
+    <update id="updateVideo"  parameterType="String">
         UPDATE ${tableName}
         set
         <if test="status != null and status != ''">
