@@ -39,6 +39,11 @@ public class YuYueSiteServiceImpl implements YuYueSiteService {
         return yuYueSiteMapper.searchYuYueSiteInfo(siteAddr,status,jPushStatus,mainPerson,startTime,endTime);
     }
 
+//    @Override
+//    public List<SiteShow> getSiteShowList(String siteId) {
+//        return yuYueSiteShowMapper.getSiteShowList(siteId);
+//    }
+
     /**
      * 将生成的二维码地址 存入数据库中
      * @param id
@@ -67,8 +72,6 @@ public class YuYueSiteServiceImpl implements YuYueSiteService {
         }catch (Exception e){
             return;
         }
-
-
     }
 
     /**
@@ -106,6 +109,11 @@ public class YuYueSiteServiceImpl implements YuYueSiteService {
     @Override
     public void insertSiteShow(SiteShow siteShow) {
         yuYueSiteShowMapper.insertSiteShow(siteShow);
+    }
+
+    @Override
+    public void updateSiteShow(SiteShow siteShow) {
+        yuYueSiteShowMapper.updateSiteShow(siteShow);
     }
 
 

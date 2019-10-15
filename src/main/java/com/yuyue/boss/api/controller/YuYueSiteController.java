@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -136,14 +137,26 @@ public class YuYueSiteController extends BaseController{
     public ResponseData insertSiteShow(@RequestBody List<SiteShow> siteShows, HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
         log.info("添加现场------------>>/site/insertYuYueSite"+JSON.toJSONString(siteShows));
+        try {
 
-        if (StringUtils.isNotEmpty(siteShows)){
-            for (SiteShow siteShow : siteShows
-            ) {
-                siteShow.setId(UUID.randomUUID().toString().replace("-", "").toUpperCase().toString());
-                yuYueSiteService.insertSiteShow(siteShow);
+            if (StringUtils.isNotEmpty(siteShows)){
+                    for (SiteShow siteShow : siteShows
+                    ) {
+                        if (StringUtils.isEmpty(siteShow.getId())){
+                            siteShow.setId(UUID.randomUUID().toString().replace("-", "").toUpperCase().toString());
+                            yuYueSiteService.insertSiteShow(siteShow);
+                        }else {
+                            yuYueSiteService.updateSiteShow(siteShow);
+                        }
+                    }
+
             }
+
+        }catch (NullPointerException n){
+            n.printStackTrace();
+            log.info("确实现场Id");
         }
+
 
         return new ResponseData();
     }

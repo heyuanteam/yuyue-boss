@@ -48,9 +48,9 @@
         <if test="showTime != null and showTime != ''">
             SHOW_TIME = #{showTime},
         </if>
-        <if test="siteId != null and siteId != ''">
+       <!-- <if test="siteId != null and siteId != ''">
             siteId = #{siteId},
-        </if>
+        </if>-->
         id = #{id}
 
         WHERE id = #{id};

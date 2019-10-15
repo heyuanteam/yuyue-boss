@@ -13,6 +13,7 @@ public interface YuYueSiteService {
 
     List<YuYueSite> searchYuYueSiteInfo(String siteAddr, String status,String jPushStatus,
                                         String mainPerson,String startTime,String endTime);
+    //List<SiteShow> getSiteShowList(String siteId);
 
     void insertQRCodePath(String id ,String qrCodePath);
 
@@ -23,4 +24,6 @@ public interface YuYueSiteService {
     void deleteYuYueSiteById(String id);
 
     void insertSiteShow(SiteShow siteShow);
+
+    void updateSiteShow(SiteShow siteShow);
 }
