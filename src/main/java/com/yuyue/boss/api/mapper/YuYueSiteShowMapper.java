@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface YuYueSiteShowMapper extends MyBaseMapper<SiteShow> {
 
-//    List<SiteShow> getSiteShowList(@Param(value = "siteId") String siteId);
+    List<SiteShow> getSiteShowList(@Param(value = "siteId") String siteId);
 
 
     void updateSiteShow(SiteShow siteShow);
