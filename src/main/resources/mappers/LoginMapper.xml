@@ -234,4 +234,36 @@
         ORDER BY d.CREATE_TIME
     </select>
 
+    <!--获取APP菜单列表-->
+    <select id="getAPPMenuList" resultType="com.yuyue.boss.api.domain.VideoCategory" parameterType="String">
+        SELECT d.id,d.category ,DATE_FORMAT(d.upload_time ,'%Y-%m-%d %H:%i:%s') uploadTime,d.url,d.description,
+               d.category_no categoryNo,d.`status`
+        FROM yuyue_category d
+        where 1=1 /*`status` = '10B' */
+        <if test=" status !=null and status!='' ">  and d.`status` = #{status}  </if>
+        <if test=" id !=null and id!='' ">  and d.`id` = #{id}  </if>
+        <if test=" category !=null and category!='' ">  and d.category like concat('%', #{category}, '%')  </if>
+        ORDER BY category_no
+    </select>
+
+    <!-- 修改APP菜单 -->
+    <update id="updateAPPMenu" parameterType="String">
+        UPDATE yuyue_category b
+        <set>
+            <if test="category!=null and category!=''">
+                b.category = #{category},
+            </if>
+            <if test="status!=null and status!=''">
+                b.status = #{status},
+            </if>
+            <if test=" sort!=0 ">
+                b.category_no = #{sort},
+            </if>
+        </set>
+        WHERE 1=1
+        <if test="id!=null and id!=''">
+            and b.id = #{id}
+        </if>
+    </update>
+
 </mapper>

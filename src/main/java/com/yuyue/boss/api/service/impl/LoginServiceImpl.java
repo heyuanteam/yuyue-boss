@@ -178,4 +178,20 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public void delJPush(String id) {
         loginMapper.delJPush(id); }
+
+    @Override
+    public List<VideoCategory> getAPPMenuList(String id,String category, String status) {
+        return loginMapper.getAPPMenuList(id,category,status); }
+
+    @Override
+    public void insertVideoCategory(VideoCategory videoCategory) {
+        loginMapper.insertVideoCategory(videoCategory); }
+
+    @Override
+    public void updateAPPMenu(String id, int sort, String status, String category) {
+        loginMapper.updateAPPMenu(id,sort,status,category); }
+
+    @Override
+    public void delAPPMenu(String id) {
+        loginMapper.delAPPMenu(id); }
 }
