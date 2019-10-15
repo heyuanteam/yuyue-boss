@@ -23,5 +23,5 @@ public interface VideoMapper extends MyBaseMapper<UploadFile> {
 
     void updateVideo(@Param(value = "id")String id,@Param(value = "tableName") String tableName,@Param(value = "status")String status);
 
-    void deleteVideoById(String id,String authorId);
+    void deleteVideoById(@Param(value = "tableName")String tableName,@Param(value = "id")String id);
 }

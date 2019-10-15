@@ -15,8 +15,7 @@ public class VideoServiceImpl implements VideoService {
 
     @Autowired
     private VideoMapper videoMapper;
-    @Autowired
-    private FastFileStorageClient storageClient;
+
 
 
 
@@ -45,19 +44,11 @@ public class VideoServiceImpl implements VideoService {
     public void updateVideo(String id,String authorId,String status){
         videoMapper.updateVideo(id,ResultJSONUtils.getHashValue("yuyue_upload_file_",authorId),status);
     }
+
     @Override
-    public void deleteVideoById(String id, String authorId) {
+    public void deleteVideoById(String tableName,String authorId) {
         System.out.println(ResultJSONUtils.getHashValue("yuyue_upload_file_", authorId));
-        List<UploadFile> uploadFile = videoMapper.searchVideoInfo(id,"","","","","");
-        if (StringUtils.isEmpty(uploadFile))return;
-        else{
-            try {
-                videoMapper.deleteVideoById(ResultJSONUtils.getHashValue("yuyue_upload_file_",authorId),id);
-                String[] split = uploadFile.get(0).getFilesPath().split("/");
-                this.storageClient.deleteFile(split[1] +"/"+ split[2] +"/"+ split[3] +"/"+ split[4] +"/"+ split[5]);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        videoMapper.deleteVideoById(ResultJSONUtils.getHashValue("yuyue_upload_file_",authorId),authorId);
+
     }
 }

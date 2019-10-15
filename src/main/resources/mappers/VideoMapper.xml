@@ -120,4 +120,11 @@
 
         WHERE id=#{id};
     </update>
+
+    <delete id="deleteVideoById" parameterType="String">
+
+        DELETE FROM  ${tableName} WHERE id = #{id}
+    </delete>
+
+
 </mapper>
