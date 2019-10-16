@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 
 
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
+import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.*;
 
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -46,8 +48,8 @@ public class VideoController extends BaseController {
     private FastFileStorageClient storageClient;
 
     /**
-     * 视频审核
-     * 获取视频列表
+     * 视频审核 -获取视频列表
+     *
      * @param
      * @param request
      */
@@ -79,7 +81,6 @@ public class VideoController extends BaseController {
 
         }else {
             log.info("视频搜索------------>>/video/searchVideoInfo");
-
             PageHelper.startPage(Integer.parseInt(page), 10);
             uploadFiles = videoService.searchVideoInfo(id,categoryId, startTime, endTime, title, status);
         }
@@ -89,11 +90,43 @@ public class VideoController extends BaseController {
         int currentPage = Integer.parseInt(page);
         return new ResponseData(uploadFiles,currentPage,(int)total,pages);
     }
+    /**
+     * 视频审核 - 上传视频
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/insertVideo")
+    @ResponseBody
+    @RequiresPermissions("video:save")//具有 user:detail 权限的用户才能访问此方法
+    @LoginRequired
+    public ResponseData insertVideo(@CurrentUser SystemUser systemUser, UploadFile uploadFile, HttpServletRequest request, HttpServletResponse response){
+        getParameterMap(request,response);
+        log.info("视频审核 - 上传视频----------------->/video/insertVideo");
 
+
+        if (StringUtils.isEmpty(uploadFile.getCategoryId()))
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"视频种类id为空！！");
+        else if (StringUtils.isEmpty(uploadFile.getTitle()))
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"标题名为空！！");
+        else if (StringUtils.isEmpty(uploadFile.getFilesPath()))
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"视频路径为空！！");
+        else if (StringUtils.isEmpty(uploadFile.getDescription()))
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"描述为空！！");
+        else if (StringUtils.isEmpty(uploadFile.getVideoAddress()))
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"视频第一帧图片为空！！");
+        uploadFile.setId(UUID.randomUUID().toString().toUpperCase().replace("-",""));
+        uploadFile.setAuthorId(systemUser.getId());
+        uploadFile.setFilesName(uploadFile.getTitle());
+        uploadFile.setTableName(ResultJSONUtils.getHashValue("yuyue_upload_file_",systemUser.getId()));
+
+        videoService.insertVideo(uploadFile);
+        return new ResponseData(CodeEnum.SUCCESS);
+
+    }
 
     /**
-     * 视频审核
-     * 修改视频状态
+     * 视频审核 - 修改视频状态
      * @param request
      * @param response
      * @return
@@ -104,6 +137,7 @@ public class VideoController extends BaseController {
     @LoginRequired
     public ResponseData updateVideoStatus(HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
+        log.info("视频审核 - 修改视频状态----------------->/video/updateVideoStatus");
         String id = request.getParameter("id");
         String authorId = request.getParameter("authorId");
         String status = request.getParameter("status");
@@ -129,8 +163,7 @@ public class VideoController extends BaseController {
 
 
     /**
-     * 视频审核
-     * 删除视频
+     * 视频审核 - 删除视频
      * @param
      * @param request
      * @param response
@@ -142,6 +175,7 @@ public class VideoController extends BaseController {
     @LoginRequired
     public ResponseData deleteVideoById(HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
+        log.info("视频审核 - 删除视频----------------->/video/deleteVideoById");
         String id = request.getParameter("id");
         String authorId = request.getParameter("authorId");
         log.info("视频更新------------>>/video/updateVideo");
