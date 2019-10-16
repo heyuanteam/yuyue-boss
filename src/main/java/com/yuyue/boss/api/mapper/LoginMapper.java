@@ -32,7 +32,8 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     void insertSystemMenu(SystemMenu systemMenu);
 
     @Transactional
-    void updateSystemMenu(@Param("id")String id,@Param("upSort") int upSort,@Param("status")String status,@Param("menuName")String menuName);
+    void updateSystemMenu(@Param("id")String id,@Param("upSort") int upSort,@Param("status")String status,
+                          @Param("menuName")String menuName,@Param("menuAction")String menuAction);
 
     @Transactional
     @Insert("INSERT into yuyue_system_permission (id,systemUserId,menuId,menuKey,saveKey,removeKey)  values  " +

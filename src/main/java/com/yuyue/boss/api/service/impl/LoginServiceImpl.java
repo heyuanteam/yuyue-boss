@@ -87,7 +87,7 @@ public class LoginServiceImpl implements LoginService {
     public void insertSystemMenu(SystemMenu systemMenu) { loginMapper.insertSystemMenu(systemMenu); }
 
     @Override
-    public void updateSystemMenu(String id, int upSort,String status,String menuName) { loginMapper.updateSystemMenu(id,upSort,status,menuName); }
+    public void updateSystemMenu(String id, int upSort,String status,String menuName,String menuAction) { loginMapper.updateSystemMenu(id,upSort,status,menuName,menuAction); }
 
     @Override
     public void insertSystemPermission(String id, String systemUserId, String menuId, String menuKey, String saveKey, String removeKey) {

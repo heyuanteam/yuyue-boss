@@ -66,6 +66,9 @@
             <if test="menuName!=null and menuName!=''">
                 b.menuName = #{menuName},
             </if>
+            <if test="menuAction!=null and menuAction!=''">
+                b.menuAction = #{menuAction},
+            </if>
         </set>
         WHERE 1=1
         <if test="id!=null and id!=''">

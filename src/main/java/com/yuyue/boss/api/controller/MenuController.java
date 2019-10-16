@@ -162,9 +162,9 @@ public class MenuController extends BaseController {
                 } else {
                     number = sort - 1;//向上
                 }
-                loginService.updateSystemMenu(menuList.get(0).getId(), number, "", "");
+                loginService.updateSystemMenu(menuList.get(0).getId(), number, "", "","");
                 List<SystemMenu> list2 = loginService.getMenu("", number, "", "", "");
-                loginService.updateSystemMenu(list2.get(0).getId(), sort, "", "");
+                loginService.updateSystemMenu(list2.get(0).getId(), sort, "", "","");
                 List<SystemMenu> list = loginService.getMenu("", 0, "", "", "");
                 return new ResponseData(list);
             } catch (Exception e) {
@@ -172,7 +172,8 @@ public class MenuController extends BaseController {
                 return new ResponseData(CodeEnum.SYSTEM_BUSY.getCode(), "修改系统菜单失败！");
             }
         } else if (StringUtils.isNotEmpty(parameterMap.get("status")) && ("10A".equals(parameterMap.get("status"))
-                || "10B".equals(parameterMap.get("status"))) && StringUtils.isNotEmpty(parameterMap.get("menuName"))) {
+                || "10B".equals(parameterMap.get("status"))) && StringUtils.isNotEmpty(parameterMap.get("menuName"))
+                && StringUtils.isNotEmpty(parameterMap.get("menuAction"))) {
 
             List<SystemMenu> list = loginService.getMenu(parameterMap.get("id"), 0, "","","");
             if (CollectionUtils.isEmpty(list)) {
@@ -188,7 +189,8 @@ public class MenuController extends BaseController {
                     }
                 }
             }
-            loginService.updateSystemMenu(parameterMap.get("id"), 0, parameterMap.get("status"), parameterMap.get("menuName"));
+            loginService.updateSystemMenu(parameterMap.get("id"), 0, parameterMap.get("status"), parameterMap.get("menuName"),
+                    parameterMap.get("menuAction"));
             return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改系统菜单成功！");
         }
         return new ResponseData(CodeEnum.SYSTEM_BUSY.getCode(), "参数错误！");

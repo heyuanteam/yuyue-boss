@@ -27,7 +27,7 @@ public interface LoginService {
     void insertSystemMenu(SystemMenu systemMenu);
 
     //修改菜单
-    void updateSystemMenu(String id, int upSort,String status,String menuName);
+    void updateSystemMenu(String id, int upSort,String status,String menuName,String menuAction);
 
     //插入权限
     void insertSystemPermission(String id, String systemUserId, String menuId, String menuKey, String saveKey, String removeKey);
