@@ -32,7 +32,8 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     void insertSystemMenu(SystemMenu systemMenu);
 
     @Transactional
-    void updateSystemMenu(@Param("id")String id,@Param("upSort") int upSort,@Param("status")String status,@Param("menuName")String menuName);
+    void updateSystemMenu(@Param("id")String id,@Param("upSort") int upSort,@Param("status")String status,
+                          @Param("menuName")String menuName,@Param("menuAction")String menuAction);
 
     @Transactional
     @Insert("INSERT into yuyue_system_permission (id,systemUserId,menuId,menuKey,saveKey,removeKey)  values  " +
@@ -103,45 +104,4 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     @Delete("DELETE FROM yuyue_system WHERE id =#{id} ")
     void delLookupCdeSystem(@Param("id") String id);
 
-    List<AppVersion> getVersionList(@Param("systemType")String systemType,@Param("versionNo") String versionNo,
-                                    @Param("appVersionId")String appVersionId);
-
-    @Transactional
-    @Insert("INSERT into yuyue_app_version (id,system_type,version_no,update_user,program_description,number) values " +
-            "(#{appVersionId},#{systemType},#{versionNo},#{updateUser},#{programDescription},#{number})")
-    @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
-    void insertAppVersion(AppVersion appVersion);
-
-    @Transactional
-    void updateAppVersion(@Param("appVersionId")String appVersionId,@Param("versionNo") String versionNo,
-                          @Param("systemType") String systemType,@Param("programDescription") String programDescription,
-                          @Param("status")String status);
-
-    @Transactional
-    @Delete("DELETE FROM yuyue_app_version WHERE id =#{appVersionId} ")
-    void delVersion(@Param("appVersionId")String appVersionId);
-
-    List<JPush> getJPushList(@Param("id")String id,@Param("msgTitle")String msgTitle,@Param("extras") String extras,
-                             @Param("startTime") String startTime, @Param("endTime")String endTime);
-
-    @Transactional
-    @Delete("DELETE FROM yuyue_jpush WHERE id =#{id} ")
-    void delJPush(@Param("id")String id);
-
-    List<VideoCategory> getAPPMenuList(@Param("id")String id,@Param("category")String category,@Param("status") String status,
-                                       @Param("number")int number);
-
-    @Transactional
-    @Insert("INSERT into yuyue_category (id,category,url,category_no) values " +
-            "(#{id},#{category},#{url},#{categoryNo})")
-    @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
-    void insertVideoCategory(VideoCategory videoCategory);
-
-    @Transactional
-    void updateAPPMenu(@Param("id")String id,@Param("sort") int sort,@Param("status") String status,
-                       @Param("category") String category,@Param("url") String url);
-
-    @Transactional
-    @Delete("DELETE FROM yuyue_category WHERE id =#{id} ")
-    void delAPPMenu(@Param("id")String id);
 }

@@ -66,6 +66,9 @@
             <if test="menuName!=null and menuName!=''">
                 b.menuName = #{menuName},
             </if>
+            <if test="menuAction!=null and menuAction!=''">
+                b.menuAction = #{menuAction},
+            </if>
         </set>
         WHERE 1=1
         <if test="id!=null and id!=''">
@@ -116,152 +119,6 @@
             </if>
             <if test="status!=null and status!=''">
                 b.status = #{status},
-            </if>
-        </set>
-        WHERE 1=1
-        <if test="id!=null and id!=''">
-            and b.id = #{id}
-        </if>
-    </update>
-
-    <!-- 获取系统字典 -->
-    <select id="getLookupCdeSystem" resultType="com.yuyue.boss.api.domain.LookupCde" parameterType="String">
-        SELECT b.*
-        from yuyue_system b where 1=1
-        <if test="status!=null and status!=''">  and b.status = #{status}  </if>
-        <if test="id!=null and id!=''">  and b.id = #{id}  </if>
-        <if test="typeName!=null and typeName!='' ">  and b.typeName like concat('%', #{typeName}, '%')</if>
-        order by b.sort
-    </select>
-
-    <!-- 修改系统字典 -->
-    <update id="updateLookupCde" parameterType="String">
-        UPDATE yuyue_system b
-        <set>
-            <if test="typeName!=null and typeName!=''">
-                b.typeName = #{typeName},
-            </if>
-            <if test="status!=null and status!=''">
-                b.status = #{status},
-            </if>
-        </set>
-        WHERE 1=1
-        <if test="id!=null and id!=''">
-            and b.id = #{id}
-        </if>
-    </update>
-
-    <!-- 获取系统字典下级 -->
-    <select id="getLookupCdeList" resultType="com.yuyue.boss.api.domain.LookupCdeConfig" parameterType="String">
-        SELECT b.*
-        from yuyue_system_config b where 1=1
-        <if test="id!=null and id!=''">  and b.id = #{id}  </if>
-        <if test="systemId!=null and systemId!=''">  and b.systemId = #{systemId}  </if>
-        order by b.createTime
-    </select>
-
-    <!-- 修改系统字典下级 -->
-    <update id="updateLookupCdeList" parameterType="String">
-        UPDATE yuyue_system_config b
-        <set>
-            <if test="type!=null and type!=''">
-                b.type = #{type},
-            </if>
-            <if test="status!=null and status!=''">
-                b.status = #{status},
-            </if>
-        </set>
-        WHERE 1=1
-        <if test="id!=null and id!=''">
-            and b.id = #{id}
-        </if>
-    </update>
-
-    <!-- 获取版本列表 -->
-    <select id="getVersionList" resultType="com.yuyue.boss.api.domain.AppVersion" parameterType="String">
-        SELECT b.id appVersionId, b.system_type systemType,b.version_no versionNo,b.update_user updateUser,
-               b.status,b.number,b.program_description programDescription,
-        DATE_FORMAT(b.UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') updateTime,
-        DATE_FORMAT(b.CREATE_TIME ,'%Y-%m-%d %H:%i:%s') createTime
-        from yuyue_app_version b where 1=1
-        <if test="versionNo!=null and versionNo!=''">and b.version_no like concat('%', #{versionNo}, '%') </if>
-        <if test="systemType!=null and systemType!='' ">  and b.`system_type` = #{systemType}  </if>
-        <if test="appVersionId!=null and appVersionId!='' ">  and b.id = #{appVersionId}  </if>
-        order by b.number
-    </select>
-
-    <!-- 修改版本 -->
-    <update id="updateAppVersion" parameterType="String">
-        UPDATE yuyue_app_version b
-        <set>
-            <if test="versionNo!=null and versionNo!=''">
-                b.version_no = #{versionNo},
-            </if>
-            <if test="systemType!=null and systemType!=''">
-                b.system_type = #{systemType},
-            </if>
-            <if test="programDescription!=null and programDescription!=''">
-                b.program_description = #{programDescription},
-            </if>
-            <if test="status!=null and status!=''">
-                b.status = #{status},
-            </if>
-        </set>
-        WHERE 1=1
-        <if test="appVersionId!=null and appVersionId!=''">
-            and b.id = #{appVersionId}
-        </if>
-    </update>
-
-    <!--获取公告列表-->
-    <select id="getJPushList" resultType="com.yuyue.boss.api.domain.JPush" parameterType="String">
-        SELECT d.*,DATE_FORMAT(d.CREATE_TIME ,'%Y-%m-%d %H:%i:%s') createTime
-        FROM yuyue_jpush d
-        WHERE 1=1
-        <if test=" id !=null and id!='' ">  and d.id = #{id}  </if>
-        <if test=" msgTitle !=null and msgTitle!='' ">  and d.msgTitle like concat('%', #{msgTitle}, '%')  </if>
-        <if test=" extras!=null and extras!='' ">  and d.extras = #{extras}  </if>
-        <if test=" startTime !=null and startTime!='' ">
-            <![CDATA[
-				and	DATE_FORMAT(d.CREATE_TIME, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT(#{startTime}, '%Y-%m-%d %H:%i:%s')
-			]]>
-        </if>
-        <if test=" endTime !=null and endTime!='' ">
-            <![CDATA[
-				and	DATE_FORMAT(d.CREATE_TIME, '%Y-%m-%d %H:%i:%s') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i:%s')
-			]]>
-        </if>
-        ORDER BY d.CREATE_TIME
-    </select>
-
-    <!--获取APP菜单列表-->
-    <select id="getAPPMenuList" resultType="com.yuyue.boss.api.domain.VideoCategory" parameterType="String">
-        SELECT d.id,d.category ,DATE_FORMAT(d.upload_time ,'%Y-%m-%d %H:%i:%s') uploadTime,d.url,d.description,
-               d.category_no categoryNo,d.`status`
-        FROM yuyue_category d
-        where 1=1 /*`status` = '10B' */
-        <if test=" status !=null and status!='' ">  and d.`status` = #{status}  </if>
-        <if test=" id !=null and id!='' ">  and d.`id` = #{id}  </if>
-        <if test=" number!=0 ">  and d.`category_no` = #{number}  </if>
-        <if test=" category !=null and category!='' ">  and d.category like concat('%', #{category}, '%')  </if>
-        ORDER BY category_no
-    </select>
-
-    <!-- 修改APP菜单 -->
-    <update id="updateAPPMenu" parameterType="String">
-        UPDATE yuyue_category b
-        <set>
-            <if test="category!=null and category!=''">
-                b.category = #{category},
-            </if>
-            <if test="status!=null and status!=''">
-                b.status = #{status},
-            </if>
-            <if test=" sort!=0 ">
-                b.category_no = #{sort},
-            </if>
-            <if test="url!=null and url!=''">
-                b.url = #{url},
             </if>
         </set>
         WHERE 1=1

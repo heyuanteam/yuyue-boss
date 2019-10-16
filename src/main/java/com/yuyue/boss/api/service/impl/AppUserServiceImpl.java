@@ -20,4 +20,7 @@ public class AppUserServiceImpl implements AppUserService {
     public void updateAppUser(AppUser appUser) {
         appUserMapper.updateAppUser(appUser);
     }
+
+    @Override
+    public void insertAppUser(AppUser appUser) { appUserMapper.insertAppUser(appUser); }
 }

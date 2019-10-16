@@ -28,4 +28,13 @@ public class SendServiceImpl implements SendService {
     @Override
     public List<String> getAttentionList(String authorId) {
         return sendMapper.getAttentionList(authorId); }
+
+
+    @Override
+    public List<JPush> getJPushList(String id,String msgTitle, String extras, String startTime, String endTime) {
+        return sendMapper.getJPushList(id,msgTitle,extras,startTime,endTime); }
+
+    @Override
+    public void delJPush(String id) {
+        sendMapper.delJPush(id); }
 }

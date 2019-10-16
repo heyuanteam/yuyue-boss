@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yuyue.boss.api.mapper.LookupCdeMapper" >
+
+    <!-- 获取系统字典 -->
+    <select id="getLookupCdeSystem" resultType="com.yuyue.boss.api.domain.LookupCde" parameterType="String">
+        SELECT b.*
+        from yuyue_system b where 1=1
+        <if test="status!=null and status!=''">  and b.status = #{status}  </if>
+        <if test="id!=null and id!=''">  and b.id = #{id}  </if>
+        <if test="typeName!=null and typeName!='' ">  and b.typeName like concat('%', #{typeName}, '%')</if>
+        order by b.sort
+    </select>
+
+    <!-- 修改系统字典 -->
+    <update id="updateLookupCde" parameterType="String">
+        UPDATE yuyue_system b
+        <set>
+            <if test="typeName!=null and typeName!=''">
+                b.typeName = #{typeName},
+            </if>
+            <if test="status!=null and status!=''">
+                b.status = #{status},
+            </if>
+        </set>
+        WHERE 1=1
+        <if test="id!=null and id!=''">
+            and b.id = #{id}
+        </if>
+    </update>
+
+    <!-- 获取系统字典下级 -->
+    <select id="getLookupCdeList" resultType="com.yuyue.boss.api.domain.LookupCdeConfig" parameterType="String">
+        SELECT b.*
+        from yuyue_system_config b where 1=1
+        <if test="id!=null and id!=''">  and b.id = #{id}  </if>
+        <if test="systemId!=null and systemId!=''">  and b.systemId = #{systemId}  </if>
+        order by b.createTime
+    </select>
+
+    <!-- 修改系统字典下级 -->
+    <update id="updateLookupCdeList" parameterType="String">
+        UPDATE yuyue_system_config b
+        <set>
+            <if test="type!=null and type!=''">
+                b.type = #{type},
+            </if>
+            <if test="status!=null and status!=''">
+                b.status = #{status},
+            </if>
+        </set>
+        WHERE 1=1
+        <if test="id!=null and id!=''">
+            and b.id = #{id}
+        </if>
+    </update>
+
+</mapper>
