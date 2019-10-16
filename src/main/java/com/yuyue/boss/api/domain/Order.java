@@ -41,4 +41,11 @@ public class Order implements Serializable {
 //    收礼物的那个人
     private String sourceId;
 
+    //查询所用到的字段
+    private String startTime;
+
+    private String endTime;
+    //用户信息
+    private AppUser appUser;
+
 }

@@ -43,12 +43,12 @@
         c.SPOKESPERSON_ID ,
         c.MERCHANT_ID ,
         c.VIDEO_ID,
-        c.APPLICATION_DATE,
+       /* c.APPLICATION_DATE,
         c.START_DATE ,
-        c.END_DATE ,
-       /* DATE_FORMAT(c.APPLICATION_DATE ,'%Y-%m-%d %H:%i:%s') APPLICATION_DATE,
+        c.END_DATE ,*/
+        DATE_FORMAT(c.APPLICATION_DATE ,'%Y-%m-%d %H:%i:%s') APPLICATION_DATE,
         DATE_FORMAT(c.START_DATE ,'%Y-%m-%d %H:%i:%s') START_DATE ,
-        DATE_FORMAT(c.END_DATE ,'%Y-%m-%d %H:%i:%s') END_DATE ,*/
+        DATE_FORMAT(c.END_DATE ,'%Y-%m-%d %H:%i:%s') END_DATE ,
         c.STATUS ,
         p.ID ,
         p.AD_DURATION ,

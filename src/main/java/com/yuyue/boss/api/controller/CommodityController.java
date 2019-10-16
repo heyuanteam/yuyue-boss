@@ -4,7 +4,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.Commodity;
+import com.yuyue.boss.api.domain.Order;
 import com.yuyue.boss.api.service.CommodityService;
+import com.yuyue.boss.api.service.OrderService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.StringUtils;
@@ -38,6 +40,8 @@ public class CommodityController extends BaseController {
     private CommodityService commodityService;
     @Autowired
     private SendController sendController;
+    @Autowired
+    private OrderService orderService;
 
     /**
      * 获取爆款列表及搜索
@@ -61,7 +65,26 @@ public class CommodityController extends BaseController {
         String endTime = request.getParameter("endTime");
         if (StringUtils.isEmpty(page) || !page.matches("[0-9]+"))
             page = "1";
+        //查询未支付状态
+        List<Commodity> commodityNoPayInfo = commodityService.getCommodityInfo("","","","10A","","");
+        if (StringUtils.isNotEmpty(commodityNoPayInfo)) {
+            for (Commodity c: commodityNoPayInfo
+                 ) {
+                if (StringUtils.isNotEmpty(c.getOrderId())){
+                    Order orderById = orderService.getOrderById(c.getOrderId());
+                    if (StringUtils.isNull(orderById)) continue;
+                    else {
+                        if ("10B".equals(orderById.getStatus()) && "10A".equals(c.getStatus())){
+                            c.setStatus("10B");
+                            commodityService.updateCommodityInfo(c);
+                        }
+                        else continue;
+                    }
+                }
 
+
+            }
+        }
         PageHelper.startPage(Integer.parseInt(page), 10);
         System.out.println(commodity);
         List<Commodity> commodityInfo = commodityService.getCommodityInfo(commodityId,commodityName,category,status,startTime,endTime);

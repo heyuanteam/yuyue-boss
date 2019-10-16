@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yuyue.boss.api.mapper.OrderMapper" >
+    <resultMap type="com.yuyue.boss.api.domain.Order" id="Order">
+        <id column="id" property="id"/>
+        <result column="orderNo" property="orderNo"/>
+        <result column="tradeType" property="tradeType"/>
+        <result column="money" property="money"/>
+        <result column="mobile" property="mobile"/>
+        <result column="status" property="status"/>
+        <result column="statusCode" property="statusCode"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="COMPLETE_TIME" property="completeTime"/>
+        <result column="note" property="note"/>
+        <result column="responseCode" property="responseCode"/>
+        <result column="responseMessage" property="responseMessage"/>
+        <result column="merchantId" property="merchantId"/>
+        <result column="sourceId" property="sourceId"/>
+        <association property="appUser" javaType="com.yuyue.boss.api.domain.AppUser">
+            <!-- 关联条件Employee的dept_id对应着Department的id -->
+            <id column="userId" property="id"/>
+            <result column="USER_NICK_NAME" property="nickName"/>
+        </association>
+    </resultMap>
+
+    <select id="getOrderList" resultMap="Order" parameterType="com.yuyue.boss.api.domain.Order">
+        select
+        DATE_FORMAT(o.CREATE_TIME,'%Y-%m-%d %H:%i:%s') CREATE_TIME,
+        DATE_FORMAT(o.COMPLETE_TIME,'%Y-%m-%d %H:%i:%s') COMPLETE_TIME,
+        o.id,o.orderNo,o.tradeType,o.money,o.mobile,o.status,o.statusCode,o.note,o.responseCode,o.responseMessage,o.merchantId,o.sourceId,
+        u.USER_NICK_NAME
+
+        from yuyue_order   o
+        left join yuyue_merchant  u on o.merchantId = u.ID
+        WHERE  1=1
+
+        <if test="orderNo != null and orderNo != ''">
+            and o.orderNo = #{orderNo}
+        </if>
+
+        <if test="tradeType != null and tradeType != ''">
+            and CONCAT(o.tradeType) like concat('%', #{tradeType}, '%')
+        </if>
+
+        <if test="nickName != null and nickName != ''">
+            and CONCAT(m.USER_NICK_NAME) like concat('%', #{nickName}, '%')
+        </if>
+        <if test="money != null and money != ''">
+            and   o.money = #{money}
+        </if>
+
+        <if test="mobile != null and mobile != ''">
+            and   o.mobile = #{mobile}
+        </if>
+
+        <if test="status != null and status != ''">
+            and   o.status = #{status}
+        </if>
+
+        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+
+            and o.CREATE_TIME  BETWEEN  #{startTime}  AND  #{endTime}
+        </if>
+
+
+
+        <if test="statusCode != null and statusCode != '' ">
+            and   o.statusCode = #{statusCode}
+        </if>
+
+        <if test="note != null and note != '' ">
+            and   o.note = #{note}
+        </if>
+
+        <if test="responseCode != null and responseCode != '' ">
+            and   o.responseCode = #{responseCode}
+        </if>
+
+        <if test="responseMessage != null and responseMessage != '' ">
+            and   o.responseMessage = #{responseMessage}
+        </if>
+
+        <if test="merchantId != null and merchantId != '' ">
+            and   o.merchantId = #{merchantId}
+        </if>
+
+        <if test="sourceId != null and sourceId != '' ">
+            and   o.sourceId = #{sourceId}
+        </if>
+
+        ORDER BY o.CREATE_TIME DESC
+
+    </select>
+
+
+    <delete id="deleteOrderById" parameterType="String">
+        DELETE FROM yuyue_order WHERE ID = #{id}
+    </delete>
+
+
+    <update id="updateOrder"  parameterType="com.yuyue.boss.api.domain.Order">
+        UPDATE yuyue_order
+        set
+        <if test="tradeType != null and tradeType != ''">
+            tradeType= #{tradeType},
+        </if>
+
+        <if test="money != null and money != ''">
+            money= #{money},
+        </if>
+
+        <if test="mobile != null and mobile != ''">
+            mobile= #{mobile},
+        </if>
+
+        <if test="status != null and status != ''">
+            status= #{status},
+        </if>
+
+        <if test="statusCode != null and statusCode != ''">
+            statusCode= #{statusCode},
+        </if>
+
+        <if test="createTime != null and createTime != ''">
+            CREATE_TIME= #{createTime},
+        </if>
+
+        <if test="completeTime != null and completeTime != ''">
+            COMPLETE_TIME= #{completeTime},
+        </if>
+
+        <if test="note != null and note != ''">
+            note= #{note},
+        </if>
+
+        <if test="responseCode != null and responseCode != ''">
+            responseCode= #{responseCode},
+        </if>
+
+        <if test="responseMessage != null and responseMessage != ''">
+            responseMessage= #{responseMessage},
+        </if>
+
+        <if test="merchantId != null and merchantId != ''">
+            merchantId= #{merchantId},
+        </if>
+
+        <if test="sourceId != null and sourceId != ''">
+            sourceId= #{sourceId},
+        </if>
+
+        id=#{id}
+
+        WHERE id=#{id};
+    </update>
+</mapper>
