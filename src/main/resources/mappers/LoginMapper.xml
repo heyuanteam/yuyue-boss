@@ -231,7 +231,7 @@
 				and	DATE_FORMAT(d.CREATE_TIME, '%Y-%m-%d %H:%i:%s') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i:%s')
 			]]>
         </if>
-        ORDER BY d.CREATE_TIME
+        ORDER BY d.CREATE_TIME desc
     </select>
 
     <!--获取APP菜单列表-->

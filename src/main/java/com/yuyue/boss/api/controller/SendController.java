@@ -9,11 +9,13 @@ import com.yuyue.boss.api.service.*;
 import com.yuyue.boss.config.JPushClients;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
+import com.yuyue.boss.utils.PageUtil;
 import com.yuyue.boss.utils.RandomSaltUtil;
 import com.yuyue.boss.utils.RedisUtil;
 import com.yuyue.boss.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 公告管理
+ */
 @RestController
 @RequestMapping(value="/send", produces = "application/json; charset=UTF-8")
 @Slf4j
@@ -47,6 +52,8 @@ public class SendController extends BaseController{
     private VideoService videoService;
     @Autowired
     private AdReviewService adReviewService;
+    @Autowired
+    private LoginService loginService;
 
     //极光推送类型
     private static final Map<String, Object> sendMap = new HashMap<>();
@@ -57,6 +64,62 @@ public class SendController extends BaseController{
         sendMap.put("4","现场详情的通知");//需要参数
         sendMap.put("5","视频审核的通知");//不需要参数
         sendMap.put("6","广告审核的通知");//不需要参数
+    }
+
+    /**
+     * 获取公告列表
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/getJPushList")
+    @ResponseBody
+    @RequiresPermissions("Announcement:menu")
+    @LoginRequired
+    public ResponseData getJPushList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("获取公告列表----------->>/system/getJPushList");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        try {
+            PageUtil.getPage(parameterMap.get("page"));
+            List<JPush> jPushList = loginService.getJPushList("",parameterMap.get("msgTitle"), parameterMap.get("extras"),
+                    parameterMap.get("startTime"),parameterMap.get("endTime"));
+            PageUtil pageUtil = new PageUtil(jPushList);
+            return new ResponseData(pageUtil);
+        } catch (Exception e) {
+            log.info("===========>>>>>>获取公告列表失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"获取公告列表失败！");
+        }
+    }
+
+    /**
+     * 删除公告
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/delJPush")
+    @ResponseBody
+    @RequiresPermissions("Announcement:remove")
+    @LoginRequired
+    public ResponseData delJPush(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("删除公告----------->>/system/delJPush");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        if (StringUtils.isEmpty(parameterMap.get("id"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "公告id不可以为空！");
+        }
+        List<JPush> jPushList = loginService.getJPushList(parameterMap.get("id"),"","","","");
+        if (CollectionUtils.isEmpty(jPushList)){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "公告不存在！");
+        }
+        try {
+            loginService.delJPush(parameterMap.get("id"));
+            return new ResponseData(CodeEnum.SUCCESS.getCode(), "删除公告成功！");
+        } catch (Exception e) {
+            log.info("===========>>>>>>删除公告失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"删除公告失败！");
+        }
     }
 
     /**
