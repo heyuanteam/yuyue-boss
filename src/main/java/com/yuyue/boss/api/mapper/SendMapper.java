@@ -28,4 +28,11 @@ public interface SendMapper extends MyBaseMapper<JPush> {
 
     @Select("SELECT userId FROM yuyue_attention b WHERE b.authorId = #{authorId} ")
     List<String> getAttentionList(@Param("authorId")String authorId);
+
+    List<JPush> getJPushList(@Param("id")String id,@Param("msgTitle")String msgTitle,@Param("extras") String extras,
+                             @Param("startTime") String startTime, @Param("endTime")String endTime);
+
+    @Transactional
+    @Delete("DELETE FROM yuyue_jpush WHERE id =#{id} ")
+    void delJPush(@Param("id")String id);
 }

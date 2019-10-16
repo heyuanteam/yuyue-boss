@@ -17,4 +17,10 @@ public interface SendService {
 
     //获取关注的人
     List<String> getAttentionList(String authorId);
+
+    //获取公告列表
+    List<JPush> getJPushList(String id,String msgTitle, String extras, String startTime, String endTime);
+
+    //删除公告
+    void delJPush(String id);
 }

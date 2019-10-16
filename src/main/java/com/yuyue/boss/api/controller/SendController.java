@@ -52,8 +52,6 @@ public class SendController extends BaseController{
     private VideoService videoService;
     @Autowired
     private AdReviewService adReviewService;
-    @Autowired
-    private LoginService loginService;
 
     //极光推送类型
     private static final Map<String, Object> sendMap = new HashMap<>();
@@ -82,7 +80,7 @@ public class SendController extends BaseController{
         Map<String, String> parameterMap = getParameterMap(request, response);
         try {
             PageUtil.getPage(parameterMap.get("page"));
-            List<JPush> jPushList = loginService.getJPushList("",parameterMap.get("msgTitle"), parameterMap.get("extras"),
+            List<JPush> jPushList = sendService.getJPushList("",parameterMap.get("msgTitle"), parameterMap.get("extras"),
                     parameterMap.get("startTime"),parameterMap.get("endTime"));
             PageUtil pageUtil = new PageUtil(jPushList);
             return new ResponseData(pageUtil);
@@ -109,12 +107,12 @@ public class SendController extends BaseController{
         if (StringUtils.isEmpty(parameterMap.get("id"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "公告id不可以为空！");
         }
-        List<JPush> jPushList = loginService.getJPushList(parameterMap.get("id"),"","","","");
+        List<JPush> jPushList = sendService.getJPushList(parameterMap.get("id"),"","","","");
         if (CollectionUtils.isEmpty(jPushList)){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "公告不存在！");
         }
         try {
-            loginService.delJPush(parameterMap.get("id"));
+            sendService.delJPush(parameterMap.get("id"));
             return new ResponseData(CodeEnum.SUCCESS.getCode(), "删除公告成功！");
         } catch (Exception e) {
             log.info("===========>>>>>>删除公告失败！");

@@ -6,7 +6,7 @@ import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.LookupCde;
 import com.yuyue.boss.api.domain.LookupCdeConfig;
 import com.yuyue.boss.api.domain.SystemUser;
-import com.yuyue.boss.api.service.LoginService;
+import com.yuyue.boss.api.service.LookupCdeService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.PageUtil;
@@ -37,7 +37,7 @@ import java.util.Map;
 public class LookupCdeController extends BaseController {
 
     @Autowired
-    private LoginService loginService;
+    private LookupCdeService lookupCdeService;
 
     /**
      * 获取全部字典
@@ -53,14 +53,14 @@ public class LookupCdeController extends BaseController {
         log.info("获取全部字典----------->>/system/getSystemList");
         getParameterMap(request, response);
         try {
-            List<LookupCde> lookupCdeList = loginService.getLookupCdeSystem("", "","");
+            List<LookupCde> lookupCdeList = lookupCdeService.getLookupCdeSystem("", "","");
             List list = new ArrayList<>();
             if (CollectionUtils.isNotEmpty(lookupCdeList)){
                 for (LookupCde lookupCde: lookupCdeList) {
                     Map<String,Object> map = Maps.newHashMap();
                     map.put("id",lookupCde.getId());
                     map.put("typeName",lookupCde.getTypeName());
-                    List<LookupCdeConfig> lookupCdeConfigList = loginService.getLookupCdeList(lookupCde.getId(),"");
+                    List<LookupCdeConfig> lookupCdeConfigList = lookupCdeService.getLookupCdeList(lookupCde.getId(),"");
                     map.put("content",lookupCdeConfigList);
                     list.add(map);
                 }
@@ -88,7 +88,7 @@ public class LookupCdeController extends BaseController {
         Map<String, String> parameterMap = getParameterMap(request, response);
         try {
             PageUtil.getPage(parameterMap.get("page"));
-            List<LookupCde> menuList = loginService.getLookupCdeSystem(parameterMap.get("status"), parameterMap.get("typeName"),"");
+            List<LookupCde> menuList = lookupCdeService.getLookupCdeSystem(parameterMap.get("status"), parameterMap.get("typeName"),"");
             PageUtil pageUtil = new PageUtil(menuList);
             return new ResponseData(pageUtil);
         } catch (Exception e) {
@@ -114,7 +114,7 @@ public class LookupCdeController extends BaseController {
         if (StringUtils.isEmpty(parameterMap.get("typeName"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典名称不可以为空！");
         }
-        List<LookupCde> LookupCdeList = loginService.getLookupCdeSystem("", parameterMap.get("typeName"),"");
+        List<LookupCde> LookupCdeList = lookupCdeService.getLookupCdeSystem("", parameterMap.get("typeName"),"");
         if (CollectionUtils.isNotEmpty(LookupCdeList)){
             for (LookupCde lookupCde:LookupCdeList) {
                 if (parameterMap.get("typeName").equals(lookupCde.getTypeName())){
@@ -123,14 +123,14 @@ public class LookupCdeController extends BaseController {
             }
         }
         try {
-            List<LookupCde> list = loginService.getLookupCdeSystem("", "","");
+            List<LookupCde> list = lookupCdeService.getLookupCdeSystem("", "","");
             int sort = list.get(list.size()-1).getSort();
             sort += 1;
             LookupCde lookupCde = new LookupCde();
             lookupCde.setId(RandomSaltUtil.generetRandomSaltCode(32));
             lookupCde.setTypeName(parameterMap.get("typeName"));
             lookupCde.setSort(sort);
-            loginService.insertLookupCde(lookupCde);
+            lookupCdeService.insertLookupCde(lookupCde);
             return new ResponseData(CodeEnum.SUCCESS);
         } catch (Exception e) {
             log.info("===========>>>>>>添加系统字典失败！");
@@ -159,12 +159,12 @@ public class LookupCdeController extends BaseController {
         } else if (StringUtils.isEmpty(parameterMap.get("id"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典ID不可以为空！");
         }
-        List<LookupCde> list = loginService.getLookupCdeSystem("", "", parameterMap.get("id"));
+        List<LookupCde> list = lookupCdeService.getLookupCdeSystem("", "", parameterMap.get("id"));
         if (CollectionUtils.isEmpty(list)){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "修改字典不存在！");
         }
         if (!parameterMap.get("typeName").equals(list.get(0).getTypeName())) {
-            List<LookupCde> LookupCdeList = loginService.getLookupCdeSystem("", parameterMap.get("typeName"),"");
+            List<LookupCde> LookupCdeList = lookupCdeService.getLookupCdeSystem("", parameterMap.get("typeName"),"");
             if (CollectionUtils.isNotEmpty(LookupCdeList)){
                 for (LookupCde lookupCde:LookupCdeList) {
                     if (parameterMap.get("typeName").equals(lookupCde.getTypeName())){
@@ -174,7 +174,7 @@ public class LookupCdeController extends BaseController {
             }
         }
         try {
-            loginService.updateLookupCde(parameterMap.get("id"),parameterMap.get("typeName"),parameterMap.get("status"));
+            lookupCdeService.updateLookupCde(parameterMap.get("id"),parameterMap.get("typeName"),parameterMap.get("status"));
             return new ResponseData(CodeEnum.SUCCESS);
         } catch (Exception e) {
             log.info("===========>>>>>>修改系统字典失败！");
@@ -200,15 +200,15 @@ public class LookupCdeController extends BaseController {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典id不可以为空！");
         }
         try {
-            List<LookupCde> list = loginService.getLookupCdeSystem("", "", parameterMap.get("id"));
+            List<LookupCde> list = lookupCdeService.getLookupCdeSystem("", "", parameterMap.get("id"));
             if (CollectionUtils.isEmpty(list)){
                 return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "修改字典不存在！");
             }
-            loginService.delLookupCdeSystem(parameterMap.get("id"));
-            List<LookupCdeConfig> menuList = loginService.getLookupCdeList(parameterMap.get("id"),"");
+            lookupCdeService.delLookupCdeSystem(parameterMap.get("id"));
+            List<LookupCdeConfig> menuList = lookupCdeService.getLookupCdeList(parameterMap.get("id"),"");
             if (CollectionUtils.isNotEmpty(menuList)){
                 for (LookupCdeConfig lookupCdeConfig: menuList) {
-                    loginService.delLookupCdeList(lookupCdeConfig.getId());
+                    lookupCdeService.delLookupCdeList(lookupCdeConfig.getId());
                 }
             }
             return new ResponseData(CodeEnum.SUCCESS);
@@ -237,7 +237,7 @@ public class LookupCdeController extends BaseController {
         }
         try {
             PageUtil.getPage(parameterMap.get("page"));
-            List<LookupCdeConfig> menuList = loginService.getLookupCdeList(parameterMap.get("id"),"");
+            List<LookupCdeConfig> menuList = lookupCdeService.getLookupCdeList(parameterMap.get("id"),"");
             PageUtil pageUtil = new PageUtil(menuList);
             return new ResponseData(pageUtil);
         } catch (Exception e) {
@@ -273,7 +273,7 @@ public class LookupCdeController extends BaseController {
             lookupCdeConfig.setStatus(parameterMap.get("status"));
             lookupCdeConfig.setType(parameterMap.get("type"));
             lookupCdeConfig.setSystemId(parameterMap.get("systemId"));
-            loginService.insertLookupCdeConfig(lookupCdeConfig);
+            lookupCdeService.insertLookupCdeConfig(lookupCdeConfig);
             return new ResponseData(CodeEnum.SUCCESS);
         } catch (Exception e) {
             log.info("===========>>>>>>添加系统字典下级失败！");
@@ -303,7 +303,7 @@ public class LookupCdeController extends BaseController {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典ID不可以为空！");
         }
         try {
-            loginService.updateLookupCdeList(parameterMap.get("id"),parameterMap.get("type"),parameterMap.get("status"));
+            lookupCdeService.updateLookupCdeList(parameterMap.get("id"),parameterMap.get("type"),parameterMap.get("status"));
             return new ResponseData(CodeEnum.SUCCESS);
         } catch (Exception e) {
             log.info("===========>>>>>>修改系统字典下级失败！");
@@ -328,12 +328,12 @@ public class LookupCdeController extends BaseController {
         if (StringUtils.isEmpty(parameterMap.get("id"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典id不可以为空！");
         }
-        List<LookupCdeConfig> menuList = loginService.getLookupCdeList("",parameterMap.get("id"));
+        List<LookupCdeConfig> menuList = lookupCdeService.getLookupCdeList("",parameterMap.get("id"));
         if (CollectionUtils.isEmpty(menuList)){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "搜索的不存在！");
         }
         try {
-            loginService.delLookupCdeList(parameterMap.get("id"));
+            lookupCdeService.delLookupCdeList(parameterMap.get("id"));
             return new ResponseData(CodeEnum.SUCCESS);
         } catch (Exception e) {
             log.info("===========>>>>>>删除系统字典下级失败！");
