@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -15,9 +16,9 @@ public class Banner implements Serializable {
     private String id;
     private String name;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private String uploadTime;
+    private Date uploadTime;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private String createTime;
+    private Date createTime;
     private String url;
     private String description;
     private String status;
