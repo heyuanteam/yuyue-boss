@@ -48,4 +48,19 @@ public interface AppMapper extends MyBaseMapper<AppVersion> {
     @Delete("DELETE FROM yuyue_category WHERE id =#{id} ")
     void delAPPMenu(@Param("id") String id);
 
+    List<Banner> getBannerList(@Param("id")String id,@Param("name") String name,@Param("status") String status,@Param("sort") int sort);
+
+    @Transactional
+    @Insert("INSERT into yuyue_banner (id,name,url,sort) values " +
+            "(#{id},#{name},#{url},#{sort})")
+    @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
+    void insertBanner(Banner banner);
+
+    @Transactional
+    void updateBanner(@Param("id")String id,@Param("sort") int sort,@Param("name") String name,
+                      @Param("status") String status,@Param("url") String url);
+
+    @Transactional
+    @Delete("DELETE FROM yuyue_banner WHERE id =#{id} ")
+    void delBanner(@Param("id")String id);
 }

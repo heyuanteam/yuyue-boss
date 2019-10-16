@@ -74,4 +74,39 @@
         </if>
     </update>
 
+    <!--获取APP轮播图列表-->
+    <select id="getBannerList" resultType="com.yuyue.boss.api.domain.Banner" parameterType="String">
+        SELECT b.*
+        FROM yuyue_banner b
+        where 1=1
+        <if test=" status !=null and status!='' ">  and b.`status` = #{status}  </if>
+        <if test=" id !=null and id!='' ">  and b.`id` = #{id}  </if>
+        <if test=" sort!=0 ">  and b.sort = #{sort}  </if>
+        <if test=" name !=null and name!='' ">  and b.name like concat('%', #{name}, '%')  </if>
+        ORDER BY b.sort
+    </select>
+
+    <!-- 修改APP轮播图 -->
+    <update id="updateBanner" parameterType="String">
+        UPDATE yuyue_banner b
+        <set>
+            <if test="name!=null and name!=''">
+                b.name = #{name},
+            </if>
+            <if test="status!=null and status!=''">
+                b.status = #{status},
+            </if>
+            <if test=" sort!=0 ">
+                b.sort = #{sort},
+            </if>
+            <if test="url!=null and url!=''">
+                b.url = #{url},
+            </if>
+        </set>
+        WHERE 1=1
+        <if test="id!=null and id!=''">
+            and b.id = #{id}
+        </if>
+    </update>
+
 </mapper>

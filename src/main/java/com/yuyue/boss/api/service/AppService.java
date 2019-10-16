@@ -3,6 +3,7 @@ package com.yuyue.boss.api.service;
 
 import com.yuyue.boss.api.domain.AppUser;
 import com.yuyue.boss.api.domain.AppVersion;
+import com.yuyue.boss.api.domain.Banner;
 import com.yuyue.boss.api.domain.VideoCategory;
 
 import java.util.List;
@@ -33,5 +34,15 @@ public interface AppService {
     //删除APP菜单
     void delAPPMenu(String id);
 
+    //查询轮播图
+    List<Banner> getBannerList(String id, String name, String status, int sort);
 
+    //添加轮播图
+    void insertBanner(Banner banner);
+
+    //修改轮播图
+    void updateBanner(String id, int sort, String name, String status,String url);
+
+    //删除轮播图
+    void delBanner(String id);
 }
