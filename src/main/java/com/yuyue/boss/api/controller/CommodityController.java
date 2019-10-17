@@ -2,9 +2,12 @@ package com.yuyue.boss.api.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
+import com.yuyue.boss.api.domain.AdPrice;
 import com.yuyue.boss.api.domain.Commodity;
 import com.yuyue.boss.api.domain.Order;
+import com.yuyue.boss.api.domain.SystemUser;
 import com.yuyue.boss.api.service.CommodityService;
 import com.yuyue.boss.api.service.OrderService;
 import com.yuyue.boss.enums.CodeEnum;
@@ -15,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,6 +33,7 @@ import java.util.Calendar;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/commodity" ,produces = "application/json; charset=UTF-8")
@@ -142,7 +147,7 @@ public class CommodityController extends BaseController {
      * @param response
      * @return
      */
-    @RequestMapping("/updateCommodityInfo")
+    @RequestMapping(value = "/updateCommodityInfo",method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("explosive:save")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
@@ -155,17 +160,26 @@ public class CommodityController extends BaseController {
         if (StringUtils.isNull(commodityInfoById)){
             return new ResponseData("未查询该数据！！");
         }
-        if (StringUtils.isEmpty(commodity.getStatus()))
-            return new ResponseData(CodeEnum.E_90003);
-        else if("10E".equals(commodity.getStatus()))
+        if (StringUtils.isEmpty(commodity.getStatus())  ||  "10A".equals(commodity.getStatus())
+                || "10B".equals(commodity.getStatus())  || "10D".equals(commodity.getStatus())
+                || "10E".equals(commodity.getStatus() ) ){
             commodityService.updateCommodityInfo(commodity);
-        else if("10C".equals(commodity.getStatus())){
+            return new ResponseData(CodeEnum.E_90003);
+        }else if("10C".equals(commodity.getStatus())){
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             Calendar instance = Calendar.getInstance();
             instance.setTime(new Date());
             String start = simpleDateFormat.format(instance.getTime());
             commodity.setStartDate(start);
-            instance.add(Calendar.MONTH, 3);
+            /*List<AdPrice> advertisementFeeInfo = commodityService.getAdvertisementFeeInfo(commodity.getPriceId());
+            if (StringUtils.isEmpty(advertisementFeeInfo)){
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"价格为查询到！");
+            }*/
+            String adDuration = commodity.getAdPrice().getAdDuration();
+            if (StringUtils.isEmpty(adDuration)){
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"价格未查询到！");
+            }
+            instance.add(Calendar.MONTH, Integer.parseInt(adDuration));
             String end = simpleDateFormat.format(instance.getTime());
             commodity.setEndDate(end);
 
@@ -187,7 +201,31 @@ public class CommodityController extends BaseController {
 
             commodityService.updateCommodityInfo(commodity);
         }
+
         sendController.sendCommodityInfoJPush(commodityInfoById,commodity.getStatus());
+        return new ResponseData();
+    }
+
+
+    /**
+     * 添加商品信息
+     * @param commodity
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/addCommodityInfo",method = RequestMethod.POST)
+    @ResponseBody
+    @RequiresPermissions("explosive:save")//具有 user:detail 权限的用户才能访问此方法
+    @LoginRequired
+    public ResponseData addCommodityInfo(@CurrentUser SystemUser systemUser, Commodity commodity, HttpServletRequest request, HttpServletResponse response){
+        if (StringUtils.isNotNull(commodity.getCommodityPrice()) && commodity.getCommodityPrice().signum() == -1){
+            return new ResponseData(CodeEnum.PARAM_ERROR);
+        }
+        commodity.setCommodityId(UUID.randomUUID().toString().toUpperCase().replace("-",""));
+        commodity.setMerchantId(systemUser.getId());
+        commodityService.insertCommodity(commodity);
+
         return new ResponseData();
     }
 

@@ -84,13 +84,42 @@
         UPDATE yuyue_commodity
         SET
 
+        <if test="category != null and category != ''">
+            CATEGORY = #{category},
+        </if>
+
+        <if test="commodityName != null and commodityName != ''">
+            COMMODITY_NAME = #{commodityName},
+        </if>
+
+        <if test="adWord != null and adWord != ''">
+            AD_WORD = #{adWord},
+        </if>
+
+        <if test="adImageUrl != null and adImageUrl != ''">
+            AD_IMAGE_URL = #{adImageUrl},
+        </if>
+
+        <if test="commodityPrice != null and commodityPrice != ''">
+            COMMODITY_PRICE = #{commodityPrice},
+        </if>
+
+        <if test="payUrl != null and payUrl != ''">
+            PAY_URL = #{payUrl},
+        </if>
+
+        <if test="addr != null and addr != ''">
+            ADDR = #{addr},
+        </if>
+
         <if test="startDate != null and startDate != ''">
-              START_DATE = #{startDate},
+            START_DATE = #{startDate},
         </if>
 
         <if test="endDate != null and endDate != ''">
              END_DATE = #{endDate},
         </if>
+
         <if test="status != null and status != ''">
              STATUS = #{status},
         </if>

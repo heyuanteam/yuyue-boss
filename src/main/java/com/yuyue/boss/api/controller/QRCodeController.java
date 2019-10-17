@@ -9,17 +9,14 @@ import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.QRCodeUtil;
 import com.yuyue.boss.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ClassUtils;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.List;
 
 @RestController
@@ -59,9 +56,9 @@ public class QRCodeController extends BaseController{
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"传入的现场id错误！！");
         }
 
-        String qrCodeName = yuYueSite.get(0).getTitle()+yuYueSite.get(0).getStartTime().split(" ")[0];
-
-        QRCodeUtil.zxingCodeCreate(content, qrCodeName, size, "http://101.37.252.177:8088/qrcode_image/logo.png");
+        String qrCodeName = yuYueSite.get(0).getStartTime().split(" ")[0]+yuYueSite.get(0).getTitle();
+        //获取logo路径
+        QRCodeUtil.zxingCodeCreate(content, qrCodeName, size, System.getProperty("user.dir").replace("bin", "webapps")+"/qrcode_image/logo.png");
         qrCodePath="http://101.37.252.177:8088/qrcode_image/"+qrCodeName+".jpg";
         yuYueSiteService.insertQRCodePath(content,qrCodePath);
         }catch (Exception e){

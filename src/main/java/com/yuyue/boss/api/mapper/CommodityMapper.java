@@ -16,7 +16,6 @@ public interface CommodityMapper extends MyBaseMapper<Commodity> {
     @Transactional
     @Insert("INSERT INTO yuyue_commodity (\n" +
             "\tCOMMODITY_ID,\n" +
-            "\tORDER_ID,\n" +
             "\tPRICE_ID," +
             "\tCATEGORY,\n" +
             "\tCOMMODITY_NAME,\n" +
@@ -26,12 +25,11 @@ public interface CommodityMapper extends MyBaseMapper<Commodity> {
             "\tPAY_URL,\n" +
             "\tADDR,\n" +
             "\tSTATUS,\n" +
-            "\tSPOKESPERSON_ID,\n" +
             "\tMERCHANT_ID\n" +
             ")  VALUES \n" +
-            "(#{commodityId},#{orderId},#{priceId},#{category},#{commodityName},#{adWord},#{adImageUrl},#{commodityPrice}," +
-            "#{payUrl},#{addr},#{status},#{spokesPersonId},#{merchantId})")
-    void commodityToSpread(Commodity commodity);
+            "(#{commodityId},#{priceId},#{category},#{commodityName},#{adWord},#{adImageUrl},#{commodityPrice}," +
+            "#{payUrl},#{addr},#{status},#{merchantId})")
+    void insertCommodity(Commodity commodity);
 
 
 

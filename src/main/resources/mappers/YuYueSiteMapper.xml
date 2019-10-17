@@ -119,6 +119,10 @@
             personTotal = #{personTotal},
         </if>
 
+        <if test="personSum != null and personSum != ''">
+            personSum = #{personSum},
+        </if>
+
         <if test="qrCodePath != null and qrCodePath != ''">
             qrCodePath = #{qrCodePath},
         </if>
