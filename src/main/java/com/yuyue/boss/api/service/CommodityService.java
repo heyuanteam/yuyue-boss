@@ -1,5 +1,6 @@
 package com.yuyue.boss.api.service;
 
+import com.yuyue.boss.api.domain.AdPrice;
 import com.yuyue.boss.api.domain.Commodity;
 import org.apache.ibatis.annotations.Param;
 
@@ -14,4 +15,8 @@ public interface CommodityService {
                                      String startTime, String endTime);
 
     void updateCommodityInfo(Commodity commodity);
+
+    public  List<AdPrice> getAdvertisementFeeInfo(String priceId);
+
+    public void insertCommodity(Commodity commodity);
 }

@@ -1,6 +1,8 @@
 package com.yuyue.boss.api.service.impl;
 
+import com.yuyue.boss.api.domain.AdPrice;
 import com.yuyue.boss.api.domain.Commodity;
+import com.yuyue.boss.api.mapper.AdPriceMapper;
 import com.yuyue.boss.api.mapper.CommodityMapper;
 import com.yuyue.boss.api.service.CommodityService;
 import com.yuyue.boss.utils.StringUtils;
@@ -17,6 +19,8 @@ public class CommodityServiceImpl implements CommodityService {
 
     @Autowired
     private CommodityMapper commodityMapper;
+    @Autowired
+    private AdPriceMapper adPriceMapper;
 
 
     /**
@@ -50,5 +54,15 @@ public class CommodityServiceImpl implements CommodityService {
     @Override
     public void updateCommodityInfo(Commodity commodity) {
         commodityMapper.updateCommodityInfo(commodity);
+    }
+
+    @Override
+    public  List<AdPrice> getAdvertisementFeeInfo(String priceId){
+        return adPriceMapper.getAdvertisementFeeInfo(priceId);
+    }
+
+    @Override
+    public void insertCommodity(Commodity commodity) {
+        commodityMapper.insertCommodity(commodity);
     }
 }
