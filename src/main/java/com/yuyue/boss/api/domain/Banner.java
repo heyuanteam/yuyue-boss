@@ -15,10 +15,10 @@ public class Banner implements Serializable {
     private static final long serialVersionUID = 1L;
     private String id;
     private String name;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date uploadTime;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createTime;
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private String uploadTime;
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private String createTime;
     private String url;
     private String description;
     private String status;

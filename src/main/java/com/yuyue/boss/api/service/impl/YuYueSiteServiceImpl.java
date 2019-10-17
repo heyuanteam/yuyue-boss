@@ -84,8 +84,7 @@ public class YuYueSiteServiceImpl implements YuYueSiteService {
             yuYueSiteMapper.updateYuYueSite(yuYueSite);
             List<SiteShow> siteShows = yuYueSite.getSiteShow();
             if (StringUtils.isNotEmpty(siteShows)){
-                for (SiteShow siteShow : siteShows
-                ) {
+                for (SiteShow siteShow : siteShows) {
                     yuYueSiteShowMapper.updateSiteShow(siteShow);
                 }
             }
