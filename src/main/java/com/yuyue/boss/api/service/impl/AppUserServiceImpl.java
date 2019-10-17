@@ -6,6 +6,8 @@ import com.yuyue.boss.api.service.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service(value = "/AppUserService")
 public class AppUserServiceImpl implements AppUserService {
     @Autowired
@@ -19,6 +21,11 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public void updateAppUser(AppUser appUser) {
         appUserMapper.updateAppUser(appUser);
+    }
+
+    @Override
+    public List<AppUser> getAppUserMsgList(AppUser appUser) {
+        return appUserMapper.getAppUserMsgList(appUser);
     }
 
     @Override

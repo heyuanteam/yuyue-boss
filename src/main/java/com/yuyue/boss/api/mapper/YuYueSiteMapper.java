@@ -4,6 +4,7 @@ import com.yuyue.boss.api.domain.YuYueSite;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,12 +25,13 @@ public interface YuYueSiteMapper extends MyBaseMapper<YuYueSite> {
     @Insert("UPDATE yuyue_site SET qrCodePath = #{qrCodePath} WHERE id= #{id}")
     void insertQRCodePath(@Param(value = "id")String id,@Param(value = "qrCodePath")String qrCodePath);
 
-
+    @Transactional
     void insertYuYueSite(YuYueSite yuYueSite);
 
+    @Transactional
     void deleteYuYueSiteById(String id);
 
-
+    @Transactional
     void updateYuYueSite(YuYueSite yuYueSite);
 
 }

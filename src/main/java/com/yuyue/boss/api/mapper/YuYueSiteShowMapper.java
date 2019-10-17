@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,12 +16,12 @@ public interface YuYueSiteShowMapper extends MyBaseMapper<SiteShow> {
 
     List<SiteShow> getSiteShowList(@Param(value = "siteId") String siteId);
 
-
+    @Transactional
     void updateSiteShow(SiteShow siteShow);
 
-
+    @Transactional
     void insertSiteShow(SiteShow siteShow);
 
-
+    @Transactional
     void deleteSiteShow(String showId);
 }

@@ -3,6 +3,7 @@ package com.yuyue.boss.api.mapper;
 import com.yuyue.boss.api.domain.Order;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,8 +15,10 @@ public interface OrderMapper extends MyBaseMapper<Order> {
 
     List<Order> getOrderList(Order order);
 
+    @Transactional
     void  deleteOrderById(String id);
 
+    @Transactional
     void updateOrder(Order order);
 
 

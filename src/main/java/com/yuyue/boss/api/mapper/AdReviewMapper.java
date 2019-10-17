@@ -4,6 +4,7 @@ import com.yuyue.boss.api.domain.Advertisement;
 import com.yuyue.boss.api.domain.UploadFile;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface AdReviewMapper extends MyBaseMapper<Advertisement> {
                                         @Param(value = "status") String status, @Param(value = "applicationStartTime") String applicationStartTime,
                                         @Param(value = "applicationEndTime")String applicationEndTime);
 
-
+    @Transactional
     void updateAdReviewStatus(@Param(value = "id")String id,@Param(value = "status")String status);
 
 

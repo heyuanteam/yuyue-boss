@@ -40,6 +40,7 @@ public interface CommodityMapper extends MyBaseMapper<Commodity> {
     @Update("UPDATE yuyue_commodity SET `STATUS`= #{status} WHERE COMMODITY_ID = #{commodityId}")
     void updateCommodityStatus(@Param("commodityId") String commodityId, @Param("status") String status);
 
+    @Transactional
     @Delete("DELETE FROM yuyue_commodity WHERE COMMODITY_ID =#{commodityId}")
     void deleteCommodityByPrimaryKey(@Param("commodityId") String commodityId);
 

@@ -85,6 +85,7 @@ public class YuYueSiteController extends BaseController{
 
 
 
+/*
     @RequestMapping(value = "/insertYuYueSiteTest" , method = RequestMethod.POST)
     @ResponseBody
     public ResponseData insertYuYueSiteTest(@RequestBody YuYueSite yuYueSite){
@@ -95,6 +96,7 @@ public class YuYueSiteController extends BaseController{
 
         return new ResponseData(yuYueSite);
     }
+*/
 
     /**
      * 添加或是修改现场 及 节目单

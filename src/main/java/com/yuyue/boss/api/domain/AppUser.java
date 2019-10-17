@@ -83,6 +83,11 @@ public class AppUser implements Serializable {
 //    用户上传的视频   一对多
     private List<UploadFile> authorVideo;
 
+    //用于用户 通过 创建时间搜索
+    private String startTime;
+
+    private String endTime;
+
 
 
 //    用户id			id            	  string

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yuyue.boss.api.mapper.AppUserMapper" >
     <!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！-->
-    <resultMap id="BaseResultMap" type="com.yuyue.boss.api.domain.AppUser">
+    <resultMap id="AppUser" type="com.yuyue.boss.api.domain.AppUser">
         <id column="ID" property="id" jdbcType="VARCHAR"/>
         <result column="USER_NO" property="userNo" jdbcType="VARCHAR"/>
         <result column="USER_NICK_NAME" property="nickName" jdbcType="VARCHAR"/>
@@ -112,11 +112,11 @@
 
     </update>
 
-    <select id="getAppUserMsg" resultType="com.yuyue.boss.api.domain.AppUser" parameterType="String">
+    <select id="getAppUserMsg" resultMap="AppUser"  parameterType="String">
         SELECT id,user_no userNo,user_nick_name nickName,user_real_name realName,id_type idType,id_card idCard,phone,sex,city,jpushName,password,salt,
             user_status userStatus,total ,income,ADDR_DETAIL addrDetail,HEADP_URL headpUrl,USER_TYPE userType,cardFUrl,cardZUrl,userUrl,
         ATTENTION_TOTAL attentionTotal,LIKE_TOTAL likeTotal,COMMENT_TOTAL commentTotal,education ,wechat ,signature,opendId,wechatName,
-            DATE_FORMAT(create_time ,'%Y-%m-%d %H:%i:%s') createTime,DATE_FORMAT(update_time ,'%Y-%m-%d %H:%i:%s') updateTime,frontCover
+            DATE_FORMAT(CREATE_TIME ,'%Y-%m-%d %H:%i:%s') CREATE_TIME,DATE_FORMAT(UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') UPDATE_TIME,frontCover
             FROM yuyue_merchant
             where 1=1
             <choose>
@@ -125,6 +125,45 @@
                 </when>
             </choose>
          LIMIT 1
+
+    </select>
+
+    <select id="getAppUserMsgList" resultMap="AppUser" parameterType="com.yuyue.boss.api.domain.AppUser">
+        SELECT id,user_no userNo,user_nick_name nickName,user_real_name realName,id_type idType,id_card idCard,phone,sex,city,jpushName,password,salt,
+        user_status userStatus,total ,income,ADDR_DETAIL addrDetail,HEADP_URL headpUrl,USER_TYPE userType,cardFUrl,cardZUrl,userUrl,
+        ATTENTION_TOTAL attentionTotal,LIKE_TOTAL likeTotal,COMMENT_TOTAL commentTotal,education ,wechat ,signature,opendId,wechatName,
+        DATE_FORMAT(CREATE_TIME ,'%Y-%m-%d %H:%i:%s') CREATE_TIME,DATE_FORMAT(UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') UPDATE_TIME,frontCover
+        FROM yuyue_merchant
+        where 1=1
+        <if  test="id!=null and id!='' ">
+            and id = #{id}
+        </if>
+
+        <if  test="nickName!=null and nickName!='' ">
+            and CONCAT(user_nick_name) like concat('%', #{nickName}, '%')
+        </if>
+
+        <if  test="realName!=null and realName!='' ">
+            and CONCAT(user_real_name) like concat('%', #{realName}, '%')
+        </if>
+
+        <if  test="phone!=null and phone!='' ">
+            and phone=#{phone}
+        </if>
+
+        <if  test="userStatus!=null and userStatus!='' ">
+            and user_status=#{userStatus}
+        </if>
+
+        <if  test="userType!=null and userType!='' ">
+            and USER_TYPE=#{userType}
+        </if>
+
+        <if  test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+            and CREATE_TIME BETWEEN  #{startTime}  AND  #{endTime}
+        </if>
+
+        LIMIT 1
 
     </select>
 

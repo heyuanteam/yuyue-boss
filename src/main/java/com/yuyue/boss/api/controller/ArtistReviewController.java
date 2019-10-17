@@ -78,7 +78,8 @@ public class ArtistReviewController extends BaseController {
     @RequiresPermissions("show:save")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
     public ResponseData updateArtistReviewInfo(HttpServletRequest request, HttpServletResponse response){
-
+        getParameterMap(request,response);
+        log.info("修改审核-------------->>//artistReview/updateArtistReviewInfo");
         String id =request.getParameter("id");
         String status = request.getParameter("status");
         ArtistReview artistReview = new ArtistReview();
@@ -120,6 +121,8 @@ public class ArtistReviewController extends BaseController {
     @RequiresPermissions("show:remove")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
     public ResponseData deleteArtistReviewById(HttpServletRequest request, HttpServletResponse response){
+        getParameterMap(request,response);
+        log.info("删除审核-------------->>/artistReview/deleteArtistReviewById");
         String id =request.getParameter("id");
         artistReviewService.deleteArtistReviewById(id);
         return new ResponseData();

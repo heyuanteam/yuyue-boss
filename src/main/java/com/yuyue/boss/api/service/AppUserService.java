@@ -3,6 +3,8 @@ package com.yuyue.boss.api.service;
 
 import com.yuyue.boss.api.domain.AppUser;
 
+import java.util.List;
+
 public interface AppUserService {
 
     AppUser getAppUserMsg(String id);
@@ -10,4 +12,6 @@ public interface AppUserService {
     void updateAppUser(AppUser appUser);
     
     void insertAppUser(AppUser appUser);
+
+    List<AppUser> getAppUserMsgList(AppUser appUser);
 }

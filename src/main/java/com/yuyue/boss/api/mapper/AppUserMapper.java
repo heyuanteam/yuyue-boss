@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Repository
 public interface AppUserMapper extends MyBaseMapper<AppUser> {
@@ -14,7 +16,12 @@ public interface AppUserMapper extends MyBaseMapper<AppUser> {
     AppUser getAppUserMsg(@Param("id") String id);
 
 
+    List<AppUser> getAppUserMsgList(AppUser appUser);
+
+
+    @Transactional
     void updateAppUser(AppUser appUser);
+
 
     @Transactional
     @Insert("INSERT into yuyue_merchant (ID,USER_NO,USER_NICK_NAME,USER_REAL_NAME,PHONE,PASSWORD,SALT) values " +

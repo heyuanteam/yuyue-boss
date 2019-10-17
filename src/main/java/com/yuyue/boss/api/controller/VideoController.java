@@ -60,7 +60,7 @@ public class VideoController extends BaseController {
     public ResponseData getVideoInfoList(HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
         //交集参数
-
+        log.info("视频审核 -获取视频列表-------------->>/video/getVideoInfoList");
         String page=request.getParameter("page");
         String id = request.getParameter("id");
         String categoryId = request.getParameter("categoryId");

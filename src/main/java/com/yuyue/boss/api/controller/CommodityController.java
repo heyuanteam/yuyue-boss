@@ -61,6 +61,7 @@ public class CommodityController extends BaseController {
     @LoginRequired
     public ResponseData getCommodityList(Commodity commodity,HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
+        log.info("获取爆款列表及搜索   -------------->/commodity/getCommodityList");
         String page=request.getParameter("page");
         String commodityId =request.getParameter("commodityId");
         String commodityName =request.getParameter("commodityName");
@@ -110,6 +111,7 @@ public class CommodityController extends BaseController {
     @RequiresPermissions("explosive:menu")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
     public ResponseData getCommodityInfoById(String id){
+        log.info("获取爆款详情   -------------->/commodity/getCommodityInfoById");
         if (StringUtils.isNull(id)){
             return new ResponseData(CodeEnum.E_90003);
         }
@@ -128,6 +130,7 @@ public class CommodityController extends BaseController {
     @RequiresPermissions("explosive:remove")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
     public ResponseData deleteCommodity(String id){
+        log.info("删除爆款   -------------->/commodity/deleteCommodity");
         if (StringUtils.isNull(id)){
             return new ResponseData(CodeEnum.E_90003);
         }
@@ -153,6 +156,7 @@ public class CommodityController extends BaseController {
     @LoginRequired
     public ResponseData updateCommodityInfo(Commodity commodity,HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
+        log.info("修改商品状态及发布时间 --------------->/commodity/updateCommodityInfo");
         if (StringUtils.isNull(commodity.getCommodityId())){
             return new ResponseData(CodeEnum.E_90003);
         }
@@ -219,6 +223,7 @@ public class CommodityController extends BaseController {
     @RequiresPermissions("explosive:save")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
     public ResponseData addCommodityInfo(@CurrentUser SystemUser systemUser, Commodity commodity, HttpServletRequest request, HttpServletResponse response){
+        log.info("添加商品信息 --------------->/commodity/addCommodityInfo");
         if (StringUtils.isNotNull(commodity.getCommodityPrice()) && commodity.getCommodityPrice().signum() == -1){
             return new ResponseData(CodeEnum.PARAM_ERROR);
         }
