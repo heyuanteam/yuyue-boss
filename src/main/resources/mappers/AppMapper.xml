@@ -76,7 +76,9 @@
 
     <!--获取APP轮播图列表-->
     <select id="getBannerList" resultType="com.yuyue.boss.api.domain.Banner" parameterType="String">
-        SELECT b.*
+        SELECT b.id,b.name,b.url,b.description,b.status,b.sort,
+               DATE_FORMAT(b.uploadTime ,'%Y-%m-%d %H:%i:%s') uploadTime,
+               DATE_FORMAT(b.createTime,'%Y-%m-%d %H:%i:%s') createTime
         FROM yuyue_banner b
         where 1=1
         <if test=" status !=null and status!='' ">  and b.`status` = #{status}  </if>
