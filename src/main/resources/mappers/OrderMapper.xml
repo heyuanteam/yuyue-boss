@@ -34,62 +34,25 @@
         left join yuyue_merchant  u on o.merchantId = u.ID
         WHERE  1=1
 
-        <if test="orderNo != null and orderNo != ''">
-            and o.orderNo = #{orderNo}
+        <if test="orderNo != null and orderNo != ''"> and o.orderNo = #{orderNo} </if>
+        <if test="tradeType != null and tradeType != ''"> and CONCAT(o.tradeType) like concat('%', #{tradeType}, '%') </if>
+        <if test="nickName != null and nickName != ''"> and CONCAT(u.USER_NICK_NAME) like concat('%', #{nickName}, '%') </if>
+        <if test="money != null and money != ''"> and   o.money = #{money} </if>
+        <if test="mobile != null and mobile != ''"> and   o.mobile = #{mobile} </if>
+        <if test="status != null and status != ''"> and   o.status = #{status} </if>
+        <if test=" startTime !=null and startTime!='' ">
+            <![CDATA[ and	DATE_FORMAT(o.CREATE_TIME, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT(#{startTime}, '%Y-%m-%d %H:%i:%s')]]>
         </if>
-
-        <if test="tradeType != null and tradeType != ''">
-            and CONCAT(o.tradeType) like concat('%', #{tradeType}, '%')
+        <if test=" endTime !=null and endTime!='' ">
+            <![CDATA[ and	DATE_FORMAT(o.CREATE_TIME, '%Y-%m-%d %H:%i:%s') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i:%s')]]>
         </if>
-
-        <if test="nickName != null and nickName != ''">
-            and CONCAT(m.USER_NICK_NAME) like concat('%', #{nickName}, '%')
-        </if>
-        <if test="money != null and money != ''">
-            and   o.money = #{money}
-        </if>
-
-        <if test="mobile != null and mobile != ''">
-            and   o.mobile = #{mobile}
-        </if>
-
-        <if test="status != null and status != ''">
-            and   o.status = #{status}
-        </if>
-
-        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
-
-            and o.CREATE_TIME  BETWEEN  #{startTime}  AND  #{endTime}
-        </if>
-
-
-
-        <if test="statusCode != null and statusCode != '' ">
-            and   o.statusCode = #{statusCode}
-        </if>
-
-        <if test="note != null and note != '' ">
-            and   o.note = #{note}
-        </if>
-
-        <if test="responseCode != null and responseCode != '' ">
-            and   o.responseCode = #{responseCode}
-        </if>
-
-        <if test="responseMessage != null and responseMessage != '' ">
-            and   o.responseMessage = #{responseMessage}
-        </if>
-
-        <if test="merchantId != null and merchantId != '' ">
-            and   o.merchantId = #{merchantId}
-        </if>
-
-        <if test="sourceId != null and sourceId != '' ">
-            and   o.sourceId = #{sourceId}
-        </if>
-
+        <if test="statusCode != null and statusCode != '' "> and   o.statusCode = #{statusCode} </if>
+        <if test="note != null and note != '' "> and   o.note = #{note} </if>
+        <if test="responseCode != null and responseCode != '' "> and   o.responseCode = #{responseCode} </if>
+        <if test="responseMessage != null and responseMessage != '' "> and   o.responseMessage = #{responseMessage} </if>
+        <if test="merchantId != null and merchantId != '' "> and   o.merchantId = #{merchantId} </if>
+        <if test="sourceId != null and sourceId != '' "> and   o.sourceId = #{sourceId} </if>
         ORDER BY o.CREATE_TIME DESC
-
     </select>
 
 
@@ -148,9 +111,6 @@
         <if test="sourceId != null and sourceId != ''">
             sourceId= #{sourceId},
         </if>
-
-        id=#{id}
-
         WHERE id=#{id};
     </update>
 </mapper>

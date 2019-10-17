@@ -13,14 +13,10 @@
         <if test="tradeType!=null and tradeType!='' ">  and b.`tradeType` = #{tradeType}  </if>
         <if test="id!=null and id!='' ">  and b.id = #{id}  </if>
         <if test=" startTime !=null and startTime!='' ">
-            <![CDATA[
-				and	DATE_FORMAT(b.CREATE_TIME, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT(#{startTime}, '%Y-%m-%d %H:%i:%s')
-			]]>
+            <![CDATA[ and	DATE_FORMAT(b.CREATE_TIME, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT(#{startTime}, '%Y-%m-%d %H:%i:%s') ]]>
         </if>
         <if test=" endTime !=null and endTime!='' ">
-            <![CDATA[
-				and	DATE_FORMAT(b.CREATE_TIME, '%Y-%m-%d %H:%i:%s') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i:%s')
-			]]>
+            <![CDATA[ and	DATE_FORMAT(b.CREATE_TIME, '%Y-%m-%d %H:%i:%s') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i:%s') ]]>
         </if>
         order by b.CREATE_TIME desc
     </select>
