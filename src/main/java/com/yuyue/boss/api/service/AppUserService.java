@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface AppUserService {
 
-    AppUser getAppUserMsg(String id);
+    AppUser getAppUserMsg(String id,String phone);
     
     void updateAppUser(AppUser appUser);
     

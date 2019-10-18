@@ -89,7 +89,7 @@ public class ArtistReviewController extends BaseController {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"参数：id不合法！！");
         }
         if("10B".equals(status) || "10C".equals(status)){
-            AppUser appUserMsg = appUserService.getAppUserMsg(artistReviewList.get(0).getUserId());
+            AppUser appUserMsg = appUserService.getAppUserMsg(artistReviewList.get(0).getUserId(),"");
             sendController.sendShowJPush(artistReviewList.get(0),appUserMsg,status);
 
             artistReviewService.updateArtistReviewStatus(id,status);

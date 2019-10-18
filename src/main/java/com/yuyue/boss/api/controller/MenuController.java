@@ -91,7 +91,7 @@ public class MenuController extends BaseController {
         if (CollectionUtils.isNotEmpty(roleList)) {
             for (SystemMenu systemMenu:roleList) {
                 if (parameterMap.get("role").equals(systemMenu.getRole())){
-                    return new ResponseData(CodeEnum.SUCCESS.getCode(), "菜单权限已经存在！");
+                    return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单权限已经存在！");
                 }
             }
         }
@@ -99,7 +99,7 @@ public class MenuController extends BaseController {
         if (CollectionUtils.isNotEmpty(menuNameList)) {
             for (SystemMenu systemMenu:menuNameList) {
                 if (parameterMap.get("menuName").equals(systemMenu.getMenuName())){
-                    return new ResponseData(CodeEnum.SUCCESS.getCode(), "菜单名称已经存在！");
+                    return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单名称已经存在！");
                 }
             }
         }
@@ -184,7 +184,7 @@ public class MenuController extends BaseController {
                 if (CollectionUtils.isNotEmpty(menuNameList)) {
                     for (SystemMenu systemMenu:menuNameList) {
                         if (parameterMap.get("menuName").equals(systemMenu.getMenuName())){
-                            return new ResponseData(CodeEnum.SUCCESS.getCode(), "菜单名称已经存在！");
+                            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单名称已经存在！");
                         }
                     }
                 }

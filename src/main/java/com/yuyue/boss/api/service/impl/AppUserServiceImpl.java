@@ -14,8 +14,8 @@ public class AppUserServiceImpl implements AppUserService {
     private AppUserMapper appUserMapper;
 
     @Override
-    public AppUser getAppUserMsg(String id) {
-        return appUserMapper.getAppUserMsg(id);
+    public AppUser getAppUserMsg(String id,String phone) {
+        return appUserMapper.getAppUserMsg(id,phone);
     }
 
     @Override

@@ -16,8 +16,8 @@ public class OutMoneyServiceImpl implements OutMoneyService {
 
     @Override
     public List<OutMoney> getOutMoneyList(String id, String tradeType, String status, String realName,
-                                          String startTime, String endTime, String outNo) {
-        return outMoneyMapper.getOutMoneyList(id, tradeType,status,realName,startTime,endTime,outNo);
+                                          String startTime, String endTime, String outNo,String userName) {
+        return outMoneyMapper.getOutMoneyList(id, tradeType,status,realName,startTime,endTime,outNo,userName);
     }
 
     @Override

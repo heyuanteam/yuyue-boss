@@ -54,7 +54,7 @@ public interface LoginMapper extends MyBaseMapper<SystemUser> {
     void delSystemPermission(@Param("id")String id);
 
     List<SystemUser> getSystemUser(@Param("status") String status,@Param("systemName") String systemName,@Param("loginName") String loginName,
-                                   @Param("id") String id);
+                                   @Param("id") String id,@Param("phone") String phone);
 
     @Transactional
     void updateSystemUser(@Param("id") String id,@Param("loginName") String loginName,@Param("password") String password,

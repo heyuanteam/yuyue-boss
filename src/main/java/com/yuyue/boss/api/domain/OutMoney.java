@@ -36,5 +36,7 @@ public class OutMoney implements Serializable {
     private String moneyNumber;
 //    账户真实名称
     private String realName;
+//    客户名称
+    private String userName;
 
 }

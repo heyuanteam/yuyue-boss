@@ -60,7 +60,8 @@ public class SystemController extends BaseController {
         Map<String, String> parameterMap = getParameterMap(request, response);
         try {
             PageUtil.getPage(parameterMap.get("page"));
-            List<SystemUser> menuList = loginService.getSystemUser(parameterMap.get("status"), parameterMap.get("systemName"),parameterMap.get("loginName"),"");
+            List<SystemUser> menuList = loginService.getSystemUser(parameterMap.get("status"), parameterMap.get("systemName"),
+                    parameterMap.get("loginName"),"","");
             PageUtil pageUtil = new PageUtil(menuList);
             return new ResponseData(pageUtil);
         } catch (Exception e) {
@@ -92,14 +93,24 @@ public class SystemController extends BaseController {
         } else if (StringUtils.isEmpty(parameterMap.get("phone"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "手机号不可以为空！");
         }
-        List<SystemUser> loginName = loginService.getSystemUser("", "", parameterMap.get("loginName"),"");
+        List<SystemUser> loginName = loginService.getSystemUser("", "", parameterMap.get("loginName"),"","");
         if (CollectionUtils.isNotEmpty(loginName)){
             for (SystemUser user:loginName) {
                 if (parameterMap.get("loginName").equals(user.getLoginName())){
-                    return new ResponseData(CodeEnum.SUCCESS.getCode(), "登录名已经存在！");
+                    return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "登录名已经存在！");
                 }
             }
         }
+
+        List<SystemUser> phoneList = loginService.getSystemUser("", "", "","",parameterMap.get("phone"));
+        if (CollectionUtils.isNotEmpty(phoneList)){
+            for (SystemUser user:phoneList) {
+                if (parameterMap.get("phone").equals(user.getPhone())){
+                    return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "手机号已经存在！");
+                }
+            }
+        }
+
         SystemUser user = new SystemUser();
         try {
             user.setId(RandomSaltUtil.generetRandomSaltCode(32));
@@ -109,20 +120,25 @@ public class SystemController extends BaseController {
             user.setPhone(parameterMap.get("phone"));
             user.setCreateUserId(systemUser.getId());
 
-            AppUser appUserMsg = appUserService.getAppUserMsg(user.getId());
-            if (StringUtils.isNull(appUserMsg)){
-                String uuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
-                String salt = RandomSaltUtil.generetRandomSaltCode(4);
-                AppUser appUser = new AppUser();
-                appUser.setId(uuid);
-                appUser.setUserNo(RandomSaltUtil.randomNumber(15));
-                appUser.setNickName(parameterMap.get("phone"));
-                appUser.setRealName(parameterMap.get("phone"));
-                appUser.setPhone(parameterMap.get("phone"));
-                appUser.setPassword(MD5Utils.getMD5Str("123456" + salt));
-                appUser.setSalt(salt);//盐
-                appUserService.insertAppUser(appUser);
+            AppUser appUserMsg = appUserService.getAppUserMsg(user.getId(),"");
+            AppUser app = appUserService.getAppUserMsg("",parameterMap.get("phone"));
+
+            String uuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
+            String salt = RandomSaltUtil.generetRandomSaltCode(4);
+            AppUser appUser = new AppUser();
+            appUser.setId(uuid);
+            appUser.setUserNo(RandomSaltUtil.randomNumber(15));
+            appUser.setNickName(parameterMap.get("phone"));
+            appUser.setRealName(parameterMap.get("phone"));
+            appUser.setPhone(parameterMap.get("phone"));
+            appUser.setPassword(MD5Utils.getMD5Str(parameterMap.get("password") + salt));
+            appUser.setSalt(salt);//盐
+            if (StringUtils.isNotNull(appUserMsg)){
+                user.setId(appUserMsg.getId());
+            } else if (StringUtils.isNotNull(app)){
+                user.setId(app.getId());
             }
+            appUserService.insertAppUser(appUser);
             loginService.insertSystemUser(user);
 
             List<SystemMenu> menuList = loginService.getMenu("",0,"","","");
@@ -167,16 +183,16 @@ public class SystemController extends BaseController {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "系统用户状态不可以为空！");
         }
 
-        List<SystemUser> list = loginService.getSystemUser("", "", "",parameterMap.get("id"));
+        List<SystemUser> list = loginService.getSystemUser("", "", "",parameterMap.get("id"),"");
         if (CollectionUtils.isEmpty(list)) {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "修改的用户不存在！");
         }
         if (!parameterMap.get("loginName").equals(list.get(0).getLoginName())) {
-            List<SystemUser> userList = loginService.getSystemUser("", "", parameterMap.get("loginName"),"");
+            List<SystemUser> userList = loginService.getSystemUser("", "", parameterMap.get("loginName"),"","");
             if (CollectionUtils.isNotEmpty(userList)) {
                 for (SystemUser user:userList) {
                     if (parameterMap.get("loginName").equals(user.getLoginName())){
-                        return new ResponseData(CodeEnum.SUCCESS.getCode(), "登录名已经存在！");
+                        return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "登录名已经存在！");
                     }
                 }
             }
@@ -209,7 +225,7 @@ public class SystemController extends BaseController {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "系统用户ID不可以为空！");
         }
         if (StringUtils.isNotEmpty(parameterMap.get("id"))) {
-            List<SystemUser> list = loginService.getSystemUser("", "", "",parameterMap.get("id"));
+            List<SystemUser> list = loginService.getSystemUser("", "", "",parameterMap.get("id"),"");
             if (CollectionUtils.isEmpty(list)) {
                 return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "搜索的不存在！");
             }
@@ -244,7 +260,7 @@ public class SystemController extends BaseController {
         log.info("获取用户分配系统权限详情----------->>/system/getSystemPermissionList");
         Map<String, String> parameterMap = getParameterMap(request, response);
         try {
-            List<SystemUser> userList = loginService.getSystemUser("", "", "", parameterMap.get("id"));
+            List<SystemUser> userList = loginService.getSystemUser("", "", "", parameterMap.get("id"),"");
             if (CollectionUtils.isEmpty(userList)){
                 return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "用户不存在！");
             }

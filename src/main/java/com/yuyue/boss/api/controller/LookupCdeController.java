@@ -118,7 +118,7 @@ public class LookupCdeController extends BaseController {
         if (CollectionUtils.isNotEmpty(LookupCdeList)){
             for (LookupCde lookupCde:LookupCdeList) {
                 if (parameterMap.get("typeName").equals(lookupCde.getTypeName())){
-                    return new ResponseData(CodeEnum.SUCCESS.getCode(), "字典名称已经存在！");
+                    return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典名称已经存在！");
                 }
             }
         }
@@ -168,7 +168,7 @@ public class LookupCdeController extends BaseController {
             if (CollectionUtils.isNotEmpty(LookupCdeList)){
                 for (LookupCde lookupCde:LookupCdeList) {
                     if (parameterMap.get("typeName").equals(lookupCde.getTypeName())){
-                        return new ResponseData(CodeEnum.SUCCESS.getCode(), "字典名称已经存在！");
+                        return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典名称已经存在！");
                     }
                 }
             }

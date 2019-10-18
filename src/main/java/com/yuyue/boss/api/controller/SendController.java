@@ -200,7 +200,7 @@ public class SendController extends BaseController{
         JPush jPush = new JPush();
         try {
             log.info("极光关注人发视频开始-------------->>start");
-            AppUser appUserMsg = appUserService.getAppUserMsg(authorId);
+            AppUser appUserMsg = appUserService.getAppUserMsg(authorId,"");
             if (StringUtils.isNotNull(appUserMsg)){
                 Map<String, String> map = Maps.newHashMap();
                 map.put("type","3");
@@ -216,7 +216,7 @@ public class SendController extends BaseController{
                 List<String> attentionList = sendService.getAttentionList(authorId);
                 if (CollectionUtils.isNotEmpty(attentionList)){
                     for (String userId:attentionList){
-                        AppUser appUser = appUserService.getAppUserMsg(userId);
+                        AppUser appUser = appUserService.getAppUserMsg(userId,"");
                         if (StringUtils.isNotNull(appUser) && StringUtils.isNotEmpty(appUser.getJpushName())){
                             log.info("极光别名=========="+appUser.getJpushName());
                             stringList.add(appUser.getJpushName());
@@ -264,7 +264,7 @@ public class SendController extends BaseController{
                 jPush.setMsgContent(idList.get(0).getImageUrl());
                 jPush.setExtras("4");
 
-                AppUser appUserMsg = appUserService.getAppUserMsg("");
+                AppUser appUserMsg = appUserService.getAppUserMsg("","");
                 List<String> stringList = new ArrayList<>();
                 log.info("极光别名=========="+appUserMsg.getJpushName());
                 stringList.add(appUserMsg.getJpushName());
@@ -315,7 +315,7 @@ public class SendController extends BaseController{
                 jPush.setMsgContent(videoList.get(0).getTitle());
                 jPush.setExtras("5");
 
-                AppUser appUserMsg = appUserService.getAppUserMsg(authorId);
+                AppUser appUserMsg = appUserService.getAppUserMsg(authorId,"");
                 List<String> stringList = new ArrayList<>();
                 log.info("极光别名=========="+appUserMsg.getJpushName());
                 stringList.add(appUserMsg.getJpushName());
@@ -343,7 +343,7 @@ public class SendController extends BaseController{
         }
         try {
             log.info("极光广告审核的通知开始-------------->>start");
-            AppUser appUserMsg = appUserService.getAppUserMsg(commodity.getMerchantId());
+            AppUser appUserMsg = appUserService.getAppUserMsg(commodity.getMerchantId(),"");
             if (StringUtils.isNotNull(appUserMsg)){
                 Map<String, String> map = Maps.newHashMap();
                 map.put("type","6");

@@ -54,7 +54,8 @@ public class OutMoneyController extends BaseController {
         try {
             PageUtil.getPage(parameterMap.get("page"));
             List<OutMoney> outMoneyList = outMoneyService.getOutMoneyList("",parameterMap.get("tradeType"), parameterMap.get("status"),
-                    parameterMap.get("realName"),parameterMap.get("startTime"),parameterMap.get("endTime"),parameterMap.get("outNo"));
+                    parameterMap.get("realName"),parameterMap.get("startTime"),parameterMap.get("endTime"),parameterMap.get("outNo"),
+                    parameterMap.get("userName"));
             PageUtil pageUtil = new PageUtil(outMoneyList);
             return new ResponseData(pageUtil);
         } catch (Exception e) {
@@ -89,9 +90,9 @@ public class OutMoneyController extends BaseController {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "账户真实名称不可以为空！");
         }
         List<OutMoney> outMoneyList = outMoneyService.getOutMoneyList(parameterMap.get("id"),
-                "","","","","","");
+                "","","","","","","");
         if (CollectionUtils.isEmpty(outMoneyList)){
-            return new ResponseData(CodeEnum.SUCCESS.getCode(), "提现记录不存在！");
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "提现记录不存在！");
         }
         try {
             outMoneyService.updateOutMoney(parameterMap.get("id"),parameterMap.get("tradeType"),
@@ -121,7 +122,7 @@ public class OutMoneyController extends BaseController {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "提现记录id不可以为空！");
         }
         List<OutMoney> outMoneyList = outMoneyService.getOutMoneyList(parameterMap.get("id"),"","","",
-                "","","");
+                "","","","");
         if (CollectionUtils.isEmpty(outMoneyList)){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "提现记录存在！");
         }

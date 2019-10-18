@@ -99,7 +99,7 @@ public class AdReviewController extends BaseController {
         }else if (StringUtils.isEmpty(status)){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"参数status为空！！");
         }
-        AppUser appUserMsg = appUserService.getAppUserMsg(userId);
+        AppUser appUserMsg = appUserService.getAppUserMsg(userId,"");
         if (StringUtils.isNull(appUserMsg)){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"参数userId错误！！");
         }

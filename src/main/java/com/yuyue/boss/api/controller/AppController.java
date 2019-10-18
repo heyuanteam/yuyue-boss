@@ -86,7 +86,7 @@ public class AppController extends BaseController {
         if (CollectionUtils.isNotEmpty(appVersionList)){
             for (AppVersion appVersion:appVersionList) {
                 if (parameterMap.get("versionNo").equals(appVersion.getVersionNo())){
-                    return new ResponseData(CodeEnum.SUCCESS.getCode(), "版本号已经存在！");
+                    return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "版本号已经存在！");
                 }
             }
         }
@@ -138,7 +138,7 @@ public class AppController extends BaseController {
         if (CollectionUtils.isNotEmpty(appVersionList)){
             for (AppVersion appVersion:appVersionList) {
                 if (parameterMap.get("versionNo").equals(appVersion.getVersionNo())){
-                    return new ResponseData(CodeEnum.SUCCESS.getCode(), "版本号已经存在！");
+                    return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "版本号已经存在！");
                 }
             }
         }
@@ -230,7 +230,7 @@ public class AppController extends BaseController {
         if (CollectionUtils.isNotEmpty(videoCategoryList)){
             for (VideoCategory videoCategory:videoCategoryList) {
                 if (parameterMap.get("category").equals(videoCategory.getCategory())){
-                    return new ResponseData(CodeEnum.SUCCESS.getCode(), "菜单名称已经存在！");
+                    return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单名称已经存在！");
                 }
             }
         }
@@ -304,7 +304,7 @@ public class AppController extends BaseController {
                 if (CollectionUtils.isNotEmpty(categoryList)) {
                     for (VideoCategory videoCategory:categoryList) {
                         if (parameterMap.get("category").equals(videoCategory.getCategory())){
-                            return new ResponseData(CodeEnum.SUCCESS.getCode(), "菜单名称已经存在！");
+                            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单名称已经存在！");
                         }
                     }
                 }
@@ -394,7 +394,7 @@ public class AppController extends BaseController {
         if (CollectionUtils.isNotEmpty(bannerList)){
             for (Banner banner:bannerList) {
                 if (parameterMap.get("name").equals(banner.getName())){
-                    return new ResponseData(CodeEnum.SUCCESS.getCode(), "轮播图名称已经存在！");
+                    return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "轮播图名称已经存在！");
                 }
             }
         }
@@ -468,7 +468,7 @@ public class AppController extends BaseController {
                 if (CollectionUtils.isNotEmpty(nameList)) {
                     for (Banner banner:nameList) {
                         if (parameterMap.get("name").equals(banner.getName())){
-                            return new ResponseData(CodeEnum.SUCCESS.getCode(), "轮播图名称已经存在！");
+                            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "轮播图名称已经存在！");
                         }
                     }
                 }
