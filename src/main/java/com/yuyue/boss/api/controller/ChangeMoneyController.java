@@ -2,11 +2,12 @@ package com.yuyue.boss.api.controller;
 
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
-import com.yuyue.boss.api.domain.OutMoney;
-import com.yuyue.boss.api.domain.SystemUser;
-import com.yuyue.boss.api.service.OutMoneyService;
+import com.yuyue.boss.api.domain.*;
+import com.yuyue.boss.api.service.AppUserService;
+import com.yuyue.boss.api.service.ChangeMoneyService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
+import com.yuyue.boss.utils.BeanUtil;
 import com.yuyue.boss.utils.PageUtil;
 import com.yuyue.boss.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,103 +33,118 @@ import java.util.Map;
 public class ChangeMoneyController extends BaseController {
 
     @Autowired
-    private OutMoneyService outMoneyService;
+    private ChangeMoneyService changeMoneyService;
+    @Autowired
+    private AppUserService appUserService;
 
     /**
-     * 获取提现记录
+     * 获取收益记录
      * @param systemUser
      * @param request
      * @param response
      * @return
      */
-    @RequestMapping(value = "/getOutMoneyList")
+    @RequestMapping(value = "/getChangeMoneyList")
     @ResponseBody
-    @RequiresPermissions("money:menu")
+    @RequiresPermissions("profit:menu")
     @LoginRequired
-    public ResponseData getOutMoneyList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("获取提现记录----------->>/system/getOutMoneyList");
+    public ResponseData getChangeMoneyList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("获取收益记录---------->>/changeMoney/getChangeMoneyList");
         Map<String, String> parameterMap = getParameterMap(request, response);
         try {
             PageUtil.getPage(parameterMap.get("page"));
-            List<OutMoney> outMoneyList = outMoneyService.getOutMoneyList("",parameterMap.get("tradeType"), parameterMap.get("status"),
-                    parameterMap.get("realName"),parameterMap.get("startTime"),parameterMap.get("endTime"),parameterMap.get("outNo"),
-                    parameterMap.get("userName"));
-            PageUtil pageUtil = new PageUtil(outMoneyList);
+            List<ChangeMoney> changeMoneyList = changeMoneyService.getChangeMoneyList("",parameterMap.get("changeNo"),parameterMap.get("sourceName"),
+                    parameterMap.get("tradeType"), parameterMap.get("mobile"),parameterMap.get("status"),parameterMap.get("note"),
+                    parameterMap.get("yiName"),parameterMap.get("startTime"),parameterMap.get("endTime"));
+            List<ChangeMoney> list = new ArrayList<>();
+            if (CollectionUtils.isNotEmpty(changeMoneyList)) {
+                for (ChangeMoney changeMoney: changeMoneyList) {
+                    AppUser appUserMsg = appUserService.getAppUserMsg(changeMoney.getSourceId(),"");
+                    if (StringUtils.isNotEmpty(appUserMsg.getRealName())) {
+                        changeMoney.setYiName(appUserMsg.getRealName());
+                        list.add(changeMoney);
+                    }
+                }
+            }
+            PageUtil pageUtil = new PageUtil(list);
             return new ResponseData(pageUtil);
         } catch (Exception e) {
-            log.info("===========>>>>>>获取提现记录失败！");
-            return new ResponseData(CodeEnum.E_400.getCode(),"获取提现记录失败！");
+            log.info("===========>>>>>>获取收益记录失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"获取收益记录失败！");
         }
     }
 
     /**
-     * 修改提现记录
+     * 修改收益
      * @param systemUser
      * @param request
      * @param response
      * @return
      */
-    @RequestMapping(value = "/editOutMoney")
+    @RequestMapping(value = "/editChangeMoney")
     @ResponseBody
-    @RequiresPermissions("money:save")
+    @RequiresPermissions("profit:save")
     @LoginRequired
-    public ResponseData editOutMoney(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("修改提现记录---------->>/system/editOutMoney");
+    public ResponseData editChangeMoney(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("修改收益----------->>/changeMoney/editChangeMoney");
         Map<String, String> parameterMap = getParameterMap(request, response);
-        if (StringUtils.isEmpty(parameterMap.get("id"))){
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "提现id不可以为空！");
-        } else if (StringUtils.isEmpty(parameterMap.get("tradeType"))){
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "提现类型不可以为空！");
-        } else if (StringUtils.isEmpty(parameterMap.get("money"))){
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "提现金额不可以为空！");
+        if (StringUtils.isEmpty(parameterMap.get("tradeType"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "收益类型不可以为空！");
+        } else if (StringUtils.isEmpty(parameterMap.get("mobile"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "收益手机号不可以为空！");
         } else if (StringUtils.isEmpty(parameterMap.get("status"))){
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "提现状态不可以为空！");
-        } else if (StringUtils.isEmpty(parameterMap.get("realName"))){
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "账户真实名称不可以为空！");
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "收益状态不可以为空！");
+        } else if (StringUtils.isEmpty(parameterMap.get("note"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "备注不可以为空！");
+        } else if (StringUtils.isEmpty(parameterMap.get("id"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "收益Id不可以为空！");
+        } else if (StringUtils.isEmpty(parameterMap.get("money"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "收益钱不可以为空！");
         }
-        List<OutMoney> outMoneyList = outMoneyService.getOutMoneyList(parameterMap.get("id"),
-                "","","","","","","");
-        if (CollectionUtils.isEmpty(outMoneyList)){
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "提现记录不存在！");
+        List<ChangeMoney> changeMoneyList = changeMoneyService.getChangeMoneyList(parameterMap.get("id"),
+                "","","","","","","","","");
+        if (CollectionUtils.isEmpty(changeMoneyList)){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "收益记录不存在！");
         }
+
         try {
-            outMoneyService.updateOutMoney(parameterMap.get("id"),parameterMap.get("tradeType"),
-                    parameterMap.get("money"),parameterMap.get("status"),parameterMap.get("realName"));
-            return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改提现记录成功！");
+            changeMoneyService.updateChangeMoney(parameterMap.get("id"),parameterMap.get("money"),parameterMap.get("tradeType"),
+                    parameterMap.get("note"),parameterMap.get("status"),parameterMap.get("mobile"));
+            return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改收益成功！");
         } catch (Exception e) {
-            log.info("===========>>>>>>修改提现记录失败！");
-            return new ResponseData(CodeEnum.E_400.getCode(),"修改提现记录失败！");
+            log.info("===========>>>>>>修改收益失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"修改收益失败！");
         }
     }
 
     /**
-     * 删除提现记录
+     * 删除收益记录
      * @param systemUser
      * @param request
      * @param response
      * @return
      */
-    @RequestMapping(value = "/delOutMoney")
+    @RequestMapping(value = "/delChangeMoney")
     @ResponseBody
-    @RequiresPermissions("money:remove")
+    @RequiresPermissions("profit:remove")
     @LoginRequired
     public ResponseData delOutMoney(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("删除提现记录----------->>/system/delOutMoney");
+        log.info("删除收益记录----------->>/changeMoney/delChangeMoney");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("id"))){
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "提现记录id不可以为空！");
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "收益记录id不可以为空！");
         }
-        List<OutMoney> outMoneyList = outMoneyService.getOutMoneyList(parameterMap.get("id"),"","","",
-                "","","","");
-        if (CollectionUtils.isEmpty(outMoneyList)){
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "提现记录存在！");
+        List<ChangeMoney> changeMoneyList = changeMoneyService.getChangeMoneyList(parameterMap.get("id"),
+                "","","","","","","","","");
+        if (CollectionUtils.isEmpty(changeMoneyList)){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "收益记录不存在！");
         }
         try {
-            outMoneyService.delOutMoney(parameterMap.get("id"));
-            return new ResponseData(CodeEnum.SUCCESS.getCode(), "删除提现记录成功！");
+            changeMoneyService.delOutMoney(parameterMap.get("id"));
+            return new ResponseData(CodeEnum.SUCCESS.getCode(), "删除收益记录成功！");
         } catch (Exception e) {
-            log.info("===========>>>>>>删除提现记录失败！");
-            return new ResponseData(CodeEnum.E_400.getCode(),"删除提现记录失败！");
+            log.info("===========>>>>>>删除收益记录失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"删除收益记录失败！");
         }
     }
 

@@ -48,7 +48,7 @@ public class AppController extends BaseController {
     @RequiresPermissions("appversion:menu")
     @LoginRequired
     public ResponseData getVersionList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("获取版本列表----------->>/system/getVersionList");
+        log.info("获取版本列表----------->>/app/getVersionList");
         Map<String, String> parameterMap = getParameterMap(request, response);
         try {
             PageUtil.getPage(parameterMap.get("page"));
@@ -73,7 +73,7 @@ public class AppController extends BaseController {
     @RequiresPermissions("appversion:save")
     @LoginRequired
     public ResponseData addVersion(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("添加版本----------->>/system/addVersion");
+        log.info("添加版本----------->>/app/addVersion");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("versionNo"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "版本号不可以为空！");
@@ -121,7 +121,7 @@ public class AppController extends BaseController {
     @RequiresPermissions("appversion:save")
     @LoginRequired
     public ResponseData editVersion(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("修改版本----------->>/system/editVersion");
+        log.info("修改版本----------->>/app/editVersion");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("versionNo"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "版本号不可以为空！");
@@ -164,7 +164,7 @@ public class AppController extends BaseController {
     @RequiresPermissions("appversion:remove")
     @LoginRequired
     public ResponseData delVersion(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("删除版本----------->>/system/delVersion");
+        log.info("删除版本----------->>/app/delVersion");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("appVersionId"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "版本appVersionId不可以为空！");
@@ -194,7 +194,7 @@ public class AppController extends BaseController {
     @RequiresPermissions("appMenu:menu")
     @LoginRequired
     public ResponseData getAPPMenuList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("获取APP菜单列表----------->>/system/getAPPMenuList");
+        log.info("获取APP菜单列表----------->>/app/getAPPMenuList");
         Map<String, String> parameterMap = getParameterMap(request, response);
         try {
             PageUtil.getPage(parameterMap.get("page"));
@@ -219,7 +219,7 @@ public class AppController extends BaseController {
     @RequiresPermissions("appMenu:save")
     @LoginRequired
     public ResponseData addAPPMenu(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("添加APP菜单----------->>/system/addAPPMenu");
+        log.info("添加APP菜单----------->>/app/addAPPMenu");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("category"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单名称不可以为空！");
@@ -263,7 +263,7 @@ public class AppController extends BaseController {
     @RequiresPermissions("appMenu:save")
     @LoginRequired
     public ResponseData editAPPMenu(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("修改APP菜单------------>>/system/editAPPMenu");
+        log.info("修改APP菜单------------>>/app/editAPPMenu");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("id"))) {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单ID不可以为空！");
@@ -328,7 +328,7 @@ public class AppController extends BaseController {
     @RequiresPermissions("appMenu:remove")
     @LoginRequired
     public ResponseData delAPPMenu(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("删除APP菜单----------->>/system/delAPPMenu");
+        log.info("删除APP菜单----------->>/app/delAPPMenu");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("id"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "APP菜单id不可以为空！");
@@ -358,7 +358,7 @@ public class AppController extends BaseController {
     @RequiresPermissions("banner:menu")
     @LoginRequired
     public ResponseData getBannerList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("获取APP轮播图列表----------->>/system/getBannerList");
+        log.info("获取APP轮播图列表----------->>/app/getBannerList");
         Map<String, String> parameterMap = getParameterMap(request, response);
         try {
             PageUtil.getPage(parameterMap.get("page"));
@@ -383,7 +383,7 @@ public class AppController extends BaseController {
     @RequiresPermissions("banner:save")
     @LoginRequired
     public ResponseData addBanner(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("添加APP轮播图----------->>/system/addBanner");
+        log.info("添加APP轮播图----------->>/app/addBanner");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("name"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "轮播图名称不可以为空！");
@@ -427,7 +427,7 @@ public class AppController extends BaseController {
     @RequiresPermissions("banner:save")
     @LoginRequired
     public ResponseData editBanner(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("修改APP轮播图------------>>/system/editBanner");
+        log.info("修改APP轮播图------------>>/app/editBanner");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("id"))) {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "轮播图ID不可以为空！");
@@ -492,7 +492,7 @@ public class AppController extends BaseController {
     @RequiresPermissions("banner:remove")
     @LoginRequired
     public ResponseData delBanner(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("删除APP轮播图----------->>/system/delBanner");
+        log.info("删除APP轮播图----------->>/app/delBanner");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("id"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "APP轮播图id不可以为空！");

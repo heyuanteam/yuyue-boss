@@ -24,5 +24,5 @@ public interface OrderMapper extends MyBaseMapper<Order> {
     List<Order> getOrderList(@Param("orderNo") String orderNo,@Param("realName") String realName,@Param("mobile") String mobile,
                              @Param("tradeType") String tradeType,@Param("status") String status,
                              @Param("startTime") String startTime,@Param("endTime") String endTime,
-                             @Param("typeList") List<String> typeList);
+                             @Param("type") String type);
 }

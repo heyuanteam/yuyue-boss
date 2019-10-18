@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yuyue.boss.api.mapper.ChangeMoneyMapper" >
+
+    <select id="getChangeMoneyList" resultType="com.yuyue.boss.api.domain.ChangeMoney" parameterType="String">
+        select b.*,
+            DATE_FORMAT(b.CREATE_TIME,'%Y-%m-%d %H:%i:%s') createTime,
+            DATE_FORMAT(b.COMPLETE_TIME,'%Y-%m-%d %H:%i:%s') completeTime,
+            a.USER_REAL_NAME sourceName
+
+        from yuyue_change_money b,yuyue_merchant a
+        WHERE  1=1 and b.merchantId = a.ID
+        <if test="changeNo != null and changeNo != ''"> and b.changeNo = #{changeNo} </if>
+        <if test="tradeType != null and tradeType != ''"> and CONCAT(b.tradeType) like concat('%', #{tradeType}, '%') </if>
+        <if test="sourceName != null and sourceName != ''"> and CONCAT(a.USER_REAL_NAME) like concat('%', #{sourceName}, '%') </if>
+        <if test="mobile != null and mobile != ''"> and CONCAT(b.mobile) like concat('%', #{mobile}, '%')</if>
+        <if test="status != null and status != ''"> and   b.status = #{status} </if>
+        <if test="note != null and note != ''"> and   CONCAT(b.note) like concat('%', #{note}, '%')  </if>
+
+        <if test=" startTime !=null and startTime!='' ">
+            <![CDATA[ and	DATE_FORMAT(b.CREATE_TIME, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT(#{startTime}, '%Y-%m-%d %H:%i:%s')]]>
+        </if>
+        <if test=" endTime !=null and endTime!='' ">
+            <![CDATA[ and	DATE_FORMAT(b.CREATE_TIME, '%Y-%m-%d %H:%i:%s') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i:%s')]]>
+        </if>
+        ORDER BY b.CREATE_TIME DESC
+    </select>
+
+    <update id="updateChangeMoney"  parameterType="String">
+        UPDATE yuyue_change_money
+        <set>
+            <if test="tradeType != null and tradeType != ''"> tradeType= #{tradeType},</if>
+
+            <if test="money != null and money != ''"> money= #{money},</if>
+
+            <if test="mobile != null and mobile != ''"> mobile= #{mobile},</if>
+
+            <if test="status != null and status != ''"> status= #{status}, </if>
+
+            <if test="note != null and note != ''"> note= #{note}, </if>
+        </set>
+        WHERE 1=1
+        <if test="id!=null and id!=''">
+            and id = #{id}
+        </if>
+    </update>
+
+</mapper>

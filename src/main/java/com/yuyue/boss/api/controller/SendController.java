@@ -76,7 +76,7 @@ public class SendController extends BaseController{
     @RequiresPermissions("Announcement:menu")
     @LoginRequired
     public ResponseData getJPushList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("获取公告列表----------->>/system/getJPushList");
+        log.info("获取公告列表----------->>/send/getJPushList");
         Map<String, String> parameterMap = getParameterMap(request, response);
         try {
             PageUtil.getPage(parameterMap.get("page"));
@@ -102,7 +102,7 @@ public class SendController extends BaseController{
     @RequiresPermissions("Announcement:remove")
     @LoginRequired
     public ResponseData delJPush(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("删除公告----------->>/system/delJPush");
+        log.info("删除公告----------->>/send/delJPush");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("id"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "公告id不可以为空！");

@@ -50,7 +50,7 @@ public class LookupCdeController extends BaseController {
     @ResponseBody
     @LoginRequired
     public ResponseData getSystemList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("获取全部字典----------->>/system/getSystemList");
+        log.info("获取全部字典----------->>/lookupCde/getSystemList");
         getParameterMap(request, response);
         try {
             List<LookupCde> lookupCdeList = lookupCdeService.getLookupCdeSystem("", "","");
@@ -84,7 +84,7 @@ public class LookupCdeController extends BaseController {
     @RequiresPermissions("LookupCdeManager:menu")
     @LoginRequired
     public ResponseData getLookupCdeSystem(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("获取系统字典----------->>/system/getSystem");
+        log.info("获取系统字典----------->>/lookupCde/getSystem");
         Map<String, String> parameterMap = getParameterMap(request, response);
         try {
             PageUtil.getPage(parameterMap.get("page"));
@@ -109,7 +109,7 @@ public class LookupCdeController extends BaseController {
     @RequiresPermissions("LookupCdeManager:save")
     @LoginRequired
     public ResponseData addLookupCdeSystem(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("添加系统字典----------->>/system/addLookupCdeSystem");
+        log.info("添加系统字典----------->>/lookupCde/addLookupCdeSystem");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("typeName"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典名称不可以为空！");
@@ -150,7 +150,7 @@ public class LookupCdeController extends BaseController {
     @RequiresPermissions("LookupCdeManager:save")
     @LoginRequired
     public ResponseData editLookupCdeSystem(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("修改系统字典----------->>/system/editLookupCdeSystem");
+        log.info("修改系统字典----------->>/lookupCde/editLookupCdeSystem");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("typeName"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典名称不可以为空！");
@@ -194,7 +194,7 @@ public class LookupCdeController extends BaseController {
     @RequiresPermissions("LookupCdeManager:remove")
     @LoginRequired
     public ResponseData delLookupCde(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("删除系统字典---------->>/system/delLookupCde");
+        log.info("删除系统字典---------->>/lookupCde/delLookupCde");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("id"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典id不可以为空！");
@@ -230,7 +230,7 @@ public class LookupCdeController extends BaseController {
     @RequiresPermissions("LookupCdeManager:menu")
     @LoginRequired
     public ResponseData getLookupCdeList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("获取系统字典下级----------->>/system/getLookupCdeList");
+        log.info("获取系统字典下级----------->>/lookupCde/getLookupCdeList");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("id"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典id不可以为空！");
@@ -258,7 +258,7 @@ public class LookupCdeController extends BaseController {
     @RequiresPermissions("LookupCdeManager:save")
     @LoginRequired
     public ResponseData addLookupCdeList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("添加系统字典下级----------->>/system/addLookupCdeList");
+        log.info("添加系统字典下级----------->>/lookupCde/addLookupCdeList");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("type"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典类型不可以为空！");
@@ -293,7 +293,7 @@ public class LookupCdeController extends BaseController {
     @RequiresPermissions("LookupCdeManager:save")
     @LoginRequired
     public ResponseData editLookupCdeList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("修改系统字典下级----------->>/system/editLookupCdeList");
+        log.info("修改系统字典下级----------->>/lookupCde/editLookupCdeList");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("type"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典类型不可以为空！");
@@ -323,7 +323,7 @@ public class LookupCdeController extends BaseController {
     @RequiresPermissions("LookupCdeManager:remove")
     @LoginRequired
     public ResponseData delLookupCdeList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("删除系统字典下级----------->>/system/delLookupCdeList");
+        log.info("删除系统字典下级----------->>/lookupCde/delLookupCdeList");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("id"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "字典id不可以为空！");
