@@ -46,6 +46,6 @@ public class Order implements Serializable {
 
     private String endTime;
     //用户信息
-    private AppUser appUser;
+    private String realName;
 
 }

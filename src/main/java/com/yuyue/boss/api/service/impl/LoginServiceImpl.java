@@ -106,7 +106,8 @@ public class LoginServiceImpl implements LoginService {
     public void delSystemPermission(String id) { loginMapper.delSystemPermission(id);}
 
     @Override
-    public List<SystemUser> getSystemUser(String status, String systemName,String loginName,String id) { return loginMapper.getSystemUser(status,systemName,loginName,id); }
+    public List<SystemUser> getSystemUser(String status, String systemName,String loginName,String id,String phone) {
+        return loginMapper.getSystemUser(status,systemName,loginName,id,phone); }
 
     @Override
     public void updateSystemUser(String id, String loginName, String password, String systemName, String phone,String status) {
