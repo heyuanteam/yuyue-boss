@@ -2,13 +2,12 @@ package com.yuyue.boss.api.controller;
 
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
-import com.yuyue.boss.api.domain.AppVersion;
-import com.yuyue.boss.api.domain.ChangeMoney;
-import com.yuyue.boss.api.domain.OutMoney;
-import com.yuyue.boss.api.domain.SystemUser;
+import com.yuyue.boss.api.domain.*;
+import com.yuyue.boss.api.service.AppUserService;
 import com.yuyue.boss.api.service.ChangeMoneyService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
+import com.yuyue.boss.utils.BeanUtil;
 import com.yuyue.boss.utils.PageUtil;
 import com.yuyue.boss.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +34,8 @@ public class ChangeMoneyController extends BaseController {
 
     @Autowired
     private ChangeMoneyService changeMoneyService;
+    @Autowired
+    private AppUserService appUserService;
 
     /**
      * 获取收益记录
@@ -54,7 +56,17 @@ public class ChangeMoneyController extends BaseController {
             List<ChangeMoney> changeMoneyList = changeMoneyService.getChangeMoneyList("",parameterMap.get("changeNo"),parameterMap.get("sourceName"),
                     parameterMap.get("tradeType"), parameterMap.get("mobile"),parameterMap.get("status"),parameterMap.get("note"),
                     parameterMap.get("yiName"),parameterMap.get("startTime"),parameterMap.get("endTime"));
-            PageUtil pageUtil = new PageUtil(changeMoneyList);
+            List<ChangeMoney> list = new ArrayList<>();
+            if (CollectionUtils.isNotEmpty(changeMoneyList)) {
+                for (ChangeMoney changeMoney: changeMoneyList) {
+                    AppUser appUserMsg = appUserService.getAppUserMsg(changeMoney.getSourceId(),"");
+                    if (StringUtils.isNotEmpty(appUserMsg.getRealName())) {
+                        changeMoney.setYiName(appUserMsg.getRealName());
+                        list.add(changeMoney);
+                    }
+                }
+            }
+            PageUtil pageUtil = new PageUtil(list);
             return new ResponseData(pageUtil);
         } catch (Exception e) {
             log.info("===========>>>>>>获取收益记录失败！");

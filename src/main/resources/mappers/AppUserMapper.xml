@@ -112,26 +112,24 @@
 
     </update>
 
-    <select id="getAppUserMsg" resultMap="AppUser"  parameterType="String">
+    <select id="getAppUserMsg" resultType="com.yuyue.boss.api.domain.AppUser"  parameterType="String">
         SELECT id,user_no userNo,user_nick_name nickName,user_real_name realName,id_type idType,id_card idCard,phone,sex,city,jpushName,password,salt,
             user_status userStatus,total ,income,ADDR_DETAIL addrDetail,HEADP_URL headpUrl,USER_TYPE userType,cardFUrl,cardZUrl,userUrl,
         ATTENTION_TOTAL attentionTotal,LIKE_TOTAL likeTotal,COMMENT_TOTAL commentTotal,education ,wechat ,signature,opendId,wechatName,
             DATE_FORMAT(CREATE_TIME ,'%Y-%m-%d %H:%i:%s') CREATE_TIME,DATE_FORMAT(UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') UPDATE_TIME,frontCover
             FROM yuyue_merchant
             where 1=1
-            <choose>
-                <when test="id!=null and id!='' ">
+                <if test="id!=null and id!='' ">
                   and id=#{id}
-                </when>
-                <when test="phone!=null and phone!='' ">
+                </if>
+                <if test="phone!=null and phone!='' ">
                   and phone=#{phone}
-                </when>
-            </choose>
+                </if>
          LIMIT 1
 
     </select>
 
-    <select id="getAppUserMsgList" resultMap="AppUser" parameterType="com.yuyue.boss.api.domain.AppUser">
+    <select id="getAppUserMsgList" resultType="com.yuyue.boss.api.domain.AppUser" parameterType="com.yuyue.boss.api.domain.AppUser">
         SELECT id,user_no userNo,user_nick_name nickName,user_real_name realName,id_type idType,id_card idCard,phone,sex,city,jpushName,password,salt,
         user_status userStatus,total ,income,ADDR_DETAIL addrDetail,HEADP_URL headpUrl,USER_TYPE userType,cardFUrl,cardZUrl,userUrl,
         ATTENTION_TOTAL attentionTotal,LIKE_TOTAL likeTotal,COMMENT_TOTAL commentTotal,education ,wechat ,signature,opendId,wechatName,
