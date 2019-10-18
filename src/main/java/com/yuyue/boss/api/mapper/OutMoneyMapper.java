@@ -14,11 +14,11 @@ public interface OutMoneyMapper extends MyBaseMapper<OutMoney> {
     List<OutMoney> getOutMoneyList(@Param("id")String id,@Param("tradeType") String tradeType,@Param("status") String status,
                                    @Param("realName")String realName,@Param("startTime") String startTime,
                                    @Param("endTime") String endTime,@Param("outNo") String outNo,@Param("userName") String userName);
-
+    @Transactional
     void updateOutMoney(@Param("id")String id,@Param("tradeType") String tradeType,@Param("money") String money,
                         @Param("status") String status, @Param("realName")String realName);
 
     @Transactional
-    @Delete("DELETE FROM yuyue_out_money WHERE id =#{id} ")
+    @Delete("DELETE FROM yuyue_change_money WHERE id =#{id} ")
     void delOutMoney(@Param("id")String id);
 }

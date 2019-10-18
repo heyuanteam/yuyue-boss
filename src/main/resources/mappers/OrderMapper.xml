@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yuyue.boss.api.mapper.OrderMapper" >
 
-    <select id="getOrderList" resultType="com.yuyue.boss.api.domain.Order" parameterType="map">
+    <select id="getOrderList" resultType="com.yuyue.boss.api.domain.Order" parameterType="String">
         select
         DATE_FORMAT(o.CREATE_TIME,'%Y-%m-%d %H:%i:%s') createTime,
         DATE_FORMAT(o.COMPLETE_TIME,'%Y-%m-%d %H:%i:%s') completeTime,
@@ -15,11 +15,14 @@
         <if test="orderNo != null and orderNo != ''"> and o.orderNo = #{orderNo} </if>
         <if test="tradeType != null and tradeType != ''"> and CONCAT(o.tradeType) like concat('%', #{tradeType}, '%') </if>
 
-        <if test="typeList!= null and typeList.size>0 ">
-            <foreach collection="typeList" item="item" index="index"  open="and o.tradeType in (" separator=","  close=")" >
+        <if test="type == 1">
+            <!--<foreach collection="typeList" item="item" index="index"  open="and o.tradeType in (" separator=","  close=")" >
                 #{item}
-            </foreach>
-            /*and CONCAT(o.tradeType) like concat('%', #{tradeType}, '%')*/
+            </foreach>-->
+            and o.tradeType in ('CZWX','XF','CZIOS','SMWX','SMZFB','CZZFB')
+        </if>
+        <if test="type == 0">
+            and o.tradeType in ('GGWX','GGZFB')
         </if>
 
         <if test="realName != null and realName != ''"> and CONCAT(u.USER_REAL_NAME) like concat('%', #{realName}, '%') </if>

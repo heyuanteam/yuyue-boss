@@ -30,7 +30,7 @@ public interface LookupCdeMapper extends MyBaseMapper<LookupCde> {
 
     List<LookupCdeConfig> getLookupCdeList(@Param("systemId") String systemId, @Param("id") String id);
 
-
+    @Transactional
     void updateLookupCdeList(@Param("id") String id, @Param("type") String type, @Param("status") String status);
 
     @Transactional
