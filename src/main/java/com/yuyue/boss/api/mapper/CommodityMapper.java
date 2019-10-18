@@ -23,12 +23,12 @@ public interface CommodityMapper extends MyBaseMapper<Commodity> {
             "\tAD_IMAGE_URL,\n" +
             "\tCOMMODITY_PRICE,\n" +
             "\tPAY_URL,\n" +
-            "\tADDR,\n" +
+            "\tADDR, START_DATE,END_DATE,VIDEO_ID,\n" +
             "\tSTATUS,\n" +
             "\tMERCHANT_ID\n" +
             ")  VALUES \n" +
             "(#{commodityId},#{priceId},#{category},#{commodityName},#{adWord},#{adImageUrl},#{commodityPrice}," +
-            "#{payUrl},#{addr},#{status},#{merchantId})")
+            "#{payUrl},#{addr},#{startDate},#{endDate},#{videoId},#{status},#{merchantId})")
     void insertCommodity(Commodity commodity);
 
     List<Commodity> getReleaseCommodity(@Param("videoId")String videoId);

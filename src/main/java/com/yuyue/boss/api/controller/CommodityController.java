@@ -167,24 +167,31 @@ public class CommodityController extends BaseController {
                 || "10B".equals(commodity.getStatus())  || "10D".equals(commodity.getStatus())
                 || "10E".equals(commodity.getStatus() ) ){
             commodityService.updateCommodityInfo(commodity);
-            return new ResponseData(CodeEnum.E_90003.getCode(),"爆款信息修改成功！！");
+            return new ResponseData(CodeEnum.SUCCESS.getCode(),"爆款信息修改成功！！");
         }else if("10C".equals(commodity.getStatus())){
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            Calendar instance = Calendar.getInstance();
-            instance.setTime(new Date());
-            String start = simpleDateFormat.format(instance.getTime());
-            commodity.setStartDate(start);
+
             /*List<AdPrice> advertisementFeeInfo = commodityService.getAdvertisementFeeInfo(commodity.getPriceId());
             if (StringUtils.isEmpty(advertisementFeeInfo)){
                 return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"价格为查询到！");
             }*/
-            String adDuration = commodity.getAdPrice().getAdDuration();
-            if (StringUtils.isEmpty(adDuration)){
-                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"价格未查询到！");
+             if (StringUtils.isEmpty(commodity.getStartDate()) &&  StringUtils.isEmpty(commodity.getEndDate())){
+                //设置开始时间结束时间
+                 String adDuration = commodity.getAdPrice().getAdDuration();
+                 if (StringUtils.isEmpty(adDuration)){
+                     return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"价格对象中未查询到推广的时长！！");
+                 }
+                 //设置开始时间结束时间
+                 Calendar instance = Calendar.getInstance();
+                 instance.setTime(new Date());
+                 String start = simpleDateFormat.format(instance.getTime());
+                 commodity.setStartDate(start);
+                 instance.add(Calendar.MONTH, Integer.parseInt(adDuration));
+                 String end = simpleDateFormat.format(instance.getTime());
+                 commodity.setEndDate(end);
+
             }
-            instance.add(Calendar.MONTH, Integer.parseInt(adDuration));
-            String end = simpleDateFormat.format(instance.getTime());
-            commodity.setEndDate(end);
+
 
  /*           Date parseStart = null;
             Date parseEnd=null;
@@ -198,31 +205,45 @@ public class CommodityController extends BaseController {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+
+
 */
-            List<UploadFile> videoInfoList = videoService.getVideoInfoList();
-            if (StringUtils.isEmpty(videoInfoList)){
+            Commodity releaseCommodity = getReleaseCommodity(commodity);
+            if (StringUtils.isEmpty(releaseCommodity.getVideoId()))
                 return new ResponseData(CodeEnum.SUCCESS.getCode(),"暂无视频");
-            }else {
-                for (UploadFile uploadFile:videoInfoList
-                     ) {
-                    List<Commodity> releaseCommodity = commodityService.getReleaseCommodity(uploadFile.getId());
-                    if (releaseCommodity.size() == 5)continue;
-                    else {
-                        commodity.setVideoId(uploadFile.getId());
-                        break;
-                    }
-                }
-            }
             System.out.println("开始时间："+commodity.getStartDate());
             System.out.println("结束时间："+commodity.getEndDate());
-            System.out.println(commodity);
-            commodityService.updateCommodityInfo(commodity);
+            System.out.println(releaseCommodity);
+            commodityService.updateCommodityInfo(releaseCommodity);
         }
-
         sendController.sendCommodityInfoJPush(commodity,commodity.getStatus());
-        return new ResponseData("爆款发布成功发布！！");
+        return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"爆款发布成功发布！！");
     }
 
+    /**
+     * 设置爆款推广位置
+     * @param commodity
+     * @return
+     */
+    public Commodity getReleaseCommodity(Commodity commodity){
+        //设置爆款推广位置
+        List<UploadFile> videoInfoList = videoService.getVideoInfoList();
+        if (StringUtils.isEmpty(videoInfoList)){
+            return commodity;
+        }else {
+            for (UploadFile uploadFile:videoInfoList
+            ) {
+                List<Commodity> releaseCommodity = commodityService.getReleaseCommodity(uploadFile.getId());
+                if (releaseCommodity.size() == 5)continue;
+                else {
+                    commodity.setVideoId(uploadFile.getId());
+                    break;
+                }
+            }
+            System.out.println(commodity);
+            return commodity;
+        }
+    }
 
     /**
      * 添加商品信息
@@ -235,16 +256,24 @@ public class CommodityController extends BaseController {
     @ResponseBody
     @RequiresPermissions("explosive:save")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
-    public ResponseData addCommodityInfo(@CurrentUser SystemUser systemUser, Commodity commodity, HttpServletRequest request, HttpServletResponse response){
+    public ResponseData addCommodityInfo(@CurrentUser SystemUser systemUser, @RequestBody Commodity commodity, HttpServletRequest request, HttpServletResponse response){
         log.info("添加商品信息 --------------->/commodity/addCommodityInfo");
         if (StringUtils.isNotNull(commodity.getCommodityPrice()) && commodity.getCommodityPrice().signum() == -1){
-            return new ResponseData(CodeEnum.PARAM_ERROR);
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"金钱输入错误！！");
         }
         commodity.setCommodityId(UUID.randomUUID().toString().toUpperCase().replace("-",""));
         commodity.setMerchantId(systemUser.getId());
-        commodityService.insertCommodity(commodity);
 
-        return new ResponseData();
+        if ("10C".equals(commodity.getStatus())){
+            Commodity releaseCommodity = getReleaseCommodity(commodity);
+            if (StringUtils.isEmpty(releaseCommodity.getVideoId()))
+                return new ResponseData(CodeEnum.SUCCESS.getCode(),"暂无视频！！");
+            else commodityService.insertCommodity(releaseCommodity);
+        }
+
+        return new ResponseData(CodeEnum.SUCCESS.getCode(),"添加成功！！");
     }
+
+
 
 }

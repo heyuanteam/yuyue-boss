@@ -90,20 +90,21 @@ public class ArtistReviewController extends BaseController {
         }
         if("10B".equals(status) || "10C".equals(status)){
             AppUser appUserMsg = appUserService.getAppUserMsg(artistReviewList.get(0).getUserId(),"");
-            sendController.sendShowJPush(artistReviewList.get(0),appUserMsg,status);
 
-            artistReviewService.updateArtistReviewStatus(id,status);
             if ("10B".equals(status)){
                 if (StringUtils.isNull(appUserMsg))
                     return new ResponseData("该用户不存在");
-
-                if ("1".equals(appUserMsg.getUserType()))
+                if ("1".equals(appUserMsg.getUserType())  || StringUtils.isEmpty(appUserMsg.getUserType()))
                     appUserMsg.setUserType("2");
-                if ("3".equals(appUserMsg.getUserType()))
+                if ("3".equals(appUserMsg.getUserType())  || StringUtils.isEmpty(appUserMsg.getUserType()))
                     appUserMsg.setUserType("4");
                 appUserMsg.setFrontCover("http://101.37.252.177:82/defaultFrontCover/defaultFrontCover.png");
+                System.out.println(appUserMsg);
                 appUserService.updateAppUser(appUserMsg);
             }
+            sendController.sendShowJPush(artistReviewList.get(0),appUserMsg,status);
+
+            artistReviewService.updateArtistReviewStatus(id,status);
         }else {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"参数：status不合法！！");
         }
