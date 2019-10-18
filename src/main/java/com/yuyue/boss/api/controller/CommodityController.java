@@ -4,12 +4,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
-import com.yuyue.boss.api.domain.AdPrice;
-import com.yuyue.boss.api.domain.Commodity;
-import com.yuyue.boss.api.domain.Order;
-import com.yuyue.boss.api.domain.SystemUser;
+import com.yuyue.boss.api.domain.*;
 import com.yuyue.boss.api.service.CommodityService;
 import com.yuyue.boss.api.service.OrderService;
+import com.yuyue.boss.api.service.VideoService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.StringUtils;
@@ -17,10 +15,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +42,8 @@ public class CommodityController extends BaseController {
     private SendController sendController;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private VideoService videoService;
 
     /**
      * 获取爆款列表及搜索
@@ -154,21 +151,23 @@ public class CommodityController extends BaseController {
     @ResponseBody
     @RequiresPermissions("explosive:save")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
-    public ResponseData updateCommodityInfo(Commodity commodity,HttpServletRequest request, HttpServletResponse response){
+    public ResponseData updateCommodityInfo(@RequestBody Commodity commodity, HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
         log.info("修改商品状态及发布时间 --------------->/commodity/updateCommodityInfo");
+        System.out.println(commodity);
         if (StringUtils.isNull(commodity.getCommodityId())){
-            return new ResponseData(CodeEnum.E_90003);
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"爆款Id为空！！");
         }
         Commodity commodityInfoById = commodityService.getCommodityInfoById(commodity.getCommodityId());
         if (StringUtils.isNull(commodityInfoById)){
             return new ResponseData("未查询该数据！！");
         }
+
         if (StringUtils.isEmpty(commodity.getStatus())  ||  "10A".equals(commodity.getStatus())
                 || "10B".equals(commodity.getStatus())  || "10D".equals(commodity.getStatus())
                 || "10E".equals(commodity.getStatus() ) ){
             commodityService.updateCommodityInfo(commodity);
-            return new ResponseData(CodeEnum.E_90003);
+            return new ResponseData(CodeEnum.E_90003.getCode(),"爆款信息修改成功！！");
         }else if("10C".equals(commodity.getStatus())){
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             Calendar instance = Calendar.getInstance();
@@ -200,14 +199,28 @@ public class CommodityController extends BaseController {
                 e.printStackTrace();
             }
 */
+            List<UploadFile> videoInfoList = videoService.getVideoInfoList();
+            if (StringUtils.isEmpty(videoInfoList)){
+                return new ResponseData(CodeEnum.SUCCESS.getCode(),"暂无视频");
+            }else {
+                for (UploadFile uploadFile:videoInfoList
+                     ) {
+                    List<Commodity> releaseCommodity = commodityService.getReleaseCommodity(uploadFile.getId());
+                    if (releaseCommodity.size() == 5)continue;
+                    else {
+                        commodity.setVideoId(uploadFile.getId());
+                        break;
+                    }
+                }
+            }
             System.out.println("开始时间："+commodity.getStartDate());
             System.out.println("结束时间："+commodity.getEndDate());
-
+            System.out.println(commodity);
             commodityService.updateCommodityInfo(commodity);
         }
 
-        sendController.sendCommodityInfoJPush(commodityInfoById,commodity.getStatus());
-        return new ResponseData();
+        sendController.sendCommodityInfoJPush(commodity,commodity.getStatus());
+        return new ResponseData("爆款发布成功发布！！");
     }
 
 

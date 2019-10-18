@@ -19,6 +19,7 @@
             <result column="START_DATE" property="startDate"/>
             <result column="END_DATE" property="endDate"/>
             <result column="STATUS" property="status"/>
+            <result column="VIDEO_ID" property="videoId"/>
           <association property="adPrice" javaType="com.yuyue.boss.api.domain.AdPrice">
                 <!-- 关联条件Employee的dept_id对应着Department的id -->
                 <id column="ID" property="priceId"/>
@@ -76,7 +77,40 @@
         <if test="startTime != null and endTime != ''">
             and APPLICATION_DATE  &gt; #{startTime}  and APPLICATION_DATE num <![CDATA[ < ]]> #{endTime}/*and to_days(NOW()) &lt; to_days(END_DATE)*/
         </if>
+
         ORDER BY   c.APPLICATION_DATE DESC
+
+    </select>
+
+    <select id="getReleaseCommodity" parameterType="String" resultMap="myCommodity">
+        SELECT
+        c.COMMODITY_ID ,
+        c.ORDER_ID,
+        c.PRICE_ID ,
+        c.CATEGORY ,
+        c.COMMODITY_NAME ,
+        c.AD_WORD ,
+        c.AD_IMAGE_URL ,
+        c.COMMODITY_PRICE ,
+        c.PAY_URL ,
+        c.ADDR ,
+        c.SPOKESPERSON_ID ,
+        c.MERCHANT_ID ,
+        c.VIDEO_ID,
+        /* c.APPLICATION_DATE,
+        c.START_DATE ,
+        c.END_DATE ,*/
+        DATE_FORMAT(c.APPLICATION_DATE ,'%Y-%m-%d %H:%i:%s') APPLICATION_DATE,
+        DATE_FORMAT(c.START_DATE ,'%Y-%m-%d %H:%i:%s') START_DATE ,
+        DATE_FORMAT(c.END_DATE ,'%Y-%m-%d %H:%i:%s') END_DATE ,
+        c.STATUS
+        FROM yuyue_commodity   c
+        where 1=1
+        <if test="videoId != null and videoId != ''">
+            and  VIDEO_ID = #{videoId}
+        </if>
+
+
 
     </select>
 
@@ -122,6 +156,10 @@
 
         <if test="status != null and status != ''">
              STATUS = #{status},
+        </if>
+
+        <if test="videoId != null and videoId != ''">
+            VIDEO_ID = #{videoId},
         </if>
         COMMODITY_ID = #{commodityId}
 
