@@ -4,12 +4,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
-import com.yuyue.boss.api.domain.AdPrice;
-import com.yuyue.boss.api.domain.Commodity;
-import com.yuyue.boss.api.domain.Order;
-import com.yuyue.boss.api.domain.SystemUser;
+import com.yuyue.boss.api.domain.*;
 import com.yuyue.boss.api.service.CommodityService;
 import com.yuyue.boss.api.service.OrderService;
+import com.yuyue.boss.api.service.VideoService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.StringUtils;
@@ -44,6 +42,8 @@ public class CommodityController extends BaseController {
     private SendController sendController;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private VideoService videoService;
 
     /**
      * 获取爆款列表及搜索
@@ -199,6 +199,20 @@ public class CommodityController extends BaseController {
                 e.printStackTrace();
             }
 */
+            List<UploadFile> videoInfoList = videoService.getVideoInfoList();
+            if (StringUtils.isEmpty(videoInfoList)){
+                return new ResponseData(CodeEnum.SUCCESS.getCode(),"暂无视频");
+            }else {
+                for (UploadFile uploadFile:videoInfoList
+                     ) {
+                    List<Commodity> releaseCommodity = commodityService.getReleaseCommodity(uploadFile.getId());
+                    if (releaseCommodity.size() == 5)continue;
+                    else {
+                        commodity.setVideoId(uploadFile.getId());
+                        break;
+                    }
+                }
+            }
             System.out.println("开始时间："+commodity.getStartDate());
             System.out.println("结束时间："+commodity.getEndDate());
             System.out.println(commodity);

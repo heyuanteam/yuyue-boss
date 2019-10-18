@@ -31,7 +31,7 @@ public interface CommodityMapper extends MyBaseMapper<Commodity> {
             "#{payUrl},#{addr},#{status},#{merchantId})")
     void insertCommodity(Commodity commodity);
 
-
+    List<Commodity> getReleaseCommodity(@Param("videoId")String videoId);
 
     List<Commodity> getCommodityInfo(@Param("commodityId") String commodityId,@Param("commodityName") String commodityName, @Param("category") String category, @Param(value = "status") String status,
                                      @Param("startTime") String startTime,@Param("endTime") String endTime);

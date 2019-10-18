@@ -31,7 +31,7 @@
         </association>
     </resultMap>
 
-    <select id="getVideoInfoList" resultMap="myUploadFile" parameterType="String">
+    <select id="getVideoInfoList" resultMap="myUploadFile">
         SELECT total.* FROM
         (
         SELECT

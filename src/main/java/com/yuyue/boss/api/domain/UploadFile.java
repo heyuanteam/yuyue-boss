@@ -1,9 +1,11 @@
 package com.yuyue.boss.api.domain;
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author: Lucifer
@@ -24,7 +26,8 @@ public class UploadFile implements Serializable {
 //  节目视频分类
     private String categoryId;
 //  时间
-    private String uploadTime;
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+    private Date uploadTime;
 //  视频第一帧图片链接
     private String videoAddress;
 //  文件地址

@@ -1,12 +1,17 @@
 package com.yuyue.boss.api.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.AppUser;
+import com.yuyue.boss.api.domain.Order;
 import com.yuyue.boss.api.service.AppUserService;
 import com.yuyue.boss.enums.ResponseData;
+import com.yuyue.boss.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +33,7 @@ public class AppUserController extends BaseController {
      * @param response
      * @return
      */
-    @RequestMapping("/getAppUserMsg")
+/*    @RequestMapping("/getAppUserMsg")
     @ResponseBody
     @RequiresPermissions("UserManager:menu")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
@@ -38,7 +43,7 @@ public class AppUserController extends BaseController {
         String id = request.getParameter("id");
 
         return new ResponseData(appUserService.getAppUserMsg(id));
-    }
+    }*/
 
     /**
      *获取用户列表
@@ -47,15 +52,26 @@ public class AppUserController extends BaseController {
      * @param response
      * @return
      */
-    @RequestMapping("/getAppUserMsgList")
+    @RequestMapping(value = "/getAppUserMsg" )
     @ResponseBody
     @RequiresPermissions("UserManager:menu")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
-    public ResponseData getAppUserMsgList(AppUser appUser,HttpServletRequest request, HttpServletResponse response){
+    public ResponseData getAppUserMsg( AppUser appUser, HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
-        log.info("获取用户列表-------------->>/userManager/getAppUserMsgList");
+        log.info("获取用户信息-------------->>/userManager/getAppUserMsgList");
+        String page=request.getParameter("page");
+        if (StringUtils.isEmpty(page) || !page.matches("[0-9]+"))
+            page = "1";
+        if (StringUtils.isNotEmpty(appUser.getId())){
+            return new ResponseData(appUserService.getAppUserMsg(appUser.getId()));
+        }
+        PageHelper.startPage(Integer.parseInt(page), 10);
         List<AppUser> appUserMsgList = appUserService.getAppUserMsgList(appUser);
-        return new ResponseData(appUserMsgList);
+        PageInfo<AppUser> pageInfo=new PageInfo<>(appUserMsgList);
+        long total = pageInfo.getTotal();
+        int pages = pageInfo.getPages();
+        int currentPage = Integer.parseInt(page);
+        return new ResponseData(appUserMsgList, currentPage,(int) total,pages);
     }
 
 
@@ -66,7 +82,7 @@ public class AppUserController extends BaseController {
      * @param response
      * @return
      */
-    @RequestMapping("/updateAppUser")
+    @RequestMapping(value = "/updateAppUser")
     @ResponseBody
     @RequiresPermissions("UserManager:save")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired

@@ -16,7 +16,7 @@ public interface CommodityService {
 
     void updateCommodityInfo(Commodity commodity);
 
-    public  List<AdPrice> getAdvertisementFeeInfo(String priceId);
+    List<Commodity> getReleaseCommodity(String videoId);
 
     public void insertCommodity(Commodity commodity);
 }

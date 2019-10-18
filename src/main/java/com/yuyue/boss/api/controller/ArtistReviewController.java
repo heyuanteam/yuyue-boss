@@ -101,6 +101,7 @@ public class ArtistReviewController extends BaseController {
                     appUserMsg.setUserType("2");
                 if ("3".equals(appUserMsg.getUserType()))
                     appUserMsg.setUserType("4");
+                appUserMsg.setFrontCover("http://101.37.252.177:82/defaultFrontCover/defaultFrontCover.png");
                 appUserService.updateAppUser(appUserMsg);
             }
         }else {

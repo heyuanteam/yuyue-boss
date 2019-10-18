@@ -56,10 +56,20 @@ public class CommodityServiceImpl implements CommodityService {
         commodityMapper.updateCommodityInfo(commodity);
     }
 
+    /**
+     * 获取已投放的广告
+     * @param videoId
+     * @return
+     */
     @Override
-    public  List<AdPrice> getAdvertisementFeeInfo(String priceId){
-        return adPriceMapper.getAdvertisementFeeInfo(priceId);
+    public List<Commodity> getReleaseCommodity(String videoId) {
+        return commodityMapper.getReleaseCommodity(videoId);
     }
+
+//    @Override
+//    public  List<AdPrice> getAdvertisementFeeInfo(String priceId){
+//        return adPriceMapper.getAdvertisementFeeInfo(priceId);
+//    }
 
     @Override
     public void insertCommodity(Commodity commodity) {
