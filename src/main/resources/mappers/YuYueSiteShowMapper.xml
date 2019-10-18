@@ -57,7 +57,7 @@
     </update>
 
     <delete id="deleteSiteShow" parameterType="String">
-        DELETE FROM yuyue_site_show WHERE siteId = #{siteId}
+        DELETE FROM yuyue_site_show WHERE id = #{showId}
     </delete>
 
 

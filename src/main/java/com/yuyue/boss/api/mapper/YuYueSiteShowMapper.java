@@ -23,5 +23,5 @@ public interface YuYueSiteShowMapper extends MyBaseMapper<SiteShow> {
     void insertSiteShow(SiteShow siteShow);
 
     @Transactional
-    void deleteSiteShow(String showId);
+    void deleteSiteShow(@Param(value = "showId")String showId);
 }

@@ -104,7 +104,7 @@ public class YuYueSiteController extends BaseController{
      * @param response
      * @return
      */
-    @RequestMapping(value = "/editYuYueSite" , method = RequestMethod.GET)
+    @RequestMapping(value = "/editYuYueSite" , method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("scene:save")//具有 user:save 权限的用户才能访问此方法
     @LoginRequired
