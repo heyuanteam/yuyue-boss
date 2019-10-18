@@ -7,9 +7,11 @@ import java.util.List;
 public interface OrderService {
     Order getOrderById(String orderId);
 
-    List<Order> getOrderList(Order order);
-
     void  deleteOrderById(String id);
 
     void updateOrder(Order order);
+
+    List<Order> getOrderList(String orderNo, String realName, String mobile,
+                             String tradeType, String status, String startTime,
+                             String endTime, List<String> typeList);
 }

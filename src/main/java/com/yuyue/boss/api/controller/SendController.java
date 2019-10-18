@@ -142,9 +142,11 @@ public class SendController extends BaseController{
                 jPush.setMsgContent("艺人审核通知!");
                 jPush.setExtras("1");
                 List<String> stringList = new ArrayList<>();
-                log.info("极光别名=========="+appUserMsg.getJpushName());
-                stringList.add(appUserMsg.getJpushName());
-                return getJPush(jPush,stringList,map,0);
+                if (StringUtils.isNotEmpty(appUserMsg.getJpushName())){
+                    log.info("极光别名=========="+appUserMsg.getJpushName());
+                    stringList.add(appUserMsg.getJpushName());
+                    return getJPush(jPush,stringList,map,0);
+                }
             }
         } catch (Exception e) {
             log.info("极光广告商审核的通知失败！");
@@ -180,9 +182,11 @@ public class SendController extends BaseController{
                 jPush.setMsgContent(adReviewList.get(0).getBusinessLicense());
                 jPush.setExtras("2");
                 List<String> stringList = new ArrayList<>();
-                log.info("极光别名=========="+appUserMsg.getJpushName());
-                stringList.add(appUserMsg.getJpushName());
-                return getJPush(jPush,stringList,map,0);
+                if (StringUtils.isNotEmpty(appUserMsg.getJpushName())) {
+                    log.info("极光别名==========" + appUserMsg.getJpushName());
+                    stringList.add(appUserMsg.getJpushName());
+                    return getJPush(jPush, stringList, map, 0);
+                }
             }
         } catch (Exception e) {
             log.info("极光广告商审核的通知失败！");
@@ -223,7 +227,9 @@ public class SendController extends BaseController{
                         }
                     }
                 }
-                return getJPush(jPush,stringList,map,0);
+                if (CollectionUtils.isNotEmpty(stringList)){
+                    return getJPush(jPush,stringList,map,0);
+                }
             }
         } catch (Exception e) {
             log.info("极光关注人发视频的通知失败！");
@@ -266,12 +272,14 @@ public class SendController extends BaseController{
 
                 AppUser appUserMsg = appUserService.getAppUserMsg("","");
                 List<String> stringList = new ArrayList<>();
-                log.info("极光别名=========="+appUserMsg.getJpushName());
-                stringList.add(appUserMsg.getJpushName());
-                //修改现场极光状态
-                idList.get(0).setStatus("10B");
-                yuYueSiteService.updateYuYueSite(idList.get(0));
-                return getJPush(jPush,stringList,map,1);
+                if (StringUtils.isNotEmpty(appUserMsg.getJpushName())) {
+                    log.info("极光别名==========" + appUserMsg.getJpushName());
+                    stringList.add(appUserMsg.getJpushName());
+                    //修改现场极光状态
+                    idList.get(0).setStatus("10B");
+                    yuYueSiteService.updateYuYueSite(idList.get(0));
+                    return getJPush(jPush, stringList, map, 1);
+                }
             }
             return new ResponseData(CodeEnum.E_400.getCode(),"极光推送参数错误！");
         } catch (Exception e) {
@@ -317,9 +325,11 @@ public class SendController extends BaseController{
 
                 AppUser appUserMsg = appUserService.getAppUserMsg(authorId,"");
                 List<String> stringList = new ArrayList<>();
-                log.info("极光别名=========="+appUserMsg.getJpushName());
-                stringList.add(appUserMsg.getJpushName());
-                return getJPush(jPush,stringList,map,0);
+                if (StringUtils.isNotEmpty(appUserMsg.getJpushName())) {
+                    log.info("极光别名==========" + appUserMsg.getJpushName());
+                    stringList.add(appUserMsg.getJpushName());
+                    return getJPush(jPush, stringList, map, 0);
+                }
             }
         } catch (Exception e) {
             log.info("极光视频审核的通知失败！");
@@ -355,9 +365,11 @@ public class SendController extends BaseController{
                 jPush.setExtras("6");
 
                 List<String> stringList = new ArrayList<>();
-                log.info("极光别名=========="+appUserMsg.getJpushName());
-                stringList.add(appUserMsg.getJpushName());
-                return getJPush(jPush,stringList,map,0);
+                if (StringUtils.isNotEmpty(appUserMsg.getJpushName())) {
+                    log.info("极光别名==========" + appUserMsg.getJpushName());
+                    stringList.add(appUserMsg.getJpushName());
+                    return getJPush(jPush, stringList, map, 0);
+                }
             }
         } catch (Exception e) {
             log.info("极光广告审核的通知失败！");
