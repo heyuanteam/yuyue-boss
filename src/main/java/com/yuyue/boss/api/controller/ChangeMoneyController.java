@@ -61,7 +61,7 @@ public class ChangeMoneyController extends BaseController {
                 for (ChangeMoney changeMoney: changeMoneyList) {
                     AppUser appUserMsg = appUserService.getAppUserMsg(changeMoney.getSourceId(),"");
                     if (StringUtils.isNotEmpty(appUserMsg.getRealName())) {
-                        changeMoney.setYiName(appUserMsg.getRealName());
+                        changeMoney.setSourceName(appUserMsg.getRealName());
                         list.add(changeMoney);
                     }
                 }
@@ -88,9 +88,7 @@ public class ChangeMoneyController extends BaseController {
     public ResponseData editChangeMoney(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
         log.info("修改收益----------->>/changeMoney/editChangeMoney");
         Map<String, String> parameterMap = getParameterMap(request, response);
-        if (StringUtils.isEmpty(parameterMap.get("tradeType"))){
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "收益类型不可以为空！");
-        } else if (StringUtils.isEmpty(parameterMap.get("mobile"))){
+        if (StringUtils.isEmpty(parameterMap.get("mobile"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "收益手机号不可以为空！");
         } else if (StringUtils.isEmpty(parameterMap.get("status"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "收益状态不可以为空！");
@@ -108,7 +106,7 @@ public class ChangeMoneyController extends BaseController {
         }
 
         try {
-            changeMoneyService.updateChangeMoney(parameterMap.get("id"),parameterMap.get("money"),parameterMap.get("tradeType"),
+            changeMoneyService.updateChangeMoney(parameterMap.get("id"),parameterMap.get("money"),
                     parameterMap.get("note"),parameterMap.get("status"),parameterMap.get("mobile"));
             return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改收益成功！");
         } catch (Exception e) {

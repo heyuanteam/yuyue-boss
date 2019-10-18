@@ -23,8 +23,8 @@ public class ChangeMoneyServiceImpl implements ChangeMoneyService {
     }
 
     @Override
-    public void updateChangeMoney(String id, String money, String tradeType, String note, String status, String mobile) {
-        changeMoneyMapper.updateChangeMoney(id,money,tradeType,note,status,mobile);
+    public void updateChangeMoney(String id, String money, String note, String status, String mobile) {
+        changeMoneyMapper.updateChangeMoney(id,money,note,status,mobile);
     }
 
     @Override

@@ -19,10 +19,10 @@ public interface ChangeMoneyMapper extends MyBaseMapper<ChangeMoney> {
                                          @Param("note") String note,@Param("yiName") String yiName,
                                          @Param("startTime") String startTime,@Param("endTime") String endTime);
 
-    void updateChangeMoney(@Param("id") String id,@Param("money") String money,@Param("tradeType") String tradeType,
-                           @Param("note") String note,@Param("status") String status,@Param("mobile") String mobile);
+    void updateChangeMoney(@Param("id") String id,@Param("money") String money, @Param("note") String note,
+                           @Param("status") String status,@Param("mobile") String mobile);
 
     @Transactional
     @Delete("DELETE FROM yuyue_out_money WHERE id =#{id} ")
-    void delOutMoney(String id);
+    void delOutMoney(@Param("id") String id);
 }

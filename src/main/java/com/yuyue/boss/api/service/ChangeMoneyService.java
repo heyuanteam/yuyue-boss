@@ -11,7 +11,7 @@ public interface ChangeMoneyService {
                                          String mobile, String status, String note, String yiName,
                                          String startTime, String endTime);
 
-    void updateChangeMoney(String id, String money, String tradeType, String note, String status, String mobile);
+    void updateChangeMoney(String id, String money, String note, String status, String mobile);
 
     void delOutMoney(String id);
 }
