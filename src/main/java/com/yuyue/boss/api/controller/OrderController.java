@@ -13,13 +13,16 @@ import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/order" ,produces = "application/json; charset=UTF-8")
@@ -41,7 +44,7 @@ public class OrderController extends BaseController {
     @RequiresPermissions("OrderPayment:menu")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
     public ResponseData getAdReviewList(Order order, HttpServletRequest request, HttpServletResponse response){
-        getParameterMap(request,response);
+        Map<String, String> parameterMap = getParameterMap(request,response);
         log.info("查询订单-------------->>/order/getOrderList");
         String page=request.getParameter("page");
         if (StringUtils.isEmpty(page) || !page.matches("[0-9]+"))
@@ -52,7 +55,19 @@ public class OrderController extends BaseController {
        }
         else {
            PageHelper.startPage(Integer.parseInt(page), 10);
-           List<Order> orderList = orderService.getOrderList(order);
+           List<String> typeList = new ArrayList<>();
+           if (StringUtils.isNotEmpty(order.getType())) {
+               String[] split = order.getType().split(",");
+               for (int i = 0; i < split.length; i++) {
+                   typeList.add(split[i]);
+               }
+           }
+           if (CollectionUtils.isNotEmpty(typeList)) {
+               order.setTypeList(typeList);
+           }
+           List<Order> orderList = orderService.getOrderList(parameterMap.get("orderNo"),parameterMap.get("realName"),
+                   parameterMap.get("mobile"),parameterMap.get("tradeType"),parameterMap.get("status"),
+                   parameterMap.get("startTime"),parameterMap.get("endTime"),typeList);
            PageInfo<Order> pageInfo=new PageInfo<>(orderList);
            long total = pageInfo.getTotal();
            int pages = pageInfo.getPages();

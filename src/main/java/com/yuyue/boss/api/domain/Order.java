@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -47,5 +48,9 @@ public class Order implements Serializable {
     private String endTime;
     //用户信息
     private String realName;
+    //订单类型
+    private List<String> typeList;
+    //订单类型
+    private String type;
 
 }

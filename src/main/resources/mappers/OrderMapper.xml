@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yuyue.boss.api.mapper.OrderMapper" >
 
-    <select id="getOrderList" resultType="com.yuyue.boss.api.domain.Order" parameterType="String">
+    <select id="getOrderList" resultType="com.yuyue.boss.api.domain.Order" parameterType="map">
         select
         DATE_FORMAT(o.CREATE_TIME,'%Y-%m-%d %H:%i:%s') createTime,
         DATE_FORMAT(o.COMPLETE_TIME,'%Y-%m-%d %H:%i:%s') completeTime,
@@ -14,8 +14,15 @@
 
         <if test="orderNo != null and orderNo != ''"> and o.orderNo = #{orderNo} </if>
         <if test="tradeType != null and tradeType != ''"> and CONCAT(o.tradeType) like concat('%', #{tradeType}, '%') </if>
+
+        <if test="typeList!= null and typeList.size>0 ">
+            <foreach collection="typeList" item="item" index="index"  open="and o.tradeType in (" separator=","  close=")" >
+                #{item}
+            </foreach>
+            /*and CONCAT(o.tradeType) like concat('%', #{tradeType}, '%')*/
+        </if>
+
         <if test="realName != null and realName != ''"> and CONCAT(u.USER_REAL_NAME) like concat('%', #{realName}, '%') </if>
-        <if test="money != null and money != ''"> and   o.money = #{money} </if>
         <if test="mobile != null and mobile != ''"> and   CONCAT(o.mobile) like concat('%', #{mobile}, '%')  </if>
         <if test="status != null and status != ''"> and   o.status = #{status} </if>
         <if test=" startTime !=null and startTime!='' ">
@@ -24,12 +31,6 @@
         <if test=" endTime !=null and endTime!='' ">
             <![CDATA[ and	DATE_FORMAT(o.CREATE_TIME, '%Y-%m-%d %H:%i:%s') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i:%s')]]>
         </if>
-        <if test="statusCode != null and statusCode != '' "> and   o.statusCode = #{statusCode} </if>
-        <if test="note != null and note != '' "> and   o.note = #{note} </if>
-        <if test="responseCode != null and responseCode != '' "> and   o.responseCode = #{responseCode} </if>
-        <if test="responseMessage != null and responseMessage != '' "> and   o.responseMessage = #{responseMessage} </if>
-        <if test="merchantId != null and merchantId != '' "> and   o.merchantId = #{merchantId} </if>
-        <if test="sourceId != null and sourceId != '' "> and   o.sourceId = #{sourceId} </if>
         ORDER BY o.CREATE_TIME DESC
     </select>
 
