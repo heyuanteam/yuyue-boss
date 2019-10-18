@@ -47,7 +47,7 @@ public class MenuController extends BaseController {
     @RequiresPermissions("MenuManager:menu")
     @LoginRequired
     public ResponseData getMenuList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("获取系统菜单------------>>/system/getMenuList");
+        log.info("获取系统菜单------------>>/menu/getMenuList");
         Map<String, String> parameterMap = getParameterMap(request, response);
 //        Subject subject = SecurityUtils.getSubject();
 //        if(subject.isPermitted("video:menu3")){
@@ -78,7 +78,7 @@ public class MenuController extends BaseController {
     @RequiresPermissions("MenuManager:save")
     @LoginRequired
     public ResponseData addMenu(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("添加系统菜单------------>>/system/addMenu");
+        log.info("添加系统菜单------------>>/menu/addMenu");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("menuName"))) {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单名不可以为空！");
@@ -143,7 +143,7 @@ public class MenuController extends BaseController {
     @RequiresPermissions("MenuManager:save")
     @LoginRequired
     public ResponseData editMenu(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("修改系统菜单------------>>/system/editMenu");
+        log.info("修改系统菜单------------>>/menu/editMenu");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("id"))) {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单ID不可以为空！");
@@ -208,7 +208,7 @@ public class MenuController extends BaseController {
     @RequiresPermissions("MenuManager:remove")
     @LoginRequired
     public ResponseData delMenu(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("删除系统菜单------------>>/system/delMenu");
+        log.info("删除系统菜单------------>>/menu/delMenu");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("id"))) {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "菜单ID不可以为空！");

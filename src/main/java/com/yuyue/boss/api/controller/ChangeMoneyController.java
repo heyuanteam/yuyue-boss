@@ -47,7 +47,7 @@ public class ChangeMoneyController extends BaseController {
     @RequiresPermissions("profit:menu")
     @LoginRequired
     public ResponseData getChangeMoneyList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("获取收益记录---------->>/system/getChangeMoneyList");
+        log.info("获取收益记录---------->>/changeMoney/getChangeMoneyList");
         Map<String, String> parameterMap = getParameterMap(request, response);
         try {
             PageUtil.getPage(parameterMap.get("page"));
@@ -74,7 +74,7 @@ public class ChangeMoneyController extends BaseController {
     @RequiresPermissions("profit:save")
     @LoginRequired
     public ResponseData editChangeMoney(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("修改收益----------->>/system/editChangeMoney");
+        log.info("修改收益----------->>/changeMoney/editChangeMoney");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("tradeType"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "收益类型不可以为空！");
@@ -117,7 +117,7 @@ public class ChangeMoneyController extends BaseController {
     @RequiresPermissions("profit:remove")
     @LoginRequired
     public ResponseData delOutMoney(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("删除收益记录----------->>/system/delChangeMoney");
+        log.info("删除收益记录----------->>/changeMoney/delChangeMoney");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("id"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "收益记录id不可以为空！");

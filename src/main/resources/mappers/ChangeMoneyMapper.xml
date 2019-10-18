@@ -2,15 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yuyue.boss.api.mapper.ChangeMoneyMapper" >
 
-    <select id="getOrderList" resultType="com.yuyue.boss.api.domain.ChangeMoney" parameterType="map">
+    <select id="getOrderList" resultType="com.yuyue.boss.api.domain.ChangeMoney" parameterType="String">
         select b.*,
             DATE_FORMAT(b.CREATE_TIME,'%Y-%m-%d %H:%i:%s') createTime,
             DATE_FORMAT(b.COMPLETE_TIME,'%Y-%m-%d %H:%i:%s') completeTime,
-            (select a.USER_REAL_NAME from yuyue_merchant a,yuyue_change_money c where a.ID = c.merchantId) sourceName,
-            (select a.USER_REAL_NAME from yuyue_merchant a,yuyue_change_money c where a.ID = c.sourceId) yiName
+            (select a.USER_REAL_NAME from yuyue_merchant a where a.ID = b.merchantId) sourceName,
+            (select a.USER_REAL_NAME from yuyue_merchant a where a.ID = b.sourceId) yiName
 
-        from yuyue_change_money b,yuyue_merchant a
-        WHERE  1=1
+        <if test="sourceName != null and sourceName != '' or yiName != null and yiName != ''">
+            from yuyue_change_money b,yuyue_merchant a
+            WHERE  1=1
+        </if>
+        <if test="sourceName == null and sourceName == '' or yiName == null and yiName == ''">
+            from yuyue_change_money b
+            WHERE  1=1
+        </if>
 
         <if test="changeNo != null and changeNo != ''"> and b.changeNo = #{changeNo} </if>
         <if test="tradeType != null and tradeType != ''"> and CONCAT(b.tradeType) like concat('%', #{tradeType}, '%') </if>
