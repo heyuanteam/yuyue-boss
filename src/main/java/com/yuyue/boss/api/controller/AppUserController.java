@@ -63,7 +63,7 @@ public class AppUserController extends BaseController {
         if (StringUtils.isEmpty(page) || !page.matches("[0-9]+"))
             page = "1";
         if (StringUtils.isNotEmpty(appUser.getId())){
-            return new ResponseData(appUserService.getAppUserMsg(appUser.getId()));
+            return new ResponseData(appUserService.getAppUserMsg(appUser.getId(),""));
         }
         PageHelper.startPage(Integer.parseInt(page), 10);
         List<AppUser> appUserMsgList = appUserService.getAppUserMsgList(appUser);
