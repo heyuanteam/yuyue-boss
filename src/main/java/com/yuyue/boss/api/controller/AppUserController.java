@@ -37,7 +37,7 @@ public class AppUserController extends BaseController {
         log.info("获取用户信息-------------->>/userManager/getAppUserMsg");
         String id = request.getParameter("id");
 
-        return new ResponseData(appUserService.getAppUserMsg(id));
+        return new ResponseData(appUserService.getAppUserMsg(id,""));
     }
 
     /**

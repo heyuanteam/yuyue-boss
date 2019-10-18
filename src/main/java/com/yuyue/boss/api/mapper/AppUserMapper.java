@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface AppUserMapper extends MyBaseMapper<AppUser> {
 
-    AppUser getAppUserMsg(@Param("id") String id);
+    AppUser getAppUserMsg(@Param("id") String id,@Param("phone") String phone);
 
 
     List<AppUser> getAppUserMsgList(AppUser appUser);

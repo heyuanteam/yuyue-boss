@@ -109,20 +109,25 @@ public class SystemController extends BaseController {
             user.setPhone(parameterMap.get("phone"));
             user.setCreateUserId(systemUser.getId());
 
-            AppUser appUserMsg = appUserService.getAppUserMsg(user.getId());
-            if (StringUtils.isNull(appUserMsg)){
-                String uuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
-                String salt = RandomSaltUtil.generetRandomSaltCode(4);
-                AppUser appUser = new AppUser();
-                appUser.setId(uuid);
-                appUser.setUserNo(RandomSaltUtil.randomNumber(15));
-                appUser.setNickName(parameterMap.get("phone"));
-                appUser.setRealName(parameterMap.get("phone"));
-                appUser.setPhone(parameterMap.get("phone"));
-                appUser.setPassword(MD5Utils.getMD5Str("123456" + salt));
-                appUser.setSalt(salt);//盐
-                appUserService.insertAppUser(appUser);
+            AppUser appUserMsg = appUserService.getAppUserMsg(user.getId(),"");
+            AppUser app = appUserService.getAppUserMsg("",parameterMap.get("phone"));
+
+            String uuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
+            String salt = RandomSaltUtil.generetRandomSaltCode(4);
+            AppUser appUser = new AppUser();
+            appUser.setId(uuid);
+            appUser.setUserNo(RandomSaltUtil.randomNumber(15));
+            appUser.setNickName(parameterMap.get("phone"));
+            appUser.setRealName(parameterMap.get("phone"));
+            appUser.setPhone(parameterMap.get("phone"));
+            appUser.setPassword(MD5Utils.getMD5Str(parameterMap.get("password") + salt));
+            appUser.setSalt(salt);//盐
+            if (StringUtils.isNotNull(appUserMsg)){
+                user.setId(appUserMsg.getId());
+            } else if (StringUtils.isNotNull(app)){
+                user.setId(app.getId());
             }
+            appUserService.insertAppUser(appUser);
             loginService.insertSystemUser(user);
 
             List<SystemMenu> menuList = loginService.getMenu("",0,"","","");

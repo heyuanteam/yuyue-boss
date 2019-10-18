@@ -4,10 +4,12 @@
 
     <!-- 获取提现记录 -->
     <select id="getOutMoneyList" resultType="com.yuyue.boss.api.domain.OutMoney" parameterType="String">
-        SELECT b.*,DATE_FORMAT(b.CREATE_TIME, '%Y-%m-%d %H:%i:%s') createTime,
+        SELECT b.*,c.USER_NICK_NAME userName,
+                DATE_FORMAT(b.CREATE_TIME, '%Y-%m-%d %H:%i:%s') createTime,
                 DATE_FORMAT(b.COMPLETE_TIME, '%Y-%m-%d %H:%i:%s') completeTime
-        from yuyue_out_money b where 1=1
+        from yuyue_out_money b,yuyue_merchant c where 1=1 and b.merchantId = c.ID
         <if test="realName!=null and realName!=''">and b.realName like concat('%', #{realName}, '%') </if>
+        <if test="userName!=null and userName!=''">and c.USER_NICK_NAME like concat('%', #{userName}, '%') </if>
         <if test="status!=null and status!='' ">  and b.`status` = #{status}  </if>
         <if test="outNo!=null and outNo!='' ">  and b.`outNo` = #{outNo}  </if>
         <if test="tradeType!=null and tradeType!='' ">  and b.`tradeType` = #{tradeType}  </if>

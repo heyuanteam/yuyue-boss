@@ -13,7 +13,7 @@ public interface OutMoneyMapper extends MyBaseMapper<OutMoney> {
 
     List<OutMoney> getOutMoneyList(@Param("id")String id,@Param("tradeType") String tradeType,@Param("status") String status,
                                    @Param("realName")String realName,@Param("startTime") String startTime,
-                                   @Param("endTime") String endTime,@Param("outNo") String outNo);
+                                   @Param("endTime") String endTime,@Param("outNo") String outNo,@Param("userName") String userName);
 
     void updateOutMoney(@Param("id")String id,@Param("tradeType") String tradeType,@Param("money") String money,
                         @Param("status") String status, @Param("realName")String realName);
