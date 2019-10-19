@@ -124,7 +124,7 @@ public class OutMoneyController extends BaseController {
         List<OutMoney> outMoneyList = outMoneyService.getOutMoneyList(parameterMap.get("id"),"","","",
                 "","","","");
         if (CollectionUtils.isEmpty(outMoneyList)){
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "提现记录存在！");
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "提现记录不存在！");
         }
         try {
             outMoneyService.delOutMoney(parameterMap.get("id"));
