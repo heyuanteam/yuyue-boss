@@ -16,6 +16,7 @@ import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
 
 
+import com.yuyue.boss.enums.Variables;
 import com.yuyue.boss.utils.ResultJSONUtils;
 import com.yuyue.boss.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -188,11 +189,9 @@ public class VideoController extends BaseController {
             return new ResponseData(CodeEnum.SUCCESS.getCode(),"未查询该视频！！");
         else{
             videoService.deleteVideoById(ResultJSONUtils.getHashValue("yuyue_upload_file_",authorId),id);
-            String[] split = videoInfoList.get(0).getFilesPath().split("8888");
-           // http://101.37.252.177:8888/group1/M00/00/04/rBDoeV2IWPqASGlcACTDBUNyDd8640.mp4
-            this.storageClient.deleteFile(split[1]);
+            String[] split = videoInfoList.get(0).getFilesPath().split("group1/");
             log.info(split[1]);
-
+            this.storageClient.deleteFile(Variables.groupName,split[1]);
         }
 
         return new ResponseData(CodeEnum.SUCCESS);

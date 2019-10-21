@@ -227,7 +227,7 @@ public class SystemController extends BaseController {
         if (StringUtils.isNotEmpty(parameterMap.get("id"))) {
             List<SystemUser> list = loginService.getSystemUser("", "", "",parameterMap.get("id"),"");
             if (CollectionUtils.isEmpty(list)) {
-                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "搜索的不存在！");
+                return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "删除系统用户不存在！");
             }
         }
         try {

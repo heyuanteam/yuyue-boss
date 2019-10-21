@@ -12,7 +12,7 @@ public class Variables {
     public static final String ip_home = "http://101.37.252.177:8888";
 
     //组名，跟你在fastdfs配置文件中的一致
-    public static final String groupName = "/group1";
+    public static final String groupName = "group1";
 
 
     //默认文件格式，后缀名,设置上传后在fastdfs存储的格式，你可以改成其它格式图片，fastdfs只支持几种常用格式的，自己百度可以查查，jpg和png都是可以的

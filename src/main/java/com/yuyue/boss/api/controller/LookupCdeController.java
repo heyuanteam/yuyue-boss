@@ -330,7 +330,7 @@ public class LookupCdeController extends BaseController {
         }
         List<LookupCdeConfig> menuList = lookupCdeService.getLookupCdeList("",parameterMap.get("id"));
         if (CollectionUtils.isEmpty(menuList)){
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "搜索的不存在！");
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "删除系统字典下级不存在！");
         }
         try {
             lookupCdeService.delLookupCdeList(parameterMap.get("id"));
