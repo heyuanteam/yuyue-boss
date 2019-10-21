@@ -1,6 +1,7 @@
 package com.yuyue.boss.api.mapper;
 
 import com.yuyue.boss.api.domain.UploadFile;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,4 +29,12 @@ public interface VideoMapper extends MyBaseMapper<UploadFile> {
 
     @Transactional
     void deleteVideoById(@Param(value = "tableName")String tableName,@Param(value = "id")String id);
+
+    @Transactional
+    @Delete("delete from yuyue_video_barrage where VIDEO_ID  = #{videoId}")
+    void deleteBarrage(@Param(value = "videoId")String videoId);
+
+    @Transactional
+    @Delete("delete from yuyue_user_comment where VIDEO_ID  = #{videoId}")
+    void deleteComment(@Param(value = "videoId")String videoId);
 }
