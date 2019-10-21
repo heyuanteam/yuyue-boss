@@ -1,5 +1,6 @@
 package com.yuyue.boss.utils;
 
+import com.yuyue.boss.enums.Variables;
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacv.*;
 
@@ -21,7 +22,7 @@ public class GetImageFromVideoUtil {
             upload.mkdirs();
         }
         String targerFilePath = path + "/videoImage";
-        String s = randomGrabberFFmpegImage("http://101.37.252.177:8888/group1/M00/00/08/rBDoeV2lhdCARsu8AGh51FLK7-A759.mp4", targerFilePath, "1236");
+        String s = randomGrabberFFmpegImage(Variables.ip_home+"/group1/M00/00/08/rBDoeV2lhdCARsu8AGh51FLK7-A759.mp4", targerFilePath, "1236");
         return s;
     }
 
