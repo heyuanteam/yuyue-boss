@@ -170,9 +170,18 @@ public class SimpleTest {
         System.out.println(commodity.getStartDate());*/
 
         /*http://101.37.252.177:8888/group1/M00/00/04/rBDoeV2IWPqASGlcACTDBUNyDd8640.mp4*/
-        String s ="http://101.37.252.177:8888/group1/M00/00/04/rBDoeV2IWPqASGlcACTDBUNyDd8640.mp4";
+       /* String s ="http://101.37.252.177:8888/group1/M00/00/04/rBDoeV2IWPqASGlcACTDBUNyDd8640.mp4";
         String[] split = s.split("8888");
         System.out.println("前端:"+split[0]+"     后段："+split[1]);
+        String[] strings=s.split("/",s.lastIndexOf("/"));
+        String[] split1 = s.split("/");
+        int i = strings.length;
+        System.out.println( strings.length);
+/var/www/html/videoImage
+        System.out.println(strings[i-1]);
+
+        System.out.println("xin:"+split1[i-1]);*/
+
 
     }
 

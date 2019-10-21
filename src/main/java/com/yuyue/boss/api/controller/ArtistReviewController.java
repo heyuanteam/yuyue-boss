@@ -121,13 +121,20 @@ public class ArtistReviewController extends BaseController {
                     uploadFile.setFilesPath(artistReviewList.get(0).getVideoAddress());
                     uploadFile.setDescription(artistReviewList.get(0).getDescription());
                     String image = null;
+                    if (StringUtils.isEmpty(artistReviewList.get(0).getVideoAddress())){
+                        return new ResponseData("视频路径为空");
+                    }
                     try {
-                        image = GetImageFromVideoUtil.getImage();
+                        image = GetImageFromVideoUtil.getImage(artistReviewList.get(0).getVideoAddress());
+                        String imageName = image.split("html")[1];
+                        System.out.println(image);
+                        System.out.println(imageName);
+                        uploadFile.setVideoAddress("http://101.37.252.177:8088"+imageName);
                     } catch (FrameGrabber.Exception e) {
                         e.printStackTrace();
-                        return new ResponseData("生成视频第一帧图片失败");
+                        return new ResponseData("生成视频第一帧图片失败（路径错误）");
                     }
-                    uploadFile.setVideoAddress(image);
+
                     uploadFile.setTableName(ResultJSONUtils.getHashValue("yuyue_upload_file_",appUserMsg.getId()));
                     System.out.println(uploadFile);
                     videoService.insertVideo(uploadFile);

@@ -10,18 +10,21 @@ import java.io.IOException;
 
 public class GetImageFromVideoUtil {
 
-    public  static String getImage() throws FrameGrabber.Exception {
+    public  static String getImage(String videoPath) throws FrameGrabber.Exception {
 
         //    randomGrabberFFmpegImage("C:/videotest\\小姐姐视频.mp4", "C:\\videotest", "111");
         //"http:\\101.37.252.177:82/image/"
         //String targerFilePath = "http:" + File.separator +  "101.37.252.177:82" + File.separator + "videoImage" ;
-        String path = System.getProperty("user.dir").replace("bin", "webapps");
+        //String path = System.getProperty("user.dir").replace("bin", "webapps");
+        //http://101.37.252.177:8888/group1/M00/00/09/rBDoeV2oDq-AWwrmAT1g9aO4YkE110.mp4
+        String path = "/var/www/html";
         File upload= new File(path,"/videoImage");
         if(!upload.exists()){
             upload.mkdirs();
         }
         String targerFilePath = path + "/videoImage";
-        String s = randomGrabberFFmpegImage("http://101.37.252.177:8888/group1/M00/00/08/rBDoeV2lhdCARsu8AGh51FLK7-A759.mp4", targerFilePath, "1236");
+        String[] split = targerFilePath.split("/");
+        String s = randomGrabberFFmpegImage(videoPath, targerFilePath, split[split.length - 1]);
         return s;
     }
 
@@ -70,7 +73,7 @@ public class GetImageFromVideoUtil {
         Java2DFrameConverter converter =new Java2DFrameConverter();
         String imageMat ="jpg";
         String FileName =targerFilePath + File.separator +targetFileName +"." +imageMat;
-        System.out.println(FileName);
+
         BufferedImage image =converter.getBufferedImage(f);
         System.out.println("width:" + image.getWidth());
         System.out.println("height:" + image.getHeight());
