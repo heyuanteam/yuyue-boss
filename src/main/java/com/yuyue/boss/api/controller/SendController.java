@@ -56,12 +56,12 @@ public class SendController extends BaseController{
     //极光推送类型
     private static final Map<String, Object> sendMap = new HashMap<>();
     static {
-        sendMap.put("1","艺人审核的通知");//不需要参数
-        sendMap.put("2","广告商审核的通知");//不需要参数
-        sendMap.put("3","关注人发视频的通知");//需要参数
-        sendMap.put("4","现场详情的通知");//需要参数
-        sendMap.put("5","视频审核的通知");//不需要参数
-        sendMap.put("6","广告审核的通知");//不需要参数
+        sendMap.put("1","艺人审核通知");//不需要参数
+        sendMap.put("2","广告商审核通知");//不需要参数
+        sendMap.put("3","关注人发视频通知");//需要参数
+        sendMap.put("4","现场详情通知");//需要参数
+        sendMap.put("5","视频审核通知");//不需要参数
+        sendMap.put("6","广告审核通知");//不需要参数
     }
 
     /**
@@ -135,7 +135,7 @@ public class SendController extends BaseController{
             if (StringUtils.isNotNull(artistReview)){
                 Map<String, String> map = Maps.newHashMap();
                 map.put("type","1");
-                map.put("notice","艺人审核的通知");
+                map.put("notice","艺人审核通知");
                 jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
                 jPush.setNotificationTitle("您好!"+artistReview.getTeamName()+"艺人审核"+str);
                 jPush.setMsgTitle(artistReview.getDescription());
@@ -175,7 +175,7 @@ public class SendController extends BaseController{
             if (CollectionUtils.isNotEmpty(adReviewList)){
                 Map<String, String> map = Maps.newHashMap();
                 map.put("type","2");
-                map.put("notice","广告商审核的通知");
+                map.put("notice","广告商审核通知");
                 jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
                 jPush.setNotificationTitle("您好!"+adReviewList.get(0).getPhone()+"广告商审核"+str);
                 jPush.setMsgTitle(adReviewList.get(0).getMerchantName());
@@ -213,7 +213,7 @@ public class SendController extends BaseController{
                 jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
                 jPush.setNotificationTitle("您关注的"+appUserMsg.getNickName()+"发视频啦!");
                 jPush.setMsgTitle(appUserMsg.getNickName()+"发视频啦!");
-                jPush.setMsgContent("关注人发视频的通知!");
+                jPush.setMsgContent("关注人发视频通知!");
                 jPush.setExtras("3");
 
                 List<String> stringList = new ArrayList<>();
@@ -262,7 +262,7 @@ public class SendController extends BaseController{
             if (CollectionUtils.isNotEmpty(idList)) {
                 Map<String, String> map = Maps.newHashMap();
                 map.put("type","4");
-                map.put("notice","现场详情的通知");
+                map.put("notice","现场详情通知");
                 map.put("sceneId",parameterMap.get("id"));
                 jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
                 jPush.setNotificationTitle(idList.get(0).getTitle());
@@ -316,10 +316,10 @@ public class SendController extends BaseController{
             if (CollectionUtils.isNotEmpty(videoList)){
                 Map<String, String> map = Maps.newHashMap();
                 map.put("type","5");
-                map.put("notice","视频审核的通知");
+                map.put("notice","视频审核通知");
                 jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
                 jPush.setNotificationTitle("您好!"+videoList.get(0).getFilesName()+"视频审核"+str);
-                jPush.setMsgTitle("视频审核的通知");
+                jPush.setMsgTitle("视频审核通知");
                 jPush.setMsgContent(videoList.get(0).getTitle());
                 jPush.setExtras("5");
 
@@ -357,7 +357,7 @@ public class SendController extends BaseController{
             if (StringUtils.isNotNull(appUserMsg)){
                 Map<String, String> map = Maps.newHashMap();
                 map.put("type","6");
-                map.put("notice","广告审核的通知");
+                map.put("notice","广告审核通知");
                 jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
                 jPush.setNotificationTitle("您好!"+commodity.getCommodityName()+"广告审核"+str);
                 jPush.setMsgTitle(commodity.getCommodityName());
