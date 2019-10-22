@@ -48,7 +48,7 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public void deleteVideoById(String tableName,String authorId) {
         System.out.println(ResultJSONUtils.getHashValue("yuyue_upload_file_", authorId));
-        videoMapper.deleteVideoById(ResultJSONUtils.getHashValue("yuyue_upload_file_",authorId),authorId);
+        videoMapper.deleteVideoById(tableName,authorId);
 
     }
 }

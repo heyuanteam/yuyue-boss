@@ -12,6 +12,7 @@ import com.yuyue.boss.api.service.VideoService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.GetImageFromVideoUtil;
+import com.yuyue.boss.utils.GetImageUtil;
 import com.yuyue.boss.utils.ResultJSONUtils;
 import com.yuyue.boss.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -124,22 +125,23 @@ public class ArtistReviewController extends BaseController {
                     if (StringUtils.isEmpty(artistReviewList.get(0).getVideoAddress())){
                         return new ResponseData("视频路径为空");
                     }
-                    try {
+                    /* try {
                         image = GetImageFromVideoUtil.getImage(artistReviewList.get(0).getVideoAddress());
                         String imageName = image.split("html")[1];
                         System.out.println(image);
                         System.out.println(imageName);
-                        uploadFile.setVideoAddress("http://101.37.252.177:8088"+imageName);
+                        uploadFile.setVideoAddress("http://101.37.252.177:82"+imageName);
+                         GetImageUtil.getImage();
+
                     } catch (FrameGrabber.Exception e) {
                         e.printStackTrace();
                         return new ResponseData("生成视频第一帧图片失败（路径错误）");
-                    }
-
+                    }*/
+                    uploadFile.setVideoAddress("http://101.37.252.177:82/videoImage/videoImage.jpg");
                     uploadFile.setTableName(ResultJSONUtils.getHashValue("yuyue_upload_file_",appUserMsg.getId()));
                     System.out.println(uploadFile);
                     videoService.insertVideo(uploadFile);
                 }
-
             }
             sendController.sendShowJPush(artistReviewList.get(0),appUserMsg,status);
             artistReviewService.updateArtistReviewStatus(id,status);

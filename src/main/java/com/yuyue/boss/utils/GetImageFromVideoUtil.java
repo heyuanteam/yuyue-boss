@@ -16,15 +16,22 @@ public class GetImageFromVideoUtil {
         //"http:\\101.37.252.177:82/image/"
         //String targerFilePath = "http:" + File.separator +  "101.37.252.177:82" + File.separator + "videoImage" ;
         //String path = System.getProperty("user.dir").replace("bin", "webapps");
-        //http://101.37.252.177:8888/group1/M00/00/09/rBDoeV2oDq-AWwrmAT1g9aO4YkE110.mp4
+        //http://101.37.252.177/group1/M00/00/08/rBDoeV2lhW6AWJDLAGFmTB1M9vM260.mp4
+        // videoPath http://101.37.252.177/group1/M00/00/09/rBDoeV2oDq-AWwrmAT1g9aO4YkE110.mp4
         String path = "/var/www/html";
+
         File upload= new File(path,"/videoImage");
         if(!upload.exists()){
             upload.mkdirs();
         }
-        String targerFilePath = path + "/videoImage";
-        String[] split = targerFilePath.split("/");
-        String s = randomGrabberFFmpegImage(videoPath, targerFilePath, split[split.length - 1]);
+       // String targerFilePath = path + "/videoImage";
+       /* String[] split = videoPath.split(File.separator);
+        String videoName = split[split.length - 1];
+        String[] imageNames = videoName.split("\\.");
+         String imageName = imageName[0];
+        */
+
+        String s = randomGrabberFFmpegImage(videoPath, "/var/www/html/videoImage",RandomSaltUtil.generetRandomSaltCode(12));
         return s;
     }
 
@@ -46,7 +53,6 @@ public class GetImageFromVideoUtil {
                 f =converter.convert(rotate(src, Integer.valueOf(rotate)));
             }
             imagePath = doExecuteFrame(f, targerFilePath, targetFileName);
-
             i++;
            
         }
@@ -65,10 +71,17 @@ public class GetImageFromVideoUtil {
         return img;
     }
 
+    /**
+     * 文件路径，图片存放路径，图片名
+     * @param f
+     * @param targerFilePath
+     * @param targetFileName
+     * @return
+     */
     public static String doExecuteFrame(Frame f, String targerFilePath, String targetFileName) {
 
         if (null ==f ||null ==f.image) {
-            return null;
+            return "/var/www/html/videoImage/banner1@2x.png";
         }
         Java2DFrameConverter converter =new Java2DFrameConverter();
         String imageMat ="jpg";
@@ -84,7 +97,7 @@ public class GetImageFromVideoUtil {
             return output.getPath();
         }catch (IOException e) {
             e.printStackTrace();
-            return "生成视频第一帧图片失败！！";
+            return "/var/www/html/videoImage/banner1@2x.png";
         }
     }
 }
