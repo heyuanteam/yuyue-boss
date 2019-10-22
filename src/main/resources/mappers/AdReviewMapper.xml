@@ -46,7 +46,7 @@
         </if>
 
         <if test="applicationStartTime != null and applicationStartTime != '' and applicationEndTime != null and applicationEndTime != ''">
-            and   APPLICATION_TIME  between  #{applicationStartTime} and #{applicationEndTime}
+            and   APPLICATION_TIME  >   #{applicationStartTime} and  APPLICATION_TIME   <![CDATA[ < ]]> #{applicationEndTime}
         </if>
 
         <if test="id != null and id != '' ">

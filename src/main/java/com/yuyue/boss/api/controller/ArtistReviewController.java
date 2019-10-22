@@ -109,7 +109,6 @@ public class ArtistReviewController extends BaseController {
                 appUserService.updateAppUser(appUserMsg);
                 if (StringUtils.isNotEmpty(artistReviewList.get(0).getCategoryId()) &&
                         StringUtils.isNotEmpty(artistReviewList.get(0).getVideoAddress())){
-                    System.out.println(artistReviewList.get(0));
                     UploadFile uploadFile = new UploadFile();
                     uploadFile.setId(UUID.randomUUID().toString().replace("-","").toUpperCase());
                     uploadFile.setAuthorId(appUserMsg.getId());
@@ -120,7 +119,9 @@ public class ArtistReviewController extends BaseController {
                     uploadFile.setDescription(artistReviewList.get(0).getDescription());
                     String image = null;
                     if (StringUtils.isEmpty(artistReviewList.get(0).getVideoAddress())){
-                        return new ResponseData("视频路径为空");
+                       uploadFile.setVideoAddress("http://101.37.252.177:82/videoImage/videoImage.jpg");
+                    }else {
+                        uploadFile.setVideoAddress(artistReviewList.get(0).getImageAddress());
                     }
                     /* try {
                         image = GetImageFromVideoUtil.getImage(artistReviewList.get(0).getVideoAddress());
@@ -134,7 +135,6 @@ public class ArtistReviewController extends BaseController {
                         e.printStackTrace();
                         return new ResponseData("生成视频第一帧图片失败（路径错误）");
                     }*/
-                    uploadFile.setVideoAddress("http://101.37.252.177:82/videoImage/videoImage.jpg");
                     uploadFile.setTableName(ResultJSONUtils.getHashValue("yuyue_upload_file_",appUserMsg.getId()));
                     System.out.println(uploadFile);
                     videoService.insertVideo(uploadFile);

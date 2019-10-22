@@ -76,7 +76,7 @@
             and CONCAT(mainPerson) like concat('%', #{mainPerson}, '%')
         </if>
         <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
-            and START_TIME  &gt;=#{startTime}  AND END_TIME &lt;= #{endTime}
+            and START_TIME  &gt;=#{startTime}  AND END_TIME  <![CDATA[ < ]]> #{endTime}
         </if>
         ORDER BY START_TIME DESC
 

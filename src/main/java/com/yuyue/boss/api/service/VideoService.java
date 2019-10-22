@@ -17,7 +17,7 @@ public interface VideoService {
 
     void updateVideo(String id,String authorId,String status);
 
-    void deleteVideoById(String tableName,String authorId);
+    void deleteVideoById(String tableName,String id);
 
 
 

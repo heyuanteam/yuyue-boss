@@ -75,7 +75,7 @@
             and  STATUS = #{status}
         </if>
         <if test="startTime != null and endTime != ''">
-            and APPLICATION_DATE  &gt; #{startTime}  and APPLICATION_DATE num <![CDATA[ < ]]> #{endTime}/*and to_days(NOW()) &lt; to_days(END_DATE)*/
+            and APPLICATION_DATE  &gt; #{startTime}  and APPLICATION_DATE num <![CDATA[ < ]]> #{endTime}
         </if>
 
         ORDER BY   c.APPLICATION_DATE DESC

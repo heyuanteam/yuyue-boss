@@ -103,7 +103,7 @@
             and CONCAT(total.title) like concat('%', #{title}, '%')
         </if>
         <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
-            and  UPLOAD_TIME BETWEEN  #{startTime}  AND  #{endTime}
+            and  UPLOAD_TIME >  #{startTime}  AND  UPLOAD_TIME  <![CDATA[ < ]]> #{endTime}
         </if>
         ORDER BY total.UPLOAD_TIME DESC
 

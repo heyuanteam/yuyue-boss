@@ -29,10 +29,6 @@ public class ArtistReview implements Serializable {
     private String size;
     //    现住地
     private String address;
-    //    身份证正面
-    private String cardZUrl;
-    //    身份证反面
-    private String cardFUrl;
     //    分类ID
     private String categoryId;
     //    节目名称
@@ -41,6 +37,8 @@ public class ArtistReview implements Serializable {
     private String phone;
     //    视频地址
     private String videoAddress;
+    //视频图片路径
+    private String imageAddress;
     //    邮箱
     private String mail;
     //    微信

@@ -177,7 +177,9 @@ public class VideoController extends BaseController {
     public ResponseData deleteVideoById(HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
         log.info("视频审核 - 删除视频----------------->/video/deleteVideoById");
+        //视频id
         String id = request.getParameter("id");
+        //作者id
         String authorId = request.getParameter("authorId");
         log.info("视频更新------------>>/video/updateVideo");
         if (StringUtils.isEmpty(id) )

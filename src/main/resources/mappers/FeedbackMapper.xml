@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yuyue.boss.api.mapper.FeedbackMapper">
+
+    <!-- 查询单条记录 -->
+    <select id="getFeedback"  parameterType="String" resultType="com.yuyue.boss.api.domain.Feedback">
+        SELECT id ,
+        contact ,
+        pictureUrl ,
+        details ,
+        status ,
+        userId,
+        DATE_FORMAT(CREATE_TIME,'%Y-%m-%d %H:%i:%s') createTime
+        FROM yuyue_feedback where 1=1
+        <if test="startDate != null and startDate != ''  and endDate != null and endDate != ''">
+            and CREATE_TIME > #{startDate} AND CREATE_TIME <![CDATA[ < ]]> #{endDate}
+        </if>
+
+        <if test=" status != null and status != ''">
+            and status = #{status}
+        </if>
+        ORDER BY CREATE_TIME desc
+
+    </select>
+</mapper>

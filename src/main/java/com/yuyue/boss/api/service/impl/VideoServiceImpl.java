@@ -17,8 +17,6 @@ public class VideoServiceImpl implements VideoService {
     private VideoMapper videoMapper;
 
 
-
-
     @Override
     public List<UploadFile> getVideoInfoList() {
 
@@ -46,9 +44,10 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Override
-    public void deleteVideoById(String tableName,String authorId) {
-        System.out.println(ResultJSONUtils.getHashValue("yuyue_upload_file_", authorId));
-        videoMapper.deleteVideoById(tableName,authorId);
-
+    public void deleteVideoById(String tableName,String id) {
+        System.out.println(tableName);
+        videoMapper.deleteVideoById(tableName,id);
+        videoMapper.deleteBarrage(id);
+        videoMapper.deleteComment(id);
     }
 }

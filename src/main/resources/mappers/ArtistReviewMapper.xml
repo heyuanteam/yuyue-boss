@@ -8,12 +8,11 @@
         <result column="teamName" property="teamName"/>
         <result column="size" property="size"/>
         <result column="address" property="address"/>
-        <result column="cardZUrl" property="cardZUrl"/>
-        <result column="cardFUrl" property="cardFUrl"/>
         <result column="categoryId" property="categoryId"/>
         <result column="description" property="description"/>
         <result column="phone" property="phone"/>
         <result column="videoAddress" property="videoAddress"/>
+        <result column="imageAddress" property="imageAddress"/>
         <result column="mail" property="mail"/>
         <result column="weChat" property="weChat"/>
         <result column="status" property="status"/>
@@ -29,7 +28,7 @@
         </if>
 
         <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
-            and   CREATE_TIME  between  #{startDate} and #{endDate}
+            and CREATE_TIME   >  #{startDate}  AND    CREATE_TIME  <![CDATA[ < ]]>  #{endDate}
         </if>
 
         <if test="userId != null and userId != '' ">

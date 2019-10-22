@@ -161,7 +161,7 @@
         </if>
 
         <if  test="startTime != null and startTime != '' and endTime != null and endTime != ''">
-            and CREATE_TIME BETWEEN  #{startTime}  AND  #{endTime}
+            and CREATE_TIME   >  #{startTime}  AND    CREATE_TIME  <![CDATA[ < ]]>  #{endTime}
         </if>
 
         order  by  CREATE_TIME
