@@ -11,13 +11,10 @@ import com.yuyue.boss.api.service.ArtistReviewService;
 import com.yuyue.boss.api.service.VideoService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
-import com.yuyue.boss.utils.GetImageFromVideoUtil;
-import com.yuyue.boss.utils.GetImageUtil;
 import com.yuyue.boss.utils.ResultJSONUtils;
 import com.yuyue.boss.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.bytedeco.javacv.FrameGrabber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -131,7 +128,7 @@ public class ArtistReviewController extends BaseController {
                         System.out.println(image);
                         System.out.println(imageName);
                         uploadFile.setVideoAddress("http://101.37.252.177:82"+imageName);
-                         GetImageUtil.getImage();
+
 
                     } catch (FrameGrabber.Exception e) {
                         e.printStackTrace();

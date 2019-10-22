@@ -1,3 +1,4 @@
+/*
 package com.yuyue.boss.utils;
 
 import org.bytedeco.javacpp.opencv_core;
@@ -25,11 +26,13 @@ public class GetImageFromVideoUtil {
             upload.mkdirs();
         }
        // String targerFilePath = path + "/videoImage";
-       /* String[] split = videoPath.split(File.separator);
+       */
+/* String[] split = videoPath.split(File.separator);
         String videoName = split[split.length - 1];
         String[] imageNames = videoName.split("\\.");
          String imageName = imageName[0];
-        */
+        *//*
+
 
         String s = randomGrabberFFmpegImage(videoPath, "/var/www/html/videoImage",RandomSaltUtil.generetRandomSaltCode(12));
         return s;
@@ -54,16 +57,17 @@ public class GetImageFromVideoUtil {
             }
             imagePath = doExecuteFrame(f, targerFilePath, targetFileName);
             i++;
-           
         }
        
         ff.stop();
         return imagePath;
     }
 
-    /*
+    */
+/*
      * 旋转角度的
-     */
+     *//*
+
     public static opencv_core.IplImage rotate(opencv_core.IplImage src, int angle) {
         opencv_core.IplImage img = opencv_core.IplImage.create(src.height(), src.width(), src.depth(), src.nChannels());
         opencv_core.cvTranspose(src, img);
@@ -71,13 +75,15 @@ public class GetImageFromVideoUtil {
         return img;
     }
 
-    /**
+    */
+/**
      * 文件路径，图片存放路径，图片名
      * @param f
      * @param targerFilePath
      * @param targetFileName
      * @return
-     */
+     *//*
+
     public static String doExecuteFrame(Frame f, String targerFilePath, String targetFileName) {
 
         if (null ==f ||null ==f.image) {
@@ -101,3 +107,4 @@ public class GetImageFromVideoUtil {
         }
     }
 }
+*/
