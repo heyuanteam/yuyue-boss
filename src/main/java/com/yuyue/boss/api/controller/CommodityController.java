@@ -217,7 +217,7 @@ public class CommodityController extends BaseController {
             commodityService.updateCommodityInfo(releaseCommodity);
         }
         sendController.sendCommodityInfoJPush(commodity,commodity.getStatus());
-        return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"爆款发布成功发布！！");
+        return new ResponseData();
     }
 
     /**

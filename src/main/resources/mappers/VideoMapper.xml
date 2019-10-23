@@ -24,6 +24,7 @@
             <!-- 关联条件Employee的dept_id对应着Department的id -->
             <id column="userId" property="id"/>
             <result column="USER_NICK_NAME" property="nickName"/>
+            <result column="USER_REAL_NAME" property="realName"/>
             <result column="HEADP_URL" property="headpUrl"/>
             <result column="ATTENTION_TOTAL" property="attentionTotal"/>
             <result column="LIKE_TOTAL" property="likeTotal"/>
@@ -35,10 +36,10 @@
         SELECT total.* FROM
         (
         SELECT
-                b.id , UPLOAD_TIME,b.filesName,b.filesPath,
+                b.id ,UPLOAD_TIME,b.filesName,b.filesPath,
                 b.filesType,b.fileSize,b.authorId,b.description,b.playAmount,b.commentAmount,b.likeAmount,b.attentionAmount,
                 b.duration,b.title,b.videoAddress,b.categoryId,b.status,
-                m.ID "userId",m.USER_NICK_NAME,m.HEADP_URL,m.ATTENTION_TOTAL,m.LIKE_TOTAL,m.COMMENT_TOTAL
+                m.ID "userId",m.USER_NICK_NAME,m.USER_REAL_NAME,m.HEADP_URL,m.ATTENTION_TOTAL,m.LIKE_TOTAL,m.COMMENT_TOTAL
                 from yuyue_upload_file_0 b
                 left join yuyue_merchant m on b.authorId = m.ID
 
@@ -50,7 +51,7 @@
                 b1.id ,b1.UPLOAD_TIME,b1.filesName,b1.filesPath,
                 b1.filesType,b1.fileSize,b1.authorId,b1.description,b1.playAmount,b1.commentAmount,b1.likeAmount,b1.attentionAmount,
                 b1.duration,b1.title,b1.videoAddress,b1.categoryId,b1.status,
-                m1.ID "userId",m1.USER_NICK_NAME,m1.HEADP_URL,m1.ATTENTION_TOTAL,m1.LIKE_TOTAL,m1.COMMENT_TOTAL
+                m1.ID "userId",m1.USER_NICK_NAME,m1.USER_REAL_NAME,m1.HEADP_URL,m1.ATTENTION_TOTAL,m1.LIKE_TOTAL,m1.COMMENT_TOTAL
                 from yuyue_upload_file_1 b1
                 left join yuyue_merchant  m1 on b1.authorId = m1.ID
 
@@ -70,7 +71,7 @@
         b.id , UPLOAD_TIME,b.filesName,b.filesPath,
         b.filesType,b.fileSize,b.authorId,b.description,b.playAmount,b.commentAmount,b.likeAmount,b.attentionAmount,
         b.duration,b.title,b.videoAddress,b.categoryId,b.status,
-        m.ID "userId",m.USER_NICK_NAME,m.HEADP_URL,m.ATTENTION_TOTAL,m.LIKE_TOTAL,m.COMMENT_TOTAL
+        m.ID "userId",m.USER_NICK_NAME,m.USER_REAL_NAME,m.HEADP_URL,m.ATTENTION_TOTAL,m.LIKE_TOTAL,m.COMMENT_TOTAL
         from yuyue_upload_file_0 b
         left join yuyue_merchant m on b.authorId = m.ID
 
@@ -82,7 +83,7 @@
         b1.id ,b1.UPLOAD_TIME,b1.filesName,b1.filesPath,
         b1.filesType,b1.fileSize,b1.authorId,b1.description,b1.playAmount,b1.commentAmount,b1.likeAmount,b1.attentionAmount,
         b1.duration,b1.title,b1.videoAddress,b1.categoryId,b1.status,
-        m1.ID "userId",m1.USER_NICK_NAME,m1.HEADP_URL,m1.ATTENTION_TOTAL,m1.LIKE_TOTAL,m1.COMMENT_TOTAL
+        m1.ID "userId",m1.USER_NICK_NAME,m1.USER_REAL_NAME,m1.HEADP_URL,m1.ATTENTION_TOTAL,m1.LIKE_TOTAL,m1.COMMENT_TOTAL
         from yuyue_upload_file_1 b1
         left join yuyue_merchant  m1 on b1.authorId = m1.ID
 
@@ -95,6 +96,9 @@
         </if>
         <if test="categoryId != null and categoryId != ''">
             and total.categoryId = #{categoryId}
+        </if>
+        <if test="nickName != null and nickName != ''">
+            and CONCAT(total.USER_NICK_NAME) like concat('%', #{nickName}, '%')
         </if>
         <if test="status != null and status != ''">
             and  total.status = #{status}

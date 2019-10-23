@@ -53,4 +53,8 @@ public class Commodity implements Serializable {
     private String status;
     //价格
     private AdPrice adPrice;
+    //用户
+    private AppUser appUser;
+    //公司
+    private Advertisement advertisement;
 }

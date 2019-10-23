@@ -49,4 +49,7 @@ public class ArtistReview implements Serializable {
     private String startDate;
     //结束时间（该属性用于搜索）
     private String endDate;
+
+    //
+    private AppUser appUser;
 }

@@ -53,16 +53,18 @@ public class ArtistReviewController extends BaseController {
     public ResponseData getArtistReviewInfo(ArtistReview artistReview, HttpServletRequest request, HttpServletResponse response){
 
         getParameterMap(request,response);
-        log.info("获取艺人申请-------------->>/artistReview/getArtistReviewInfo");
+
         String page=request.getParameter("page");
         if (StringUtils.isEmpty(page) || !page.matches("[0-9]+"))
             page = "1";
         List<ArtistReview> artistReviewList = null ;
         if (StringUtils.isNull(artistReview)){
+            log.info("获取全部艺人申请-------------->>/artistReview/getArtistReviewInfo");
             PageHelper.startPage(Integer.parseInt(page), 10);
             artistReviewList = artistReviewService.getArtistReviewList();
 
         }else {
+            log.info("搜索艺人申请-------------->>/artistReview/getArtistReviewInfo");
             PageHelper.startPage(Integer.parseInt(page), 10);
             artistReviewList = artistReviewService.searchArtistReviewList(artistReview);
         }
@@ -119,7 +121,7 @@ public class ArtistReviewController extends BaseController {
                     uploadFile.setDescription(artistReviewList.get(0).getDescription());
                     String image = null;
                     if (StringUtils.isEmpty(artistReviewList.get(0).getVideoAddress())){
-                       uploadFile.setVideoAddress("http://101.37.252.177:82/videoImage/videoImage.jpg");
+                       uploadFile.setVideoAddress("http://101.37.252.177:82/videoImage/default_videoImage.jpg");
                     }else {
                         uploadFile.setVideoAddress(artistReviewList.get(0).getImageAddress());
                     }

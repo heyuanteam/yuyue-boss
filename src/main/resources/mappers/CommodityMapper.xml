@@ -27,6 +27,21 @@
                 <result column="AD_TOTAL_PRICE" property="adTotalPrice"/>
                 <result column="AD_DISCOUNT" property="adDiscount"/>
                 <result column="CREATE_TIME" property="createTime"/>
+           </association>
+            <association property="appUser" javaType="com.yuyue.boss.api.domain.AppUser">
+                <!-- 关联条件Employee的dept_id对应着Department的id -->
+                <id column="userId" property="id"/>
+                <result column="USER_NICK_NAME" property="nickName"/>
+                <result column="USER_REAL_NAME" property="realName"/>
+                <result column="HEADP_URL" property="headpUrl"/>
+            </association>
+            <association property="advertisement" javaType="com.yuyue.boss.api.domain.Advertisement">
+                <!-- 关联条件Employee的dept_id对应着Department的id -->
+                <id column="adId" property="id"/>
+                <result column="merchantName" property="merchantName"/>
+                <result column="merchantAddr" property="merchantAddr"/>
+                <result column="phone" property="phone"/>
+
             </association>
         </resultMap>
     <select id="getCommodityInfo" parameterType="String" resultMap="myCommodity">
@@ -44,38 +59,49 @@
         c.SPOKESPERSON_ID ,
         c.MERCHANT_ID ,
         c.VIDEO_ID,
-       /* c.APPLICATION_DATE,
-        c.START_DATE ,
-        c.END_DATE ,*/
+        c.STATUS ,
         DATE_FORMAT(c.APPLICATION_DATE ,'%Y-%m-%d %H:%i:%s') APPLICATION_DATE,
         DATE_FORMAT(c.START_DATE ,'%Y-%m-%d %H:%i:%s') START_DATE ,
         DATE_FORMAT(c.END_DATE ,'%Y-%m-%d %H:%i:%s') END_DATE ,
-        c.STATUS ,
-        p.ID ,
+
+        p.ID "priceId",
         p.AD_DURATION ,
         p.AD_TOTAL_PRICE ,
         p.AD_DISCOUNT ,
-        DATE_FORMAT(p.CREATE_TIME ,'%Y-%m-%d %H:%i:%s') CREATE_TIME
+        DATE_FORMAT(p.CREATE_TIME ,'%Y-%m-%d %H:%i:%s') CREATE_TIME,
+        u.ID "userId",
+        u.USER_NICK_NAME,
+        u.USER_REAL_NAME ,
+        u.HEADP_URL,
+        a.id "adId",
+        a.phone,
+        a.merchantAddr,
+        a.merchantName
 
-        FROM yuyue_commodity   c
-        LEFT join yuyue_commodity_price p on c.PRICE_ID = p.ID
+
+
+        FROM
+        yuyue_commodity c
+        LEFT JOIN yuyue_commodity_price p ON c.PRICE_ID = p.ID
+        LEFT JOIN yuyue_advertisement_info a ON c.MERCHANT_ID = a.userId
+        LEFT JOIN yuyue_merchant u ON c.MERCHANT_ID = u.id
         where 1=1
         <if test="commodityId != null and commodityId != ''">
-            and   COMMODITY_ID = #{commodityId}
+            and   c.COMMODITY_ID = #{commodityId}
         </if>
 
         <if test="commodityName != null and commodityName != ''">
-            and   COMMODITY_NAME = #{commodityName}
+            and   c.COMMODITY_NAME = #{commodityName}
         </if>
 
         <if test="category != null and category != ''">
-            and  CATEGORY = #{category}
+            and  c.CATEGORY = #{category}
         </if>
         <if test="status != null and status != ''">
-            and  STATUS = #{status}
+            and  c.STATUS = #{status}
         </if>
         <if test="startTime != null and endTime != ''">
-            and APPLICATION_DATE  &gt; #{startTime}  and APPLICATION_DATE num <![CDATA[ < ]]> #{endTime}
+            and c.APPLICATION_DATE  &gt; #{startTime}  and c.APPLICATION_DATE num <![CDATA[ < ]]> #{endTime}
         </if>
 
         ORDER BY   c.APPLICATION_DATE DESC

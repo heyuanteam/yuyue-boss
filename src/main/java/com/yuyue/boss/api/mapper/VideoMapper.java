@@ -17,7 +17,8 @@ public interface VideoMapper extends MyBaseMapper<UploadFile> {
 
     List<UploadFile> searchVideoInfo(@Param(value = "id")String id,@Param(value = "categoryId") String categoryId,
                                      @Param(value = "startTime")String startTime,@Param(value = "endTime")String endTime,
-                                     @Param(value = "title")String title,@Param(value = "status")String status);
+                                     @Param(value = "title")String title,@Param(value = "status")String status,
+                                     @Param(value = "nickName")String nickName);
 
     @Transactional
     void insertVideo(UploadFile uploadFile);

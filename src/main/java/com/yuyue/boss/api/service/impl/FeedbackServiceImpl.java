@@ -1,7 +1,8 @@
-package com.yuyue.boss.api.service;
+package com.yuyue.boss.api.service.impl;
 
 import com.yuyue.boss.api.domain.Feedback;
 import com.yuyue.boss.api.mapper.FeedbackMapper;
+import com.yuyue.boss.api.service.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

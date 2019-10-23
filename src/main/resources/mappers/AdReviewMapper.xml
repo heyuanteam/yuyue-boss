@@ -20,40 +20,49 @@
         <result column="telephone" property="telephone"/>
         <result column="APPLICATION_TIME" property="applicationTime"/>
         <result column="status" property="status"/>
+        <association property="appUser" javaType="com.yuyue.boss.api.domain.AppUser">
+            <!-- 关联条件Employee的dept_id对应着Department的id -->
+            <id column="merchantId" property="id"/>
+            <result column="USER_NICK_NAME" property="nickName"/>
+            <result column="USER_REAL_NAME" property="realName"/>
+            <result column="HEADP_URL" property="headpUrl"/>
+        </association>
     </resultMap>
 
     <select id="getAdReviewList" resultMap="myAdvertisement" parameterType="String">
         select
-        DATE_FORMAT(APPLICATION_TIME,'%Y-%m-%d %H:%i:%s') APPLICATION_TIME,
-        id,userId,merchantAddr,businessLicense,idCardZM,idCardFM,agencyCode,
-        merchantName,phone,produceAddr,fixedPhone,email,wx,qqNum,merchandiseUrl,telephone,status
+        DATE_FORMAT(a.APPLICATION_TIME,'%Y-%m-%d %H:%i:%s') APPLICATION_TIME,
+        a.id,a.userId,a.merchantAddr,a.businessLicense,a.idCardZM,a.idCardFM,a.agencyCode,
+        a.merchantName,a.phone,a.produceAddr,a.fixedPhone,a.email,a.wx,a.qqNum,a.merchandiseUrl,a.telephone,a.status,
+        m.ID "merchantId",m.USER_NICK_NAME,m.USER_REAL_NAME,m.HEADP_URL
 
-        from yuyue_advertisement_info
+        from yuyue_advertisement_info a
+        left join yuyue_merchant m on  a.userId= m.ID
         WHERE  1=1
         <if test="merchantName != null and merchantName != ''">
-            and CONCAT(merchantName) like concat('%', #{merchantName}, '%')
+            and CONCAT(a.merchantName) like concat('%', #{merchantName}, '%')
         </if>
 
         <if test="merchantAddr != null and merchantAddr != ''">
-            and CONCAT(merchantAddr) like concat('%', #{merchantAddr}, '%')
+            and CONCAT(a.merchantAddr) like concat('%', #{merchantAddr}, '%')
         </if>
         <if test="phone != null and phone != ''">
-            and   phone = #{phone}
+            and   a.phone = #{phone}
         </if>
 
         <if test="status != null and status != ''">
-            and   status = #{status}
+            and   a.status = #{status}
         </if>
 
         <if test="applicationStartTime != null and applicationStartTime != '' and applicationEndTime != null and applicationEndTime != ''">
-            and   APPLICATION_TIME  >   #{applicationStartTime} and  APPLICATION_TIME   <![CDATA[ < ]]> #{applicationEndTime}
+            and   a.APPLICATION_TIME  >   #{applicationStartTime} and  a.APPLICATION_TIME   <![CDATA[ < ]]> #{applicationEndTime}
         </if>
 
         <if test="id != null and id != '' ">
-            and   id = #{id}
+            and   a.id = #{id}
         </if>
 
-        ORDER BY APPLICATION_TIME DESC
+        ORDER BY a.APPLICATION_TIME DESC
 
     </select>
 

@@ -118,6 +118,7 @@
         ATTENTION_TOTAL attentionTotal,LIKE_TOTAL likeTotal,COMMENT_TOTAL commentTotal,education ,wechat ,signature,opendId,wechatName,
             DATE_FORMAT(CREATE_TIME ,'%Y-%m-%d %H:%i:%s') CREATE_TIME,DATE_FORMAT(UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') UPDATE_TIME,frontCover
             FROM yuyue_merchant
+
             where 1=1
                 <if test="id!=null and id!='' ">
                   and id=#{id}

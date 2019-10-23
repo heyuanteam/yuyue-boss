@@ -1,25 +1,44 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yuyue.boss.api.mapper.FeedbackMapper">
-
+    <resultMap type="com.yuyue.boss.api.domain.Feedback" id="Feedback">
+        <id column="fid" property="id"/>
+        <result column="contact" property="contact"/>
+        <result column="pictureUrl" property="pictureUrl"/>
+        <result column="details" property="details"/>
+        <result column="status" property="status"/>
+        <result column="userId" property="userId"/>
+        <association property="appUser" javaType="com.yuyue.boss.api.domain.AppUser">
+            <!-- 关联条件Employee的dept_id对应着Department的id -->
+            <result column="USER_NICK_NAME" property="nickName"/>
+            <result column="USER_REAL_NAME" property="realName"/>
+            <result column="HEADP_URL" property="headpUrl"/>
+        </association>
+    </resultMap>
     <!-- 查询单条记录 -->
-    <select id="getFeedback"  parameterType="String" resultType="com.yuyue.boss.api.domain.Feedback">
-        SELECT id ,
-        contact ,
-        pictureUrl ,
-        details ,
-        status ,
-        userId,
-        DATE_FORMAT(CREATE_TIME,'%Y-%m-%d %H:%i:%s') createTime
-        FROM yuyue_feedback where 1=1
+    <select id="getFeedback"  parameterType="String" resultMap="Feedback">
+        SELECT f.id "fid",
+        f.contact ,
+        f.pictureUrl ,
+        f.details ,
+        f.status ,
+        f.userId,
+        DATE_FORMAT(f.CREATE_TIME,'%Y-%m-%d %H:%i:%s') createTime,
+        m.USER_NICK_NAME ,
+        m.USER_REAL_NAME,
+        m.HEADP_URL
+
+        FROM yuyue_feedback f
+        left join yuyue_merchant m on  f.userId= m.ID
+        where 1=1
         <if test="startDate != null and startDate != ''  and endDate != null and endDate != ''">
-            and CREATE_TIME > #{startDate} AND CREATE_TIME <![CDATA[ < ]]> #{endDate}
+            and f.CREATE_TIME > #{startDate} AND f.CREATE_TIME <![CDATA[ < ]]> #{endDate}
         </if>
 
         <if test=" status != null and status != ''">
-            and status = #{status}
+            and f.status = #{status}
         </if>
-        ORDER BY CREATE_TIME desc
+        ORDER BY f.CREATE_TIME desc
 
     </select>
 </mapper>

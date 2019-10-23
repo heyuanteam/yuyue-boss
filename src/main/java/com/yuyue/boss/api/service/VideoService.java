@@ -9,7 +9,7 @@ public interface VideoService {
 
 
     List<UploadFile> searchVideoInfo(String id,String categoryId, String startTime,String endTime,
-                                        String title,String status);
+                                        String title,String status,String nickName);
 
     void insertVideo(UploadFile uploadFile);
 

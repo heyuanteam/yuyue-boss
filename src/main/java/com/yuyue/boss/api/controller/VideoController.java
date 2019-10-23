@@ -69,13 +69,14 @@ public class VideoController extends BaseController {
         String endTime = request.getParameter("endTime");
         String title = request.getParameter("title");
         String status = request.getParameter("status");
+        String  nickName= request.getParameter("nickName");
         if (StringUtils.isEmpty(page) || !page.matches("[0-9]+"))
             page = "1";
 
         List<UploadFile> uploadFiles=null;
         if (StringUtils.isEmpty(id) && StringUtils.isEmpty(categoryId)
                 && StringUtils.isEmpty(startTime) && StringUtils.isEmpty(endTime)
-                && StringUtils.isEmpty(title) && StringUtils.isEmpty(status) ){
+                && StringUtils.isEmpty(title) && StringUtils.isEmpty(status) & StringUtils.isEmpty(nickName)){
             log.info("获取视频信息------------>>/video/getVideoInfoList");
                 PageHelper.startPage(Integer.parseInt(page), 10);
                 uploadFiles = videoService.getVideoInfoList();
@@ -83,7 +84,7 @@ public class VideoController extends BaseController {
         }else {
             log.info("视频搜索------------>>/video/searchVideoInfo");
             PageHelper.startPage(Integer.parseInt(page), 10);
-            uploadFiles = videoService.searchVideoInfo(id,categoryId, startTime, endTime, title, status);
+            uploadFiles = videoService.searchVideoInfo(id,categoryId, startTime, endTime, title, status,nickName);
         }
         PageInfo<UploadFile> pageInfo=new PageInfo<>(uploadFiles);
         long total = pageInfo.getTotal();
@@ -148,7 +149,7 @@ public class VideoController extends BaseController {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"作者id为空！！");
         else if (StringUtils.isEmpty(status))
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"现场状态为空！！");
-        List<UploadFile> videoInfoList = videoService.searchVideoInfo(id,"","","","","");
+        List<UploadFile> videoInfoList = videoService.searchVideoInfo(id,"","","","","","");
         if (StringUtils.isEmpty(videoInfoList))return new ResponseData(CodeEnum.SUCCESS.getCode(),"未查询该视频！！");
         if ("10B".equals(status) || "10C".equals(status)){
 
@@ -186,7 +187,7 @@ public class VideoController extends BaseController {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"视频id为空！！");
         else if (StringUtils.isEmpty(authorId))
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"艺人id为空！！");
-        List<UploadFile> videoInfoList = videoService.searchVideoInfo(id,"","","","","");
+        List<UploadFile> videoInfoList = videoService.searchVideoInfo(id,"","","","","","");
         if (StringUtils.isEmpty(videoInfoList))
             return new ResponseData(CodeEnum.SUCCESS.getCode(),"未查询该视频！！");
         else{

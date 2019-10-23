@@ -16,62 +16,71 @@
         <result column="mail" property="mail"/>
         <result column="weChat" property="weChat"/>
         <result column="status" property="status"/>
+        <association property="appUser" javaType="com.yuyue.boss.api.domain.AppUser">
+            <!-- 关联条件Employee的dept_id对应着Department的id -->
+            <id column="artistId" property="id"/>
+            <result column="USER_NICK_NAME" property="nickName"/>
+            <result column="USER_REAL_NAME" property="realName"/>
+            <result column="HEADP_URL" property="headpUrl"/>
+        </association>
     </resultMap>
 
     <select id="searchArtistReviewList" resultMap="ArtistReview" parameterType="com.yuyue.boss.api.domain.ArtistReview">
-        select  *
-        from yuyue_show_name
+        select  artist.*,
+                m.ID "artistId",m.USER_NICK_NAME,m.USER_REAL_NAME,m.HEADP_URL
+        from yuyue_show_name artist
+        left join yuyue_merchant m on  artist.userId= m.ID
         WHERE  1=1
 
         <if test="id != null and id != '' ">
-            and   id = #{id}
+            and   artist.id = #{id}
         </if>
 
         <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
-            and CREATE_TIME   >  #{startDate}  AND    CREATE_TIME  <![CDATA[ < ]]>  #{endDate}
+            and artist.CREATE_TIME   >  #{startDate}  AND    artist.CREATE_TIME  <![CDATA[ < ]]>  #{endDate}
         </if>
 
         <if test="userId != null and userId != '' ">
-            and   userId = #{userId}
+            and   artist.userId = #{userId}
         </if>
 
         <if test="teamName != null and teamName != ''">
-            and CONCAT(teamName) like concat('%', #{teamName}, '%')
+            and CONCAT(artist.teamName) like concat('%', #{teamName}, '%')
         </if>
 
         <if test="size != null and size != ''">
-            and size = #{size}
+            and artist.size = #{size}
         </if>
 
         <if test="address != null and address != ''">
-            and CONCAT(address) like concat('%', #{address}, '%')
+            and CONCAT(artist.address) like concat('%', #{address}, '%')
         </if>
 
         <if test="categoryId != null and categoryId != '' ">
-            and   categoryId = #{categoryId}
+            and   artist.categoryId = #{categoryId}
         </if>
 
         <if test="description != null and description != ''">
-            and CONCAT(description) like concat('%', #{description}, '%')
+            and CONCAT(artist.description) like concat('%', #{description}, '%')
         </if>
 
         <if test="phone != null and phone != ''">
-            and   phone = #{phone}
+            and   artist.phone = #{phone}
         </if>
 
         <if test="videoAddress != null and videoAddress != ''">
-            and CONCAT(videoAddress) like concat('%', #{videoAddress}, '%')
+            and CONCAT(artist.videoAddress) like concat('%', #{videoAddress}, '%')
         </if>
 
         <if test="mail != null and mail != ''">
-            and CONCAT(mail) like concat('%', #{mail}, '%')
+            and CONCAT(artist.mail) like concat('%', #{mail}, '%')
         </if>
 
         <if test="weChat != null and weChat != ''">
-            and   weChat = #{weChat}
+            and   artist.weChat = #{weChat}
         </if>
         <if test="status != null and status != ''">
-            and   status = #{status}
+            and   artist.status = #{status}
         </if>
 
 
@@ -81,7 +90,11 @@
     </select>
 
     <select id="getArtistReviewList" resultMap = "ArtistReview">
-        SELECT * FROM yuyue_show_name
+        select  artist.*,
+                m.ID "artistId",m.USER_NICK_NAME,m.USER_REAL_NAME,m.HEADP_URL
+        from yuyue_show_name artist
+        left join yuyue_merchant m on  artist.userId= m.ID
+        WHERE  1=1
     </select>
 
 

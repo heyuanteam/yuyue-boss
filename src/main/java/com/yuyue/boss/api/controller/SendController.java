@@ -312,7 +312,7 @@ public class SendController extends BaseController{
         }
         try {
             log.info("极光视频审核的通知开始-------------->>start");
-            List<UploadFile> videoList = videoService.searchVideoInfo(id,"","","","","");
+            List<UploadFile> videoList = videoService.searchVideoInfo(id,"","","","","","");
             if (CollectionUtils.isNotEmpty(videoList)){
                 Map<String, String> map = Maps.newHashMap();
                 map.put("type","5");

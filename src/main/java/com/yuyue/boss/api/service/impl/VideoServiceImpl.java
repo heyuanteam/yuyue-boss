@@ -24,9 +24,9 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Override
-    public List<UploadFile> searchVideoInfo(String id,String categoryId, String startTime, String endTime, String title, String status) {
+    public List<UploadFile> searchVideoInfo(String id,String categoryId, String startTime, String endTime, String title, String status,String nickName) {
 
-        return  videoMapper.searchVideoInfo(id,categoryId, startTime, endTime, title, status);
+        return  videoMapper.searchVideoInfo(id,categoryId, startTime, endTime, title, status,nickName);
     }
 
     @Override

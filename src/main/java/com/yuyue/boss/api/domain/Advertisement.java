@@ -57,6 +57,8 @@ public class Advertisement implements Serializable {
     private String spreadTime;
     //广告审核状态
     private String status;
+    //商家信息
+    private AppUser appUser;
 
 
 }
