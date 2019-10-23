@@ -19,6 +19,6 @@ public interface OutMoneyMapper extends MyBaseMapper<OutMoney> {
                         @Param("status") String status, @Param("realName")String realName);
 
     @Transactional
-    @Delete("DELETE FROM yuyue_change_money WHERE id =#{id} ")
+    @Delete("DELETE FROM yuyue_out_money WHERE id =#{id} ")
     void delOutMoney(@Param("id")String id);
 }

@@ -11,7 +11,7 @@
         from yuyue_change_money b,yuyue_merchant a
         WHERE  1=1 and b.merchantId = a.ID
         <if test="changeNo != null and changeNo != ''"> and b.changeNo = #{changeNo} </if>
-        <if test="tradeType != null and tradeType != ''"> and CONCAT(b.tradeType) like concat('%', #{tradeType}, '%') </if>
+        <if test="tradeType != null and tradeType != ''"> and b.tradeType = #{tradeType} </if>
         <if test="yiName != null and yiName != ''"> and CONCAT(a.USER_REAL_NAME) like concat('%', #{yiName}, '%') </if>
         <if test="mobile != null and mobile != ''"> and CONCAT(b.mobile) like concat('%', #{mobile}, '%')</if>
         <if test="status != null and status != ''"> and   b.status = #{status} </if>

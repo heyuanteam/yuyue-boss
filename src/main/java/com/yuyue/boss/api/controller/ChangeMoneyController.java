@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 收益管理
+ * 账户流水
  */
 @RestController
 @RequestMapping(value = "/changeMoney" ,produces = "application/json; charset=UTF-8")
@@ -38,7 +38,7 @@ public class ChangeMoneyController extends BaseController {
     private AppUserService appUserService;
 
     /**
-     * 获取收益记录
+     * 获取账户流水记录
      * @param systemUser
      * @param request
      * @param response
@@ -49,7 +49,7 @@ public class ChangeMoneyController extends BaseController {
     @RequiresPermissions("profit:menu")
     @LoginRequired
     public ResponseData getChangeMoneyList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
-        log.info("获取收益记录---------->>/changeMoney/getChangeMoneyList");
+        log.info("获取账户流水记录---------->>/changeMoney/getChangeMoneyList");
         Map<String, String> parameterMap = getParameterMap(request, response);
         try {
             PageUtil.getPage(parameterMap.get("page"));
@@ -69,13 +69,13 @@ public class ChangeMoneyController extends BaseController {
             PageUtil pageUtil = new PageUtil(list);
             return new ResponseData(pageUtil);
         } catch (Exception e) {
-            log.info("===========>>>>>>获取收益记录失败！");
-            return new ResponseData(CodeEnum.E_400.getCode(),"获取收益记录失败！");
+            log.info("===========>>>>>>获取账户流水记录失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"获取账户流水记录失败！");
         }
     }
 
     /**
-     * 修改收益
+     * 修改账户流水
      * @param systemUser
      * @param request
      * @param response
@@ -102,21 +102,21 @@ public class ChangeMoneyController extends BaseController {
         List<ChangeMoney> changeMoneyList = changeMoneyService.getChangeMoneyList(parameterMap.get("id"),
                 "","","","","","","","","");
         if (CollectionUtils.isEmpty(changeMoneyList)){
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "收益记录不存在！");
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "账户流水记录不存在！");
         }
 
         try {
             changeMoneyService.updateChangeMoney(parameterMap.get("id"),parameterMap.get("money"),
                     parameterMap.get("note"),parameterMap.get("status"),parameterMap.get("mobile"));
-            return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改收益成功！");
+            return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改账户流水成功！");
         } catch (Exception e) {
-            log.info("===========>>>>>>修改收益失败！");
-            return new ResponseData(CodeEnum.E_400.getCode(),"修改收益失败！");
+            log.info("===========>>>>>>修改账户流水失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"修改账户流水失败！");
         }
     }
 
     /**
-     * 删除收益记录
+     * 删除账户流水记录
      * @param systemUser
      * @param request
      * @param response
@@ -130,19 +130,19 @@ public class ChangeMoneyController extends BaseController {
         log.info("删除收益记录----------->>/changeMoney/delChangeMoney");
         Map<String, String> parameterMap = getParameterMap(request, response);
         if (StringUtils.isEmpty(parameterMap.get("id"))){
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "收益记录id不可以为空！");
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "账户流水记录id不可以为空！");
         }
         List<ChangeMoney> changeMoneyList = changeMoneyService.getChangeMoneyList(parameterMap.get("id"),
                 "","","","","","","","","");
         if (CollectionUtils.isEmpty(changeMoneyList)){
-            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "收益记录不存在！");
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "账户流水记录不存在！");
         }
         try {
             changeMoneyService.delOutMoney(parameterMap.get("id"));
-            return new ResponseData(CodeEnum.SUCCESS.getCode(), "删除收益记录成功！");
+            return new ResponseData(CodeEnum.SUCCESS.getCode(), "删除账户流水记录成功！");
         } catch (Exception e) {
-            log.info("===========>>>>>>删除收益记录失败！");
-            return new ResponseData(CodeEnum.E_400.getCode(),"删除收益记录失败！");
+            log.info("===========>>>>>>删除账户流水记录失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"删除账户流水记录失败！");
         }
     }
 
