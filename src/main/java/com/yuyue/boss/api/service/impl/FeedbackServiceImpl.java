@@ -18,10 +18,10 @@ public class FeedbackServiceImpl implements FeedbackService {
         return feedbackMapper.getFeedback(startDate,endDate,status);
     }
 
-    @Override
-    public List<Feedback> getAllFeedback() {
-        return feedbackMapper.getAllFeedback();
-    }
+//    @Override
+//    public List<Feedback> getAllFeedback() {
+//        return feedbackMapper.getAllFeedback();
+//    }
 
     @Override
     public void deleteFeedback(String id) {

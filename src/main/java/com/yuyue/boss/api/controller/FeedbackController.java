@@ -37,23 +37,15 @@ public class FeedbackController extends BaseController {
     public ResponseData getFeedbackInfo(HttpServletRequest request, HttpServletResponse response){
 
         getParameterMap(request,response);
-
+        log.info("获取用户反馈-------------->>/feedback/getFeedbackInfo");
         String page=request.getParameter("page");
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
         String status = request.getParameter("status");
         if (StringUtils.isEmpty(page) || !page.matches("[0-9]+"))
             page = "1";
-        List<Feedback> feedback = null;
-        if (StringUtils.isEmpty(startDate) && StringUtils.isEmpty(endDate) && StringUtils.isEmpty(status)){
-            log.info("获取用户反馈-------------->>/feedback/getFeedbackInfo");
-            PageHelper.startPage(Integer.parseInt(page), 10);
-            feedback = feedbackService.getAllFeedback();
-        }else {
-            log.info("搜索用户反馈-------------->>/feedback/getFeedbackInfo");
-            PageHelper.startPage(Integer.parseInt(page), 10);
-            feedback = feedbackService.getFeedback(startDate, endDate, status);
-        }
+        PageHelper.startPage(Integer.parseInt(page), 10);
+        List<Feedback> feedback =  feedbackService.getFeedback(startDate, endDate, status);;
         PageInfo<Feedback> pageInfo=new PageInfo<>(feedback);
         long total = pageInfo.getTotal();
         int pages = pageInfo.getPages();

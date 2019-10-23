@@ -17,8 +17,8 @@ public interface FeedbackMapper extends MyBaseMapper<Feedback> {
     List<Feedback> getFeedback(@Param("startDate") String startDate, @Param("endDate") String endDate,
                                @Param("status") String status);
 
-    @Select("SELECT * FROM yuyue_feedback ")
-    List<Feedback> getAllFeedback();
+//    @Select("SELECT * FROM yuyue_feedback ")
+//    List<Feedback> getAllFeedback();
 
     @Transactional
     @Select("delete from yuyue_feedback where id = #{id}")

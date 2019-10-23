@@ -8,7 +8,7 @@ public interface FeedbackService {
 
     List<Feedback> getFeedback(String startDate, String endDate, String status);
 
-    List<Feedback> getAllFeedback();
+  //  List<Feedback> getAllFeedback();
 
     void deleteFeedback(String id);
 
