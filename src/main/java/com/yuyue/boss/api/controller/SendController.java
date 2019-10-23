@@ -166,7 +166,7 @@ public class SendController extends BaseController{
     public ResponseData sendAdReviewJPush(String id,AppUser appUserMsg,String status){
         JPush jPush = new JPush();
         String str = "拒绝!";
-        if ("10C".equals(status)){
+        if ("10B".equals(status)){
             str = "通过!";
         }
         try {
@@ -348,7 +348,7 @@ public class SendController extends BaseController{
     public ResponseData sendCommodityInfoJPush(Commodity commodity,String status){
         JPush jPush = new JPush();
         String str = "拒绝!";
-        if ("10B".equals(status)){
+        if ("10C".equals(status)){
             str = "通过!";
         }
         try {
