@@ -28,6 +28,5 @@ public class Feedback implements Serializable {
 //    用户ID
     private String userId;
 
-    //
     private AppUser appUser;
 }

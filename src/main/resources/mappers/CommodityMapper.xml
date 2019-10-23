@@ -136,6 +136,7 @@
             and  VIDEO_ID = #{videoId}
         </if>
 
+        ORDER BY   c.APPLICATION_DATE DESC
 
 
     </select>

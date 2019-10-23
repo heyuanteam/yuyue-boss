@@ -165,7 +165,7 @@
             and CREATE_TIME   >  #{startTime}  AND    CREATE_TIME  <![CDATA[ < ]]>  #{endTime}
         </if>
 
-        order  by  CREATE_TIME
+        order  by  CREATE_TIME DESC
 
     </select>
 

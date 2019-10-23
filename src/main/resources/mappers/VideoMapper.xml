@@ -59,7 +59,7 @@
              1=1 and b1.filesType = 'video'  ) total
 
         WHERE 1=1
-        ORDER BY playAmount DESC
+         ORDER BY total.UPLOAD_TIME DESC
 
     </select>
 

@@ -3,6 +3,7 @@
 <mapper namespace="com.yuyue.boss.api.mapper.FeedbackMapper">
     <resultMap type="com.yuyue.boss.api.domain.Feedback" id="Feedback">
         <id column="fid" property="id"/>
+        <result column="CREATE_TIME" property="createTime"/>
         <result column="contact" property="contact"/>
         <result column="pictureUrl" property="pictureUrl"/>
         <result column="details" property="details"/>
@@ -23,7 +24,7 @@
         f.details ,
         f.status ,
         f.userId,
-        DATE_FORMAT(f.CREATE_TIME,'%Y-%m-%d %H:%i:%s') createTime,
+        DATE_FORMAT(f.CREATE_TIME,'%Y-%m-%d %H:%i:%s') CREATE_TIME,
         m.USER_NICK_NAME ,
         m.USER_REAL_NAME,
         m.HEADP_URL
