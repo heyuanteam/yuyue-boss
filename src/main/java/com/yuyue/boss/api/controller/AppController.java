@@ -27,10 +27,9 @@ import java.util.Map;
 /**
  * APP管理
  */
-@CrossOrigin
+@Slf4j
 @RestController
 @RequestMapping(value = "/app", produces = "application/json; charset=UTF-8")
-@Slf4j
 public class AppController extends BaseController {
 
     @Autowired
@@ -184,16 +183,13 @@ public class AppController extends BaseController {
 
     /**
      * 获取APP菜单列表
-     * @param systemUser
      * @param request
      * @param response
      * @return
      */
     @RequestMapping(value = "/getAPPMenuList")
     @ResponseBody
-    @RequiresPermissions("appMenu:menu")
-    @LoginRequired
-    public ResponseData getAPPMenuList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseData getAPPMenuList(HttpServletRequest request, HttpServletResponse response) {
         log.info("获取APP菜单列表----------->>/app/getAPPMenuList");
         Map<String, String> parameterMap = getParameterMap(request, response);
         try {
