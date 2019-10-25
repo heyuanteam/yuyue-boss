@@ -35,25 +35,27 @@
     <update id="updateSiteShow"  parameterType="com.yuyue.boss.api.mapper.YuYueSiteShowMapper">
         UPDATE
             yuyue_site_show
-        SET
-        <if test="showName != null and showName != ''">
-            showName = #{showName},
+        <set>
+            <if test="showName != null and showName != ''">
+                showName = #{showName},
+            </if>
+            <if test="category != null and category != ''">
+                category = #{category},
+            </if>
+            <if test="showPersons != null and showPersons != ''">
+                showPersons = #{showPersons},
+            </if>
+            <if test="showTime != null and showTime != ''">
+                SHOW_TIME = #{showTime},
+            </if>
+           <!-- <if test="siteId != null and siteId != ''">
+                siteId = #{siteId},
+            </if>-->
+        </set>
+        WHERE 1=1
+        <if test=" id != null and id != ''">
+            and id=#{id}
         </if>
-        <if test="category != null and category != ''">
-            category = #{category},
-        </if>
-        <if test="showPersons != null and showPersons != ''">
-            showPersons = #{showPersons},
-        </if>
-        <if test="showTime != null and showTime != ''">
-            SHOW_TIME = #{showTime},
-        </if>
-       <!-- <if test="siteId != null and siteId != ''">
-            siteId = #{siteId},
-        </if>-->
-        id = #{id}
-
-        WHERE id = #{id};
     </update>
 
     <delete id="deleteSiteShow" parameterType="String">

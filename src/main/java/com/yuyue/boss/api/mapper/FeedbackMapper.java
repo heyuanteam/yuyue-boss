@@ -1,8 +1,10 @@
 package com.yuyue.boss.api.mapper;
 
 import com.yuyue.boss.api.domain.Feedback;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,10 +23,10 @@ public interface FeedbackMapper extends MyBaseMapper<Feedback> {
 //    List<Feedback> getAllFeedback();
 
     @Transactional
-    @Select("delete from yuyue_feedback where id = #{id}")
+    @Delete("delete from yuyue_feedback where id = #{id}")
     Feedback deleteFeedback(@Param("id") String id);
 
     @Transactional
-    @Select("update   yuyue_feedback  set status = #{status} where id = #{id}")
+    @Update("update   yuyue_feedback  set status = #{status} where id = #{id}")
     Feedback updateFeedback(@Param("id") String id,@Param("status")String status);
 }

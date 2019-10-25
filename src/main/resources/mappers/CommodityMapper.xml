@@ -100,8 +100,11 @@
         <if test="status != null and status != ''">
             and  c.STATUS = #{status}
         </if>
-        <if test="startTime != null and endTime != ''">
-            and c.APPLICATION_DATE  &gt; #{startTime}  and c.APPLICATION_DATE num <![CDATA[ < ]]> #{endTime}
+        <if test="startTime != null and startTime != ''">
+            <![CDATA[ and DATE_FORMAT(c.APPLICATION_DATE, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT(#{startTime}, '%Y-%m-%d %H:%i:%s') ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <![CDATA[ and DATE_FORMAT(c.APPLICATION_DATE, '%Y-%m-%d %H:%i:%s') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i:%s') ]]>
         </if>
 
         ORDER BY   c.APPLICATION_DATE DESC
@@ -143,53 +146,55 @@
 
     <update id="updateCommodityInfo" parameterType="com.yuyue.boss.api.domain.Commodity" >
         UPDATE yuyue_commodity
-        SET
+        <set>
 
-        <if test="category != null and category != ''">
-            CATEGORY = #{category},
+            <if test="category != null and category != ''">
+                CATEGORY = #{category},
+            </if>
+
+            <if test="commodityName != null and commodityName != ''">
+                COMMODITY_NAME = #{commodityName},
+            </if>
+
+            <if test="adWord != null and adWord != ''">
+                AD_WORD = #{adWord},
+            </if>
+
+            <if test="adImageUrl != null and adImageUrl != ''">
+                AD_IMAGE_URL = #{adImageUrl},
+            </if>
+
+            <if test="commodityPrice != null and commodityPrice != ''">
+                COMMODITY_PRICE = #{commodityPrice},
+            </if>
+
+            <if test="payUrl != null and payUrl != ''">
+                PAY_URL = #{payUrl},
+            </if>
+
+            <if test="addr != null and addr != ''">
+                ADDR = #{addr},
+            </if>
+
+            <if test="startDate != null and startDate != ''">
+                START_DATE = #{startDate},
+            </if>
+
+            <if test="endDate != null and endDate != ''">
+                 END_DATE = #{endDate},
+            </if>
+
+            <if test="status != null and status != ''">
+                 STATUS = #{status},
+            </if>
+
+            <if test="videoId != null and videoId != ''">
+                VIDEO_ID = #{videoId},
+            </if>
+        </set>
+        WHERE 1=1
+        <if test="commodityId != null and commodityId != ''">
+            and COMMODITY_ID = #{commodityId}
         </if>
-
-        <if test="commodityName != null and commodityName != ''">
-            COMMODITY_NAME = #{commodityName},
-        </if>
-
-        <if test="adWord != null and adWord != ''">
-            AD_WORD = #{adWord},
-        </if>
-
-        <if test="adImageUrl != null and adImageUrl != ''">
-            AD_IMAGE_URL = #{adImageUrl},
-        </if>
-
-        <if test="commodityPrice != null and commodityPrice != ''">
-            COMMODITY_PRICE = #{commodityPrice},
-        </if>
-
-        <if test="payUrl != null and payUrl != ''">
-            PAY_URL = #{payUrl},
-        </if>
-
-        <if test="addr != null and addr != ''">
-            ADDR = #{addr},
-        </if>
-
-        <if test="startDate != null and startDate != ''">
-            START_DATE = #{startDate},
-        </if>
-
-        <if test="endDate != null and endDate != ''">
-             END_DATE = #{endDate},
-        </if>
-
-        <if test="status != null and status != ''">
-             STATUS = #{status},
-        </if>
-
-        <if test="videoId != null and videoId != ''">
-            VIDEO_ID = #{videoId},
-        </if>
-        COMMODITY_ID = #{commodityId}
-
-        WHERE COMMODITY_ID = #{commodityId}
     </update>
 </mapper>

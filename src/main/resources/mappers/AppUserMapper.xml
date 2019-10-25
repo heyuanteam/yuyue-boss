@@ -161,15 +161,13 @@
             and USER_TYPE=#{userType}
         </if>
 
-        <if  test="startTime != null and startTime != '' and endTime != null and endTime != ''">
-            and CREATE_TIME   >  #{startTime}  AND    CREATE_TIME  <![CDATA[ < ]]>  #{endTime}
+        <if  test="startTime != null and startTime != '' ">
+            <![CDATA[ and DATE_FORMAT(CREATE_TIME, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT( #{startTime}, '%Y-%m-%d %H:%i:%s') ]]>
         </if>
-
+        <if  test="endTime != null and endTime != ''">
+            <![CDATA[ AND DATE_FORMAT(CREATE_TIME, '%Y-%m-%d %H:%i:%s') <= DATE_FORMAT( #{endTime}, '%Y-%m-%d %H:%i:%s') ]]>
+        </if>
         order  by  CREATE_TIME DESC
-
     </select>
-
-
-
 
 </mapper>

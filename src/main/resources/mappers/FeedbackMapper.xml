@@ -18,7 +18,7 @@
     </resultMap>
     <!-- 查询单条记录 -->
     <select id="getFeedback"  parameterType="String" resultMap="Feedback">
-        SELECT f.id "fid",
+        SELECT f.id fid,
         f.contact ,
         f.pictureUrl ,
         f.details ,
@@ -32,8 +32,11 @@
         FROM yuyue_feedback f
         left join yuyue_merchant m on  f.userId= m.ID
         where 1=1
-        <if test="startDate != null and startDate != ''  and endDate != null and endDate != ''">
-            and f.CREATE_TIME > #{startDate} AND f.CREATE_TIME <![CDATA[ < ]]> #{endDate}
+        <if test="startDate != null and startDate != ''">
+            <![CDATA[ and DATE_FORMAT(f.CREATE_TIME, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT(#{startDate}, '%Y-%m-%d %H:%i:%s') ]]>
+        </if>
+        <if test="endDate != null and endDate != ''">
+            <![CDATA[ AND DATE_FORMAT(f.CREATE_TIME, '%Y-%m-%d %H:%i:%s') <= DATE_FORMAT(#{endDate}, '%Y-%m-%d %H:%i:%s') ]]>
         </if>
 
         <if test=" status != null and status != ''">

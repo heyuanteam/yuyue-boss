@@ -106,8 +106,11 @@
         <if test="title != null and title != ''">
             and CONCAT(total.title) like concat('%', #{title}, '%')
         </if>
-        <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
-            and  UPLOAD_TIME >  #{startTime}  AND  UPLOAD_TIME  <![CDATA[ < ]]> #{endTime}
+        <if test="startTime != null and startTime != ''">
+            <![CDATA[ and  DATE_FORMAT(UPLOAD_TIME, '%Y-%m-%d %H:%i:%s') >=  DATE_FORMAT(#{startTime}, '%Y-%m-%d %H:%i:%s') ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <![CDATA[ AND  DATE_FORMAT(UPLOAD_TIME, '%Y-%m-%d %H:%i:%s') <=  DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i:%s') ]]>
         </if>
         ORDER BY total.UPLOAD_TIME DESC
 
@@ -121,13 +124,15 @@
     </insert>
     <update id="updateVideo"  parameterType="String">
         UPDATE ${tableName}
-        set
-        <if test="status != null and status != ''">
-            status= #{status},
+        <set>
+            <if test="status != null and status != ''">
+                status= #{status},
+            </if>
+        </set>
+        WHERE 1=1
+        <if test="id != null and id != ''">
+           and id=#{id}
         </if>
-        id=#{id}
-
-        WHERE id=#{id};
     </update>
 
     <delete id="deleteVideoById" parameterType="String">

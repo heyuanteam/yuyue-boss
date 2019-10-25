@@ -54,29 +54,30 @@
             and   a.status = #{status}
         </if>
 
-        <if test="applicationStartTime != null and applicationStartTime != '' and applicationEndTime != null and applicationEndTime != ''">
-            and   a.APPLICATION_TIME  >   #{applicationStartTime} and  a.APPLICATION_TIME   <![CDATA[ < ]]> #{applicationEndTime}
+        <if test="applicationStartTime != null and applicationStartTime != ''">
+            <![CDATA[ and  DATE_FORMAT(a.APPLICATION_TIME, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT(#{applicationStartTime}, '%Y-%m-%d %H:%i:%s') ]]>
+        </if>
+        <if test="applicationStartTime != null and applicationStartTime != ''">
+            <![CDATA[ and  DATE_FORMAT(a.APPLICATION_TIME, '%Y-%m-%d %H:%i:%s')  <= DATE_FORMAT(#{applicationEndTime}, '%Y-%m-%d %H:%i:%s') ]]>
         </if>
 
         <if test="id != null and id != '' ">
             and   a.id = #{id}
         </if>
-
         ORDER BY a.APPLICATION_TIME DESC
-
     </select>
-
-
 
 
     <update id="updateAdReviewStatus"  parameterType="String">
         UPDATE yuyue_advertisement_info
-        set
-        <if test="status != null and status != ''">
-            status= #{status},
+        <set>
+            <if test="status != null and status != ''">
+                status= #{status},
+            </if>
+        </set>
+        WHERE 1=1
+        <if test="id != null and id != ''">
+             and id=#{id}
         </if>
-        id=#{id}
-
-        WHERE id=#{id};
     </update>
 </mapper>

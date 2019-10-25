@@ -36,8 +36,11 @@
             and   artist.id = #{id}
         </if>
 
-        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
-            and artist.CREATE_TIME   >  #{startDate}  AND    artist.CREATE_TIME  <![CDATA[ < ]]>  #{endDate}
+        <if test="startDate != null and startDate != ''">
+            <![CDATA[ and DATE_FORMAT(artist.CREATE_TIME, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT(#{startDate}, '%Y-%m-%d %H:%i:%s') ]]>
+        </if>
+        <if test="endDate != null and endDate != ''">
+           <![CDATA[ AND DATE_FORMAT(artist.CREATE_TIME, '%Y-%m-%d %H:%i:%s') <= DATE_FORMAT( #{endDate}, '%Y-%m-%d %H:%i:%s') ]]>
         </if>
 
         <if test="userId != null and userId != '' ">
@@ -82,11 +85,7 @@
         <if test="status != null and status != ''">
             and   artist.status = #{status}
         </if>
-
-
-
         ORDER BY CREATE_TIME DESC
-
     </select>
 
     <select id="getArtistReviewList" resultMap = "ArtistReview">
@@ -100,12 +99,14 @@
 
     <update id="updateArtistReviewStatus"  parameterType="String">
         UPDATE yuyue_show_name
-        set
-        <if test="status != null and status != ''">
-            status= #{status},
-        </if>
-        id = #{id}
-
-        WHERE id=#{id};
+        <set>
+            <if test="status != null and status != ''">
+                status= #{status},
+            </if>
+        </set>
+        WHERE 1=1
+            <if test="id != null and id != ''">
+                and id=#{id}
+            </if>
     </update>
 </mapper>
