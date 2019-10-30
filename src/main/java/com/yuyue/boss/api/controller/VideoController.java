@@ -36,9 +36,9 @@ import java.util.List;
 import java.util.UUID;
 
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/video", produces = "application/json; charset=UTF-8")
-@Slf4j
 public class VideoController extends BaseController {
 
     @Autowired

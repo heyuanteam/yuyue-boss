@@ -11,9 +11,8 @@ import com.yuyue.boss.api.service.VideoService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,11 +29,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/commodity" ,produces = "application/json; charset=UTF-8")
 public class CommodityController extends BaseController {
-
-    private static Logger log = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
     private CommodityService commodityService;

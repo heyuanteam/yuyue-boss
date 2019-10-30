@@ -33,10 +33,10 @@ import java.util.UUID;
 /**
  * 系统权限配置
  */
+@Slf4j
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/system", produces = "application/json; charset=UTF-8")
-@Slf4j
 public class SystemController extends BaseController {
 
     @Autowired

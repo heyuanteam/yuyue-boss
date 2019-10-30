@@ -29,9 +29,9 @@ import java.util.Map;
 /**
  * 提现管理
  */
+@Slf4j
 @RestController
 @RequestMapping(value = "/outMoney" ,produces = "application/json; charset=UTF-8")
-@Slf4j
 public class OutMoneyController extends BaseController {
 
     @Autowired

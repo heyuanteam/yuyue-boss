@@ -23,9 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/site", produces = "application/json; charset=UTF-8")
-@Slf4j
 public class YuYueSiteController extends BaseController{
 
     @Autowired

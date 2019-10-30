@@ -27,9 +27,9 @@ import java.util.Map;
 /**
  * 账户流水
  */
+@Slf4j
 @RestController
 @RequestMapping(value = "/changeMoney" ,produces = "application/json; charset=UTF-8")
-@Slf4j
 public class ChangeMoneyController extends BaseController {
 
     @Autowired

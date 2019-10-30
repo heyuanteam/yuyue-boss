@@ -30,10 +30,11 @@ import java.util.Map;
 /**
  * 字典管理
  */
+
+@Slf4j
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/lookupCde", produces = "application/json; charset=UTF-8")
-@Slf4j
 public class LookupCdeController extends BaseController {
 
     @Autowired

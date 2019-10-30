@@ -36,9 +36,9 @@ import java.util.Map;
 /**
  * Create by lujun.chen on 2018/09/29
  */
+@Slf4j
 @RestController
 @RequestMapping(value = "/login", produces = "application/json; charset=UTF-8")
-@Slf4j
 public class LoginController extends BaseController{
     @Autowired
     private LoginService loginService;

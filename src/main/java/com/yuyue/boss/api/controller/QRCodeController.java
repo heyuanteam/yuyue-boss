@@ -19,10 +19,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/qrCode", produces = "application/json; charset=UTF-8")
-@Slf4j
 public class QRCodeController extends BaseController{
+
     @Autowired
     private YuYueSiteService yuYueSiteService;
     /**
