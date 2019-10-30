@@ -116,7 +116,7 @@
         SELECT id,user_no userNo,user_nick_name nickName,user_real_name realName,id_type idType,id_card idCard,phone,sex,city,jpushName,password,salt,
             user_status userStatus,total ,income,ADDR_DETAIL addrDetail,HEADP_URL headpUrl,USER_TYPE userType,cardFUrl,cardZUrl,userUrl,
         ATTENTION_TOTAL attentionTotal,LIKE_TOTAL likeTotal,COMMENT_TOTAL commentTotal,education ,wechat ,signature,opendId,wechatName,
-            DATE_FORMAT(CREATE_TIME ,'%Y-%m-%d %H:%i:%s') CREATE_TIME,DATE_FORMAT(UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') UPDATE_TIME,frontCover
+            DATE_FORMAT(CREATE_TIME ,'%Y-%m-%d %H:%i:%s') createTime,DATE_FORMAT(UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') updateTime,frontCover
             FROM yuyue_merchant
 
             where 1=1
@@ -134,7 +134,7 @@
         SELECT id,user_no userNo,user_nick_name nickName,user_real_name realName,id_type idType,id_card idCard,phone,sex,city,jpushName,password,salt,
         user_status userStatus,total ,income,ADDR_DETAIL addrDetail,HEADP_URL headpUrl,USER_TYPE userType,cardFUrl,cardZUrl,userUrl,
         ATTENTION_TOTAL attentionTotal,LIKE_TOTAL likeTotal,COMMENT_TOTAL commentTotal,education ,wechat ,signature,opendId,wechatName,
-        DATE_FORMAT(CREATE_TIME ,'%Y-%m-%d %H:%i:%s') CREATE_TIME,DATE_FORMAT(UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') UPDATE_TIME,frontCover
+        DATE_FORMAT(CREATE_TIME ,'%Y-%m-%d %H:%i:%s') createTime,DATE_FORMAT(UPDATE_TIME ,'%Y-%m-%d %H:%i:%s') updateTime,frontCover
         FROM yuyue_merchant
         where 1=1
         <if  test="id!=null and id!='' ">
