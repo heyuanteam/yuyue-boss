@@ -20,9 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/userManager", produces = "application/json; charset=UTF-8")
-@Slf4j
 public class AppUserController extends BaseController {
     @Autowired
     private AppUserService appUserService;

@@ -21,9 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/feedback" ,produces = "application/json; charset=UTF-8")
-@Slf4j
 public class FeedbackController extends BaseController {
 
     @Autowired

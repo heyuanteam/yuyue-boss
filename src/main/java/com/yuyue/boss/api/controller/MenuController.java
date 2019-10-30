@@ -26,10 +26,10 @@ import java.util.Map;
 /**
  * 菜单管理
  */
+@Slf4j
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/menu", produces = "application/json; charset=UTF-8")
-@Slf4j
 public class MenuController extends BaseController {
 
     @Autowired

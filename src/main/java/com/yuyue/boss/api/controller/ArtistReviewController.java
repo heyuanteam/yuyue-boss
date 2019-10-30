@@ -25,9 +25,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/artistReview" ,produces = "application/json; charset=UTF-8")
-@Slf4j
 public class ArtistReviewController extends BaseController {
 
     @Autowired

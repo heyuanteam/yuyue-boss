@@ -32,9 +32,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/adReview" ,produces = "application/json; charset=UTF-8")
-@Slf4j
 public class AdReviewController extends BaseController {
 
     @Autowired

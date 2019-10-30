@@ -35,9 +35,10 @@ import java.util.Map;
 /**
  * 公告管理
  */
+
+@Slf4j
 @RestController
 @RequestMapping(value="/send", produces = "application/json; charset=UTF-8")
-@Slf4j
 public class SendController extends BaseController{
 
     @Autowired

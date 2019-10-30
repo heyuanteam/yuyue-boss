@@ -24,9 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/order" ,produces = "application/json; charset=UTF-8")
-@Slf4j
 public class OrderController extends BaseController {
 
     @Autowired
