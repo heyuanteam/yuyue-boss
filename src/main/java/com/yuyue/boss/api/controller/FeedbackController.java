@@ -45,7 +45,7 @@ public class FeedbackController extends BaseController {
         if (StringUtils.isEmpty(page) || !page.matches("[0-9]+"))
             page = "1";
         PageHelper.startPage(Integer.parseInt(page), 10);
-        List<Feedback> feedback =  feedbackService.getFeedback(startDate, endDate, status);;
+        List<Feedback> feedback =  feedbackService.getFeedback(startDate, endDate, status);
         PageInfo<Feedback> pageInfo=new PageInfo<>(feedback);
         long total = pageInfo.getTotal();
         int pages = pageInfo.getPages();
