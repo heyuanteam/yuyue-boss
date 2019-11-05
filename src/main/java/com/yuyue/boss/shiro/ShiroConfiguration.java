@@ -39,8 +39,8 @@ public class ShiroConfiguration {
     private String host;
     @Value("${spring.redis.port}")
     private int port;
-//    @Value("${spring.redis.password}")
-//    private String password;
+    @Value("${spring.redis.password}")
+    private String password;
 
     /**
      * Shiro的Web过滤器Factory 命名:shiroFilter
@@ -137,6 +137,7 @@ public class ShiroConfiguration {
         RedisManager redisManager = new RedisManager();
         redisManager.setHost(host);
         redisManager.setPort(port);
+        redisManager.setPassword(password);
         // 配置过期时间
         redisManager.setExpire(1800);
         return redisManager;
