@@ -2,6 +2,7 @@ package com.yuyue.boss.api.service;
 
 
 import com.yuyue.boss.api.domain.JPush;
+import com.yuyue.boss.api.domain.MallShop;
 
 import java.util.List;
 
@@ -23,4 +24,6 @@ public interface SendService {
 
     //删除公告
     void delJPush(String id);
+
+    MallShop findShopId(String shopid);
 }

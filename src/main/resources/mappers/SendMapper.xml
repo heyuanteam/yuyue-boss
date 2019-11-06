@@ -23,4 +23,14 @@
         ORDER BY d.CREATE_TIME desc
     </select>
 
+    <!--获取库存不足的商品-->
+    <select id="findShopId"  parameterType="String" resultType="com.yuyue.boss.api.domain.MallShop">
+        SELECT s.commodity_name commodityName FROM yuyue_mall_shop s,yuyue_mall_shop_commodity b
+        where s.status ='10B' and b.status ='10B' and b.commodity_reserve = '0'
+        <if test="shopid != null and shopid != ''">
+          and b.shop_id = #{shopid}  AND s.shop_id = #{shopid}
+        </if>
+        order by s.create_time desc limit 1
+    </select>
+
 </mapper>

@@ -1,6 +1,7 @@
 package com.yuyue.boss.api.mapper;
 
 import com.yuyue.boss.api.domain.JPush;
+import com.yuyue.boss.api.domain.MallShop;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,4 +36,6 @@ public interface SendMapper extends MyBaseMapper<JPush> {
     @Transactional
     @Delete("DELETE FROM yuyue_jpush WHERE id =#{id} ")
     void delJPush(@Param("id")String id);
+
+    MallShop findShopId(@Param("shopid") String shopid);
 }
