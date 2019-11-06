@@ -63,6 +63,7 @@ public class SendController extends BaseController{
         sendMap.put("4","现场详情通知");//需要参数
         sendMap.put("5","视频审核通知");//不需要参数
         sendMap.put("6","广告审核通知");//不需要参数
+        sendMap.put("7","库存通知");//需要参数
     }
 
     /**
@@ -376,6 +377,44 @@ public class SendController extends BaseController{
             log.info("极光广告审核的通知失败！");
             sendService.updateValid("10C",jPush.getId());
             return new ResponseData(CodeEnum.E_400.getCode(),"极光广告审核的通知失败！");
+        }
+        return new ResponseData(CodeEnum.SUCCESS);
+    }
+
+    /**
+     * 极光库存通知 : 7
+     * @param shopid
+     * @return
+     */
+    @RequestMapping("/sendStockJPush")
+    @ResponseBody
+    public ResponseData sendStockJPush(String merchantId,String shopid){
+        JPush jPush = new JPush();
+        try {
+            log.info("极光库存通知开始-------------->>start");
+            AppUser appUserMsg = appUserService.getAppUserMsg(merchantId,"");
+            if (StringUtils.isNotNull(appUserMsg)){
+                Map<String, String> map = Maps.newHashMap();
+                map.put("type","7");
+                map.put("notice","极光库存通知");
+                map.put("shopid",shopid);
+                jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
+                jPush.setNotificationTitle("您好！库存已严重不足，请及时补充！以便客户购买！");
+                jPush.setMsgTitle("极光库存通知");
+                jPush.setMsgContent("您好！库存已严重不足，请及时补充！以便客户购买！");
+                jPush.setExtras("7");
+
+                List<String> stringList = new ArrayList<>();
+                if (StringUtils.isNotEmpty(appUserMsg.getJpushName())) {
+                    log.info("极光别名==========" + appUserMsg.getJpushName());
+                    stringList.add(appUserMsg.getJpushName());
+                    return getJPush(jPush, stringList, map, 0);
+                }
+            }
+        } catch (Exception e) {
+            log.info("极光库存通知失败！");
+            sendService.updateValid("10C",jPush.getId());
+            return new ResponseData(CodeEnum.E_400.getCode(),"极光库存通知失败！");
         }
         return new ResponseData(CodeEnum.SUCCESS);
     }

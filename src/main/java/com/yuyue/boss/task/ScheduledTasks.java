@@ -1,5 +1,6 @@
 package com.yuyue.boss.task;
 
+import com.yuyue.boss.api.controller.SendController;
 import com.yuyue.boss.api.domain.Order;
 import com.yuyue.boss.api.domain.Commodity;
 import com.yuyue.boss.api.domain.YuYueSite;
@@ -7,9 +8,8 @@ import com.yuyue.boss.api.service.PayService;
 import com.yuyue.boss.api.service.CommodityService;
 import com.yuyue.boss.api.service.YuYueSiteService;
 import com.yuyue.boss.utils.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -21,9 +21,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @Component
 public class ScheduledTasks {
-    private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
@@ -42,7 +42,7 @@ public class ScheduledTasks {
         Calendar c = Calendar.getInstance();//可以对每个时间域单独修改
         c.add(Calendar.MINUTE,-30);
         String startTime = dateFormat.format(c.getTime());
-        System.out.println("========>>>"+startTime);
+        log.info("========>>>"+startTime);
         List<Order> list = payService.findOrderList(startTime);
         if(CollectionUtils.isNotEmpty(list)){
             for (Order order: list) {
