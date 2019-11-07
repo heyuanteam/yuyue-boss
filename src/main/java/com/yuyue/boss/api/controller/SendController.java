@@ -53,6 +53,8 @@ public class SendController extends BaseController{
     private VideoService videoService;
     @Autowired
     private AdReviewService adReviewService;
+    @Autowired
+    private OrderService orderService;
 
     //极光推送类型
     private static final Map<String, Object> sendMap = new HashMap<>();
@@ -64,6 +66,7 @@ public class SendController extends BaseController{
         sendMap.put("5","视频审核通知");//不需要参数
         sendMap.put("6","广告审核通知");//不需要参数
         sendMap.put("7","库存通知");//需要参数
+        sendMap.put("8","商家卖出商品通知");//需要参数
     }
 
     /**
@@ -416,6 +419,45 @@ public class SendController extends BaseController{
             log.info("极光库存通知失败！");
             sendService.updateValid("10C",jPush.getId());
             return new ResponseData(CodeEnum.E_400.getCode(),"极光库存通知失败！");
+        }
+        return new ResponseData(CodeEnum.SUCCESS);
+    }
+
+    /**
+     * 极光商家卖出商品通知 : 8
+     * @param orderId
+     * @return
+     */
+    @RequestMapping("/sendClotheSold")
+    @ResponseBody
+    public ResponseData sendClotheSold(String merchantId,String orderId){
+        JPush jPush = new JPush();
+        try {
+            log.info("极光商家卖出商品通知开始-------------->>start");
+            AppUser appUserMsg = appUserService.getAppUserMsg(merchantId,"");
+            Order order = orderService.getOrderById(orderId);
+            if (StringUtils.isNotNull(appUserMsg) && StringUtils.isNotNull(order)){
+                Map<String, String> map = Maps.newHashMap();
+                map.put("type","8");
+                map.put("notice","极光商家卖出商品通知");
+                map.put("orderId",orderId);
+                jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
+                jPush.setNotificationTitle("您好！"+order.getOrderNo()+"商品已卖出！");
+                jPush.setMsgTitle("极光商家卖出商品通知");
+                jPush.setMsgContent("您好！"+order.getOrderNo()+"商品已卖出！请及时查看！以便包装！");
+                jPush.setExtras("8");
+
+                List<String> stringList = new ArrayList<>();
+                if (StringUtils.isNotEmpty(appUserMsg.getJpushName())) {
+                    log.info("极光别名==========" + appUserMsg.getJpushName());
+                    stringList.add(appUserMsg.getJpushName());
+                    return getJPush(jPush, stringList, map, 0);
+                }
+            }
+        } catch (Exception e) {
+            log.info("极光商家卖出商品通知失败！");
+            sendService.updateValid("10C",jPush.getId());
+            return new ResponseData(CodeEnum.E_400.getCode(),"极光商家卖出商品通知失败！");
         }
         return new ResponseData(CodeEnum.SUCCESS);
     }

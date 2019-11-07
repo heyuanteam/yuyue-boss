@@ -29,5 +29,8 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
+    public void delAppUser(String id) { appUserMapper.delAppUser(id); }
+
+    @Override
     public void insertAppUser(AppUser appUser) { appUserMapper.insertAppUser(appUser); }
 }

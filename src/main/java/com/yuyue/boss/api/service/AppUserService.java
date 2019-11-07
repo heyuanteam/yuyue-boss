@@ -14,4 +14,6 @@ public interface AppUserService {
     void insertAppUser(AppUser appUser);
 
     List<AppUser> getAppUserMsgList(AppUser appUser);
+
+    void delAppUser(String id);
 }

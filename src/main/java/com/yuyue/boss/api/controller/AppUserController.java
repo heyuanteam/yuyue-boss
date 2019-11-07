@@ -2,13 +2,18 @@ package com.yuyue.boss.api.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.AppUser;
+import com.yuyue.boss.api.domain.ChangeMoney;
 import com.yuyue.boss.api.domain.Order;
+import com.yuyue.boss.api.domain.SystemUser;
 import com.yuyue.boss.api.service.AppUserService;
+import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -56,7 +62,7 @@ public class AppUserController extends BaseController {
     @ResponseBody
     @RequiresPermissions("UserManager:menu")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
-    public ResponseData getAppUserMsg( AppUser appUser, HttpServletRequest request, HttpServletResponse response){
+    public ResponseData getAppUserMsg(AppUser appUser, HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
         log.info("获取用户信息-------------->>/userManager/getAppUserMsgList");
         String page=request.getParameter("page");
@@ -91,6 +97,36 @@ public class AppUserController extends BaseController {
         log.info("更新用户信息-------------->>/userManager/updateAppUser");
         appUserService.updateAppUser(appUser);
         return new ResponseData();
+    }
+
+    /**
+     * 删除用户
+     * @param systemUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/delAppUser")
+    @ResponseBody
+    @RequiresPermissions("UserManager:remove")
+    @LoginRequired
+    public ResponseData delAppUser(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+        log.info("删除用户----------->>/userManager/delAppUser");
+        Map<String, String> parameterMap = getParameterMap(request, response);
+        if (StringUtils.isEmpty(parameterMap.get("id"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "用户id不可以为空！");
+        }
+        AppUser appUser = appUserService.getAppUserMsg(parameterMap.get("id"),"");
+        if (StringUtils.isNull(appUser)){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "用户不存在！");
+        }
+        try {
+            appUserService.delAppUser(parameterMap.get("id"));
+            return new ResponseData(CodeEnum.SUCCESS.getCode(), "删除用户成功！");
+        } catch (Exception e) {
+            log.info("===========>>>>>>删除用户失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"删除用户失败！");
+        }
     }
 
 }
