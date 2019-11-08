@@ -33,4 +33,14 @@
         order by s.create_time desc limit 1
     </select>
 
+    <!--获取商家信息-->
+    <select id="findOrderItemId"  parameterType="String" resultType="com.yuyue.boss.api.domain.OrderItem">
+        SELECT s.consumer_id consumerId FROM yuyue_mall_order_item s left join yuyue_order b on s.order_id = b.id
+        where b.status ='10B' and s.status = '10A'
+        <if test="orderId != null and orderId != ''">
+            and s.order_id = #{orderId} and b.id = #{orderId}
+        </if>
+        order by s.create_time desc
+    </select>
+
 </mapper>

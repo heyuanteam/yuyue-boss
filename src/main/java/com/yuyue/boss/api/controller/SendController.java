@@ -430,27 +430,32 @@ public class SendController extends BaseController{
      */
     @RequestMapping("/sendClotheSold")
     @ResponseBody
-    public ResponseData sendClotheSold(String merchantId,String orderId){
+    public ResponseData sendClotheSold(String orderId){
         JPush jPush = new JPush();
         try {
             log.info("极光商家卖出商品通知开始-------------->>start");
-            AppUser appUserMsg = appUserService.getAppUserMsg(merchantId,"");
             Order order = orderService.getOrderById(orderId);
-            if (StringUtils.isNotNull(appUserMsg) && StringUtils.isNotNull(order)){
+            List<OrderItem> list = sendService.findOrderItemId(orderId);
+            if (CollectionUtils.isNotEmpty(list) && StringUtils.isNotNull(order) && "10B".equals(order.getStatus())){
                 Map<String, String> map = Maps.newHashMap();
                 map.put("type","8");
                 map.put("notice","极光商家卖出商品通知");
                 map.put("orderId",orderId);
                 jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
-                jPush.setNotificationTitle("您好！"+order.getOrderNo()+"商品已卖出！");
+                jPush.setNotificationTitle("您好！娱悦APP提醒您！有商品已卖出！请及时查看！");
                 jPush.setMsgTitle("极光商家卖出商品通知");
-                jPush.setMsgContent("您好！"+order.getOrderNo()+"商品已卖出！请及时查看！以便包装！");
+                jPush.setMsgContent("您好！娱悦APP提醒您！有商品已卖出！请及时查看！以便包装！");
                 jPush.setExtras("8");
 
                 List<String> stringList = new ArrayList<>();
-                if (StringUtils.isNotEmpty(appUserMsg.getJpushName())) {
-                    log.info("极光别名==========" + appUserMsg.getJpushName());
-                    stringList.add(appUserMsg.getJpushName());
+                for (OrderItem orderItem: list) {
+                    AppUser appUserMsg = appUserService.getAppUserMsg(orderItem.getConsumerId(),"");
+                    if (StringUtils.isNotEmpty(appUserMsg.getJpushName())) {
+                        log.info("极光别名==========" + appUserMsg.getJpushName());
+                        stringList.add(appUserMsg.getJpushName());
+                    }
+                }
+                if (CollectionUtils.isNotEmpty(stringList)) {
                     return getJPush(jPush, stringList, map, 0);
                 }
             }

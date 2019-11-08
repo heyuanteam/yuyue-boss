@@ -2,6 +2,7 @@ package com.yuyue.boss.api.service.impl;
 
 import com.yuyue.boss.api.domain.JPush;
 import com.yuyue.boss.api.domain.MallShop;
+import com.yuyue.boss.api.domain.OrderItem;
 import com.yuyue.boss.api.mapper.SendMapper;
 import com.yuyue.boss.api.service.SendService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +43,10 @@ public class SendServiceImpl implements SendService {
     @Override
     public MallShop findShopId(String shopid) {
         return sendMapper.findShopId(shopid);
+    }
+
+    @Override
+    public List<OrderItem> findOrderItemId(String orderId) {
+        return sendMapper.findOrderItemId(orderId);
     }
 }
