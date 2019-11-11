@@ -38,7 +38,7 @@ public interface SendMapper extends MyBaseMapper<JPush> {
     @Delete("DELETE FROM yuyue_jpush WHERE id =#{id} ")
     void delJPush(@Param("id")String id);
 
-    MallShop findShopId(@Param("shopid") String shopid);
+    List<MallShop> findShopId(@Param("shopid") String shopid,@Param("userId") String userId);
 
     List<OrderItem> findOrderItemId(@Param("orderId") String orderId);
 }

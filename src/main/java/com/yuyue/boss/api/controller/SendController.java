@@ -396,16 +396,16 @@ public class SendController extends BaseController{
         try {
             log.info("极光库存通知开始-------------->>start");
             AppUser appUserMsg = appUserService.getAppUserMsg(merchantId,"");
-            MallShop mallShop = sendService.findShopId(shopid);
-            if (StringUtils.isNotNull(appUserMsg) && StringUtils.isNotNull(mallShop)){
+            List<MallShop> mallShop = sendService.findShopId(shopid,"");
+            if (StringUtils.isNotNull(appUserMsg) && CollectionUtils.isNotEmpty(mallShop)){
                 Map<String, String> map = Maps.newHashMap();
                 map.put("type","7");
                 map.put("notice","极光库存通知");
                 map.put("shopid",shopid);
                 jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
-                jPush.setNotificationTitle("您好！"+mallShop.getCommodityName()+"库存已严重不足！");
+                jPush.setNotificationTitle("您好！"+mallShop.get(0).getCommodityName()+"库存已严重不足！");
                 jPush.setMsgTitle("极光库存通知");
-                jPush.setMsgContent("您好！"+mallShop.getCommodityName()+"库存已严重不足，请及时补充！以便客户购买！");
+                jPush.setMsgContent("您好！"+mallShop.get(0).getCommodityName()+"库存已严重不足，请及时补充！以便客户购买！");
                 jPush.setExtras("7");
 
                 List<String> stringList = new ArrayList<>();

@@ -41,8 +41,8 @@ public class SendServiceImpl implements SendService {
         sendMapper.delJPush(id); }
 
     @Override
-    public MallShop findShopId(String shopid) {
-        return sendMapper.findShopId(shopid);
+    public List<MallShop> findShopId(String shopid,String userId) {
+        return sendMapper.findShopId(shopid,userId);
     }
 
     @Override

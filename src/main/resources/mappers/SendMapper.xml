@@ -26,17 +26,21 @@
     <!--获取库存不足的商品-->
     <select id="findShopId"  parameterType="String" resultType="com.yuyue.boss.api.domain.MallShop">
         SELECT s.commodity_name commodityName FROM yuyue_mall_shop s,yuyue_mall_shop_commodity b
-        where s.status ='10B' and b.status ='10B' and b.commodity_reserve = '0'
+        where 1=1
         <if test="shopid != null and shopid != ''">
           and b.shop_id = #{shopid}  AND s.shop_id = #{shopid}
+          and s.status ='10B' and b.status ='10B' and b.commodity_reserve = '0'
         </if>
-        order by s.create_time desc limit 1
+        <if test="userId != null and userId != ''">
+           AND s.merchant_id = #{userId}
+        </if>
+        order by s.create_time desc
     </select>
 
     <!--获取商家信息-->
     <select id="findOrderItemId"  parameterType="String" resultType="com.yuyue.boss.api.domain.OrderItem">
         SELECT s.consumer_id consumerId FROM yuyue_mall_order_item s left join yuyue_order b on s.order_id = b.id
-        where b.status ='10B' and s.status = '10A'
+        where b.status ='10B' and s.status = '10B'
         <if test="orderId != null and orderId != ''">
             and s.order_id = #{orderId} and b.id = #{orderId}
         </if>

@@ -27,7 +27,7 @@ public interface SendService {
     void delJPush(String id);
 
     //查询库存为0
-    MallShop findShopId(String shopid);
+    List<MallShop> findShopId(String shopid,String userId);
 
     //查询商家订单
     List<OrderItem> findOrderItemId(String orderId);

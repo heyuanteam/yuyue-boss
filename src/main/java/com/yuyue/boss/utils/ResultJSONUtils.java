@@ -1,10 +1,14 @@
 package com.yuyue.boss.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import com.yuyue.boss.annotation.MyException;
+import com.yuyue.boss.api.domain.AppUser;
+import com.yuyue.boss.enums.CodeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -15,6 +19,26 @@ public class ResultJSONUtils {
 //    public static JSONObject getJSONObjectBean(ReturnResult returnResult){
 //        return JSONObject.parseObject(JSONObject.toJSON(returnResult).toString());
 //    }
+
+    /**
+     * 加减钱，收益
+     * @param user
+     * @param money
+     * @return
+     */
+    public synchronized static BigDecimal updateTotalMoney(AppUser user, BigDecimal money, String symbol){
+        if(StringUtils.isNull(user)){
+            throw new MyException(CodeEnum.PARAM_ERROR.getCode(),"加钱失败！用户为空！");
+        } else if (money == null){
+            throw new MyException(CodeEnum.PARAM_ERROR.getCode(),"钱为空！");
+        } else if (money.compareTo(BigDecimal.ZERO) == -1){
+            throw new MyException(CodeEnum.PARAM_ERROR.getCode(),"钱不能为负！");
+        }
+        if("+".equals(symbol)){
+            return user.getIncome().add(money);
+        }
+        return user.getIncome().subtract(money);
+    }
 
     /**
      * 获取hash值分表，物理分表
