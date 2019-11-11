@@ -60,7 +60,7 @@ public class ScheduledTasks {
     /**
      * 业务员推广奖励,30分钟
      */
-    @Scheduled(cron = "0 0/10 * * * *")
+    @Scheduled(cron = "0 0/30 * * * *")
     public void toExtension() {
         log.info("业务员推广奖励开始==================================>>>>>>>>>>>");
         AppUser appUser = new AppUser();
