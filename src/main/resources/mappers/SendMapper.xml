@@ -36,7 +36,7 @@
             and s.shop_id = b.shop_id
             <![CDATA[ and DATE_FORMAT(s.CREATE_TIME, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT(#{startTime}, '%Y-%m-%d %H:%i:%s') ]]>
         </if>
-        order by s.create_time desc
+        GROUP BY s.merchant_id order by s.create_time desc
     </select>
 
     <!--获取商家信息-->
