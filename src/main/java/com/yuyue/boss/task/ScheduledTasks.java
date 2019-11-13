@@ -60,32 +60,25 @@ public class ScheduledTasks {
     /**
      * 业务员推广奖励,30分钟
      */
-    @Scheduled(cron = "0 0/30 * * * *")
+    @Scheduled(cron = "0 0/2 * * * *")
     public void toExtension() {
         log.info("业务员推广奖励开始==================================>>>>>>>>>>>");
-        AppUser appUser = new AppUser();
-        appUser.setUserType("6");
-        List<AppUser> appUserMsgList = appUserService.getAppUserMsgList(appUser);
-        List<AppUser> appList = Lists.newArrayList();
-        if(CollectionUtils.isNotEmpty(appUserMsgList)){
-            for (AppUser user: appUserMsgList) {
-                if (StringUtils.isNotEmpty(user.getPhone())) {
-                    AppUser app = new AppUser();
-                    app.setFatherPhone(user.getPhone());
-                    app.setUserType("3");
-                    appList = appUserService.getAppUserMsgList(app);
-                }
-            }
-        }
-        if(CollectionUtils.isNotEmpty(appList)){
-            for (AppUser users:appList) {
-                List<MallShop> mallShop = sendService.findShopId("",users.getId());
-                if (CollectionUtils.isNotEmpty(mallShop) && "10A".equals(users.getRewardStatus())) {
-                    AppUser appUserMsg = appUserService.getAppUserMsg("", users.getFatherPhone());
-                    if (StringUtils.isNotNull(appUserMsg) && "6".equals(appUserMsg.getUserType())) {
-                        log.info(appUserMsg.getRealName()+"推荐的"+users.getRealName()+"=====成功发布商品啦！奖励后"+appUserMsg.getIncome());
+        Calendar c = Calendar.getInstance();//可以对每个时间域单独修改
+        c.add(Calendar.MINUTE,-35);
+        String startTime = dateFormat.format(c.getTime());
+        log.info("========>>>"+startTime);
+        List<MallShop> mallShopList = sendService.findShopId("","",startTime);
+        if(CollectionUtils.isNotEmpty(mallShopList)){
+            for (MallShop mallShop: mallShopList) {
+                AppUser appUserMsg = appUserService.getAppUserMsg( mallShop.getMerchantId(),"");
+                if (StringUtils.isNotNull(appUserMsg) && "10A".equals(appUserMsg.getRewardStatus())
+                        && StringUtils.isNotEmpty(appUserMsg.getFatherPhone())) {
+                    AppUser appUser = appUserService.getAppUserMsg("", appUserMsg.getFatherPhone());
+                    if (StringUtils.isNotNull(appUser)) {
+                        log.info(appUser.getRealName()+"推荐的"+appUserMsg.getRealName()+"=====成功发布商品啦！奖励后"+appUser.getIncome());
+                        appUser.setIncome(ResultJSONUtils.updateTotalMoney(appUser, new BigDecimal(3), "+"));
+                        appUserService.updateAppUser(appUser);
                         appUserMsg.setRewardStatus("10B");
-                        appUserMsg.setIncome(ResultJSONUtils.updateTotalMoney(appUserMsg, new BigDecimal(3), "+"));
                         appUserService.updateAppUser(appUserMsg);
                     }
                 }

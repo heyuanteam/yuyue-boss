@@ -396,7 +396,7 @@ public class SendController extends BaseController{
         try {
             log.info("极光库存通知开始-------------->>start");
             AppUser appUserMsg = appUserService.getAppUserMsg(merchantId,"");
-            List<MallShop> mallShop = sendService.findShopId(shopid,"");
+            List<MallShop> mallShop = sendService.findShopId(shopid,merchantId,"");
             if (StringUtils.isNotNull(appUserMsg) && CollectionUtils.isNotEmpty(mallShop)){
                 Map<String, String> map = Maps.newHashMap();
                 map.put("type","7");
