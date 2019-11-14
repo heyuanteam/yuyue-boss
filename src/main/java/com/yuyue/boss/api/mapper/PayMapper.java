@@ -1,5 +1,6 @@
 package com.yuyue.boss.api.mapper;
 
+import com.yuyue.boss.api.domain.ChangeMoney;
 import com.yuyue.boss.api.domain.Order;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -18,4 +19,10 @@ public interface PayMapper extends MyBaseMapper<Order> {
 
     @Select("SELECT * FROM yuyue_order b where DATE_FORMAT(b.COMPLETE_TIME ,'%Y-%m-%d %H:%i:%s') < #{startTime} AND b.`status` = '10A'")
     List<Order> findOrderList(@Param(value = "startTime") String startTime);
+
+    @Transactional
+    @Insert("INSERT into yuyue_change_money (id,changeNo,tradeType,money,merchantId,mobile,note,sourceId)  values  " +
+            " (#{id},#{changeNo},#{tradeType},#{money},#{merchantId},#{mobile},#{note},#{sourceId})")
+    @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
+    void createShouMoney(ChangeMoney tGMoney);
 }

@@ -4,6 +4,7 @@ import com.beust.jcommander.internal.Lists;
 import com.yuyue.boss.api.controller.SendController;
 import com.yuyue.boss.api.domain.*;
 import com.yuyue.boss.api.service.*;
+import com.yuyue.boss.utils.RandomSaltUtil;
 import com.yuyue.boss.utils.ResultJSONUtils;
 import com.yuyue.boss.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -80,6 +81,18 @@ public class ScheduledTasks {
                         appUserService.updateAppUser(appUser);
                         appUserMsg.setRewardStatus("10B");
                         appUserService.updateAppUser(appUserMsg);
+
+                        ChangeMoney tGMoney = new ChangeMoney();
+                        tGMoney.setChangeNo("YYTG" + RandomSaltUtil.randomNumber(14));
+                        tGMoney.setId(RandomSaltUtil.generetRandomSaltCode(32));
+                        tGMoney.setStatus("10B");
+                        tGMoney.setMobile(appUser.getPhone());
+                        tGMoney.setMerchantId(appUser.getId());
+                        tGMoney.setSourceId(appUserMsg.getId());
+                        tGMoney.setNote("推广收益");
+                        tGMoney.setTradeType("TG");
+                        tGMoney.setMoney(new BigDecimal(3));
+                        payService.createShouMoney(tGMoney);
                     }
                 }
             }

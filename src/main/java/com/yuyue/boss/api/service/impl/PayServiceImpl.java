@@ -1,5 +1,6 @@
 package com.yuyue.boss.api.service.impl;
 
+import com.yuyue.boss.api.domain.ChangeMoney;
 import com.yuyue.boss.api.domain.Order;
 import com.yuyue.boss.api.mapper.PayMapper;
 import com.yuyue.boss.api.service.PayService;
@@ -21,5 +22,9 @@ public class PayServiceImpl implements PayService {
 
     @Override
     public List<Order> findOrderList(String startTime) { return payMapper.findOrderList(startTime);}
+
+    @Override
+    public void createShouMoney(ChangeMoney tGMoney) {
+        payMapper.createShouMoney(tGMoney);}
 
 }
