@@ -426,7 +426,7 @@ public class SendController extends BaseController{
     /**
      * 极光商家卖出商品通知 : 8
      * @param orderId
-     * @return
+     * @return  1
      */
     @RequestMapping("/sendClotheSold")
     @ResponseBody
