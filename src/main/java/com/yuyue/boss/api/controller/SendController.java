@@ -378,8 +378,13 @@ public class SendController extends BaseController {
         return new ResponseData(CodeEnum.SUCCESS);
     }
 
-    /*
-    * 商铺审核通过推送*/
+    /**
+     * 第二版
+     * 商铺审核通过推送
+     * @param mallShop
+     * @param status
+     * @return
+     */
     public ResponseData sendMallShopInfoJPush(MallShop mallShop, String status){
         JPush jPush = new JPush();
         String str = "拒绝!";
@@ -387,16 +392,16 @@ public class SendController extends BaseController {
             str = "通过!";
         }
         try {
-            log.info("极光广告审核的通知开始-------------->>start");
+            log.info("极光商铺审核开始-------------->>start");
             AppUser appUserMsg = appUserService.getAppUserMsg(mallShop.getMerchantId(),"");
             if (StringUtils.isNotNull(appUserMsg)){
                 Map<String, String> map = Maps.newHashMap();
                 map.put("type","6");
-                map.put("notice","广告审核通知");
+                map.put("notice","极光商铺审核");
                 jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
-                jPush.setNotificationTitle("Hello!"+mallShop.getCommodityName()+"Your mall shop review passed"+str);
+                jPush.setNotificationTitle("您好!"+mallShop.getCommodityName()+"商铺审核"+str);
                 jPush.setMsgTitle(mallShop.getCommodityName());
-                jPush.setMsgContent("You can sell the goods at the Entertainment Mall.！");
+                jPush.setMsgContent("您可以开始你店铺商品添加啦！以便客户购买！");
                 jPush.setExtras("6");
 
                 List<String> stringList = new ArrayList<>();
@@ -407,9 +412,9 @@ public class SendController extends BaseController {
                 }
             }
         } catch (Exception e) {
-            log.info("极光广告审核的通知失败！");
+            log.info("极光商铺审核的通知失败！");
             sendService.updateValid("10C",jPush.getId());
-            return new ResponseData(CodeEnum.E_400.getCode(),"极光广告审核的通知失败！");
+            return new ResponseData(CodeEnum.E_400.getCode(),"极光商铺审核的通知失败！");
         }
         return new ResponseData(CodeEnum.SUCCESS);
     }
