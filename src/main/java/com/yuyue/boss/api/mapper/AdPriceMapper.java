@@ -12,4 +12,7 @@ public interface AdPriceMapper extends MyBaseMapper<AdPrice> {
 
     List<AdPrice> getAdvertisementFeeInfo(@Param(value = "priceId") String priceId);
 
+
+    AdPrice getAdFee(@Param(value = "priceId") String priceId);
+
 }

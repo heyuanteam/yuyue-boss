@@ -24,11 +24,11 @@ public class MallShop implements Serializable {
     //    商品/服务名称
     private String commodityName;
     //    上传图片
-//    private List<ShopImage> images;
+    private List<ShopImage> images;
     //    商品/服务介绍
     private String detail;
     //    规格
-//    private List<Specification> specifications;
+    private List<Specification> specifications;
     //    服务方式
     private String serviceType;
     //    运费
@@ -49,6 +49,8 @@ public class MallShop implements Serializable {
     private String feeArea;
     //    上传视频
     private String videoPath;
+    //商铺评分
+    private double score;
     //    备注
     private String remark;
     //    创建时间
@@ -56,14 +58,23 @@ public class MallShop implements Serializable {
     private Date createTime;
     //    商铺状态
     private String status;
+    //是否修改
+    private String isRevise;
     //    推广开始时间
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
-    private Date startTime;
+    private String startTime;
     //    推广结束时间
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
-    private Date endTime;
+    private String endTime;
     //    订单id
     private String orderId;
+    //视频id
+    private String videoId;
+    //广告对象
+    private AdPrice adPrice;
+    //支付的广告费id
+    private String priceId;
+
 
 
 }

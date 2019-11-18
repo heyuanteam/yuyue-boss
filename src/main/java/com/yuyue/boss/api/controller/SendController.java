@@ -1,6 +1,5 @@
 package com.yuyue.boss.api.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
@@ -11,22 +10,17 @@ import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.PageUtil;
 import com.yuyue.boss.utils.RandomSaltUtil;
-import com.yuyue.boss.utils.RedisUtil;
 import com.yuyue.boss.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +33,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping(value="/send", produces = "application/json; charset=UTF-8")
-public class SendController extends BaseController{
+public class SendController extends BaseController {
 
     @Autowired
     private JPushClients jPushClients;
@@ -129,7 +123,7 @@ public class SendController extends BaseController{
      * 极光艺人审核的通知 : 1
      * @return
      */
-    public ResponseData sendShowJPush(ArtistReview artistReview,AppUser appUserMsg,String status){
+    public ResponseData sendShowJPush(ArtistReview artistReview, AppUser appUserMsg, String status){
         JPush jPush = new JPush();
         String str = "拒绝!";
         if ("10B".equals(status)){
@@ -168,7 +162,7 @@ public class SendController extends BaseController{
      * @param status
      * @return
      */
-    public ResponseData sendAdReviewJPush(String id,AppUser appUserMsg,String status){
+    public ResponseData sendAdReviewJPush(String id, AppUser appUserMsg, String status){
         JPush jPush = new JPush();
         String str = "拒绝!";
         if ("10B".equals(status)){
@@ -205,7 +199,7 @@ public class SendController extends BaseController{
      * 极光关注人发视频的通知 : 3
      * @return
      */
-    public ResponseData sendFollowJPush(String authorId,String videoId){
+    public ResponseData sendFollowJPush(String authorId, String videoId){
         JPush jPush = new JPush();
         try {
             log.info("极光关注人发视频开始-------------->>start");
@@ -309,7 +303,7 @@ public class SendController extends BaseController{
      * @param status        现场状态
      * @return
      */
-    public ResponseData sendVideoJPush(String id,String authorId,String status){
+    public ResponseData sendVideoJPush(String id, String authorId, String status){
         JPush jPush = new JPush();
         String str = "拒绝!";
         if ("10B".equals(status)){
@@ -350,7 +344,7 @@ public class SendController extends BaseController{
      * @param status
      * @return
      */
-    public ResponseData sendCommodityInfoJPush(Commodity commodity,String status){
+    public ResponseData sendCommodityInfoJPush(Commodity commodity, String status){
         JPush jPush = new JPush();
         String str = "拒绝!";
         if ("10C".equals(status)){
@@ -384,6 +378,41 @@ public class SendController extends BaseController{
         return new ResponseData(CodeEnum.SUCCESS);
     }
 
+    /*
+    * 商铺审核通过推送*/
+    public ResponseData sendMallShopInfoJPush(MallShop mallShop, String status){
+        JPush jPush = new JPush();
+        String str = "拒绝!";
+        if ("10C".equals(status)){
+            str = "通过!";
+        }
+        try {
+            log.info("极光广告审核的通知开始-------------->>start");
+            AppUser appUserMsg = appUserService.getAppUserMsg(mallShop.getMerchantId(),"");
+            if (StringUtils.isNotNull(appUserMsg)){
+                Map<String, String> map = Maps.newHashMap();
+                map.put("type","6");
+                map.put("notice","广告审核通知");
+                jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
+                jPush.setNotificationTitle("Hello!"+mallShop.getCommodityName()+"Your mall shop review passed"+str);
+                jPush.setMsgTitle(mallShop.getCommodityName());
+                jPush.setMsgContent("You can sell the goods at the Entertainment Mall.！");
+                jPush.setExtras("6");
+
+                List<String> stringList = new ArrayList<>();
+                if (StringUtils.isNotEmpty(appUserMsg.getJpushName())) {
+                    log.info("极光别名==========" + appUserMsg.getJpushName());
+                    stringList.add(appUserMsg.getJpushName());
+                    return getJPush(jPush, stringList, map, 0);
+                }
+            }
+        } catch (Exception e) {
+            log.info("极光广告审核的通知失败！");
+            sendService.updateValid("10C",jPush.getId());
+            return new ResponseData(CodeEnum.E_400.getCode(),"极光广告审核的通知失败！");
+        }
+        return new ResponseData(CodeEnum.SUCCESS);
+    }
     /**
      * 极光库存通知 : 7
      * @param shopid
@@ -391,7 +420,7 @@ public class SendController extends BaseController{
      */
     @RequestMapping("/sendStockJPush")
     @ResponseBody
-    public ResponseData sendStockJPush(String merchantId,String shopid){
+    public ResponseData sendStockJPush(String merchantId, String shopid){
         JPush jPush = new JPush();
         try {
             log.info("极光库存通知开始-------------->>start");
@@ -467,7 +496,7 @@ public class SendController extends BaseController{
         return new ResponseData(CodeEnum.SUCCESS);
     }
 
-    public ResponseData getJPush(JPush jPush,List<String> stringList,Map<String, String> map,int num){
+    public ResponseData getJPush(JPush jPush, List<String> stringList, Map<String, String> map, int num){
         List<JPush> list = sendService.getValid(jPush.getNotificationTitle(),jPush.getMsgTitle(),
                 jPush.getMsgContent(),jPush.getExtras(),jPush.getValid());
         if (CollectionUtils.isEmpty(list)) {

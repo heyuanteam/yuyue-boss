@@ -5,18 +5,14 @@ import com.github.pagehelper.PageInfo;
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.AppUser;
-import com.yuyue.boss.api.domain.ChangeMoney;
-import com.yuyue.boss.api.domain.Order;
 import com.yuyue.boss.api.domain.SystemUser;
 import com.yuyue.boss.api.service.AppUserService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +28,10 @@ import java.util.Map;
 public class AppUserController extends BaseController {
     @Autowired
     private AppUserService appUserService;
+
+
+
+
 
     /**
      * 获取用户信息
@@ -92,7 +92,7 @@ public class AppUserController extends BaseController {
     @ResponseBody
     @RequiresPermissions("UserManager:save")//具有 user:detail 权限的用户才能访问此方法
     @LoginRequired
-    public ResponseData updateAppUser(AppUser appUser,HttpServletRequest request, HttpServletResponse response){
+    public ResponseData updateAppUser(AppUser appUser, HttpServletRequest request, HttpServletResponse response){
         getParameterMap(request,response);
         log.info("更新用户信息-------------->>/userManager/updateAppUser");
         appUserService.updateAppUser(appUser);

@@ -7,17 +7,19 @@ import java.util.List;
 public interface VideoService {
     List<UploadFile> getVideoInfoList();
 
+    List<UploadFile> getVideoListPlayAmount();
 
-    List<UploadFile> searchVideoInfo(String id,String categoryId, String startTime,String endTime,
-                                        String title,String status,String nickName);
+
+    List<UploadFile> searchVideoInfo(String id, String categoryId, String startTime, String endTime,
+                                     String title, String status, String nickName);
 
     void insertVideo(UploadFile uploadFile);
 
     //void updateVideo(UploadFile uploadFile);
 
-    void updateVideo(String id,String authorId,String status);
+    void updateVideo(String id, String authorId, String status);
 
-    void deleteVideoById(String tableName,String id);
+    void deleteVideoById(String tableName, String id);
 
 
 

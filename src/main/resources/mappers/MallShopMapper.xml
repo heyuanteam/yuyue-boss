@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yuyue.boss.api.mapper.MallShopMapper">
+    <resultMap type="com.yuyue.boss.api.domain.MallShop" id="MallShop">
+        <id column="shop_id" property="shopId"/>
+        <result column="merchant_id" property="merchantId"/>
+        <result column="category" property="category"/>
+        <result column="commodity_name" property="commodityName"/>
+        <result column="detail" property="detail"/>
+        <result column="service_type" property="serviceType"/>
+        <result column="fare" property="fare"/>
+        <result column="commodity_price" property="commodityPrice"/>
+        <result column="business_time" property="businessTime"/>
+        <result column="business_status" property="businessStatus"/>
+        <result column="merchant_addr" property="merchantAddr"/>
+        <result column="merchant_phone" property="merchantPhone"/>
+        <result column="service_area" property="serviceArea"/>
+        <result column="fee_area" property="feeArea"/>
+        <result column="video_path" property="videoPath"/>
+        <result column="score" property="score"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="is_revise" property="isRevise"/>
+        <result column="status" property="status"/>
+        <result column="order_id" property="orderId"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <collection property="images" ofType="com.yuyue.boss.api.domain.ShopImage" >
+            <id column="image_id" property="imageId"/>
+            <result column="image_path" property="imagePath"/>
+            <result column="image_sort" property="imageSort"/>
+        </collection>
+    </resultMap>
+    <!-- 查询单条记录 -->
+    <select id="getMyMallShop"  parameterType="String" resultMap="MallShop">
+
+       SELECT * FROM yuyue_mall_shop s
+        left join  yuyue_mall_shop_images i
+        on   s.shop_id = i.shop_id
+        where s.shop_id  = #{shopId}
+        order by i.image_sort
+
+    </select>
+
+
+    <select id="getAllMallShop"  parameterType="String" resultMap="MallShop">
+
+        SELECT * FROM (
+        SELECT * FROM yuyue_mall_shop s
+        where 1=1
+        <if test="content != null and content != '' ">
+            and CONCAT(IFNULL(s.category,''),IFNULL(s.commodity_name,''),IFNULL(s.detail,''))  LIKE  concat('%', #{content}, '%')
+        </if>
+
+        UNION
+        SELECT * FROM yuyue_mall_shop s1 where 1 = 1
+        <if test="content != null and content != '' ">
+            and  s1.shop_id in (SELECT shop_id FROM yuyue_mall_shop_commodity where
+            CONCAT(IFNULL(commodity_size,''),IFNULL(commodity_detail,''))LIKE concat('%', #{content}, '%') )
+        </if>
+        ) ss ,yuyue_mall_shop_images images
+        where ss.shop_id = images.shop_id and images.image_sort = '0'
+        <if test = "status != null and status != '' ">
+            and ss.status  = #{status}
+        </if>
+        <if test = "isRevise != null and isRevise != '' ">
+            and ss.is_revise = #{isRevise}
+        </if>
+        order by ss.create_time desc
+    </select>
+
+
+    <update id="updateMyMallShopInfo" parameterType="com.yuyue.boss.api.domain.MallShop">
+        update  yuyue_mall_shop
+        <set>
+
+            <if test=" category != null and category != ''">
+                category = #{category},
+            </if>
+
+            <if test=" commodityName != null and commodityName != ''">
+                commodity_name = #{commodityName},
+            </if>
+
+            <if test=" detail != null and detail != ''">
+                detail = #{detail},
+            </if>
+
+            <if test=" serviceType != null and serviceType != ''">
+                service_type = #{serviceType},
+            </if>
+
+            <if test=" fare != null and fare != ''">
+                fare = #{fare},
+            </if>
+
+            <if test=" businessTime != null and businessTime != ''">
+                business_time = #{businessTime},
+            </if>
+
+            <if test=" merchantAddr != null and merchantAddr != ''">
+                merchant_addr = #{merchantAddr},
+            </if>
+
+            <if test=" merchantPhone != null and merchantPhone != ''">
+                merchant_phone = #{merchantPhone},
+            </if>
+
+            <if test=" serviceArea != null and serviceArea != ''">
+                service_area = #{serviceArea},
+            </if>
+
+            <if test=" feeArea != null and feeArea != ''">
+                fee_area = #{feeArea},
+            </if>
+
+            <if test=" videoPath != null and videoPath != ''">
+                video_path = #{videoPath},
+            </if>
+
+            <if test=" videoId != null and videoId != ''">
+                video_id = #{videoId},
+            </if>
+
+            <if test=" startTime != null and startTime != ''">
+                start_time = #{startTime},
+            </if>
+            <if test=" endTime != null and endTime != ''">
+                end_time = #{endTime},
+            </if>
+
+            <if test=" remark != null and remark != ''">
+                remark = #{remark},
+            </if>
+            <if test=" score != null and score != ''">
+                score = #{score},
+            </if>
+            <if test=" status != null and status != ''">
+                status = #{status},
+            </if>
+            <if test=" isRevise != null and isRevise != ''">
+                is_revise = #{isRevise},
+            </if>
+        </set>
+        where  shop_id = #{shopId}
+    </update>
+
+</mapper>
