@@ -39,6 +39,11 @@ public class MallShopServiceImpl implements MallShopService {
 
 
     @Override
+    public List<MallShop> getShopByBusinessStatus(String businessStatus) {
+        return mallShopMapper.getShopByBusinessStatus(businessStatus);
+    }
+
+    @Override
     public List<MallShop> getMallShopByVideoId(String videoId) {
         return mallShopMapper.getMallShopByVideoId(videoId);
     }

@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface MallShopService {
 
+/*---------------------------------商铺定时任务---------------------------------*/
+    List<MallShop> getShopByBusinessStatus(String businessStatus);
 
 /*---------------------------------商铺接口---------------------------------*/
     List<MallShop> getMallShopByVideoId(String videoId);

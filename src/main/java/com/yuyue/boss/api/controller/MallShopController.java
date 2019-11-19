@@ -90,7 +90,6 @@ public class MallShopController extends BaseController {
     }
 
 
-
     /**
      * (通过userId查询商铺详情)查询我的商铺（我的广告）
      * @param

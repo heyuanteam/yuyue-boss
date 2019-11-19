@@ -24,7 +24,8 @@ public interface MallShopMapper extends MyBaseMapper<MallShop> {
                                   @Param(value = "content") String content,
                                   @Param(value = "isRevise") String isRevise);
 
-
+    @Select("SELECT * FROM yuyue_mall_shop WHERE  business_status = #{businessStatus} and status = '10C' ")
+    List<MallShop> getShopByBusinessStatus(String businessStatus);
 
     @Select("SELECT * FROM yuyue_mall_shop WHERE merchant_id = #{merchantId}  ")
     List<MallShop> getMyMallShops(@Param(value = "merchantId") String merchantId);

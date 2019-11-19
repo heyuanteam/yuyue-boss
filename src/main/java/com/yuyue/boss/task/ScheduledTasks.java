@@ -37,6 +37,8 @@ public class ScheduledTasks {
     private AppUserService appUserService;
     @Autowired
     private SendService sendService;
+    @Autowired
+    private MallShopService mallShopService;
 
     /**
      * 订单支付超时判断,25分钟
@@ -177,6 +179,40 @@ public class ScheduledTasks {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Scheduled(cron = "0 */1 * * * ?")
+    private void updateShopBusinessStatusIsOpen(){
+        log.info("执行商城定时任务：---------->营业状态111111");
+        List<MallShop> open = mallShopService.getShopByBusinessStatus("open");
+        String format = new SimpleDateFormat("hh:mm").format(new Date());
+        if (StringUtils.isEmpty(open))return;
+        for (MallShop mallShop:open
+             ) {
+            String[] split = mallShop.getBusinessTime().split("-");
+            if (format.compareTo(split[0]) >= 0 && format.compareTo(split[1]) < 0){
+                continue;
+            }else {
+                mallShopService.updateMyMallShopStatus("rest",mallShop.getShopId());
+            }
+
+        }
+    }
+/*            01:00      02:00-07:00  open            16           */
+    @Scheduled(cron = "0 */1 * * * ?")
+    private void updateShopBusinessStatusIsRest(){
+        log.info("执行商城定时任务：---------->打烊状态000000");
+        List<MallShop> rest = mallShopService.getShopByBusinessStatus("rest");
+        String format = new SimpleDateFormat("HH:mm").format(new Date());
+        if (StringUtils.isEmpty(rest))return;
+        for (MallShop mallShop:rest
+        ) {
+            String[] split = mallShop.getBusinessTime().split("-");
+            if (format.compareTo(split[0]) >= 0 && format.compareTo(split[1]) < 0){
+                mallShopService.updateMyMallShopStatus("open",mallShop.getShopId());
+            }
+
         }
     }
 }

@@ -190,7 +190,32 @@ public class SimpleTest {
         String[] imageName = videoName.split("\\.");
         System.out.println("tu:"+ imageName[0]);*/
 
-        System.out.println(ResultJSONUtils.getHashValue("yuyue_upload_file_", "3778AC96E77C45C28B9DA9044D32E70A"));
+//        System.out.println(ResultJSONUtils.getHashValue("yuyue_upload_file_", "3778AC96E77C45C28B9DA9044D32E70A"));
+//
+
+        System.out.println("------06:00-23:59----");
+        //Calendar calendar = new
+//        Date startDate = null;
+//        Date endDate = null;
+//        try {
+//            startDate = new SimpleDateFormat("hh:mm:ss").parse("07:37:00");
+//            endDate = new SimpleDateFormat("hh:mm:ss").parse("12:37:00");
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+        String startDate = "06:00";
+        String endDate = "20:59";
+        String format = new SimpleDateFormat("HH:mm").format(new Date());
+        System.out.println(format);
+        if (format.compareTo(startDate) >= 0 && format.compareTo(endDate) < 0 ){
+            System.out.println("开业 yes");
+        }else {
+            System.out.println("打烊no");
+        }
+
+
+
+
 
 
     }
