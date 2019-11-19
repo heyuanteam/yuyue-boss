@@ -63,6 +63,8 @@ public class ChangeMoneyController extends BaseController {
                     if (StringUtils.isNotNull(appUserMsg) && StringUtils.isNotEmpty(appUserMsg.getRealName())) {
                         changeMoney.setSourceName(appUserMsg.getRealName());
                         list.add(changeMoney);
+                    } else {
+                        list.add(changeMoney);
                     }
                 }
             }
