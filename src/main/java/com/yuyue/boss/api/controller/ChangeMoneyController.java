@@ -60,7 +60,7 @@ public class ChangeMoneyController extends BaseController {
             if (CollectionUtils.isNotEmpty(changeMoneyList)) {
                 for (ChangeMoney changeMoney: changeMoneyList) {
                     AppUser appUserMsg = appUserService.getAppUserMsg(changeMoney.getSourceId(),"");
-                    if (StringUtils.isNotEmpty(appUserMsg.getRealName())) {
+                    if (StringUtils.isNotNull(appUserMsg) && StringUtils.isNotEmpty(appUserMsg.getRealName())) {
                         changeMoney.setSourceName(appUserMsg.getRealName());
                         list.add(changeMoney);
                     }
