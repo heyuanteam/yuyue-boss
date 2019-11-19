@@ -7,7 +7,6 @@
             DATE_FORMAT(b.CREATE_TIME,'%Y-%m-%d %H:%i:%s') createTime,
             DATE_FORMAT(b.COMPLETE_TIME,'%Y-%m-%d %H:%i:%s') completeTime,
             a.USER_REAL_NAME yiName
-
         from yuyue_change_money b,yuyue_merchant a
         WHERE  1=1 and b.merchantId = a.ID
         <if test="changeNo != null and changeNo != ''"> and b.changeNo = #{changeNo} </if>
@@ -15,8 +14,12 @@
         <if test="yiName != null and yiName != ''"> and CONCAT(a.USER_REAL_NAME) like concat('%', #{yiName}, '%') </if>
         <if test="mobile != null and mobile != ''"> and CONCAT(b.mobile) like concat('%', #{mobile}, '%')</if>
         <if test="status != null and status != ''"> and   b.status = #{status} </if>
-        <if test="note != null and note != ''"> and   CONCAT(b.note) like concat('%', #{note}, '%')  </if>
-
+        <if test="note != null and note != '' and note == 'income'">
+            and b.tradeType in ('TXZFB','TXZWX','SY','TG') and b.note in ('income','用户收益','推广收益')
+        </if>
+        <if test="note != null and note != '' and note == 'mIncome'">
+            and b.tradeType in ('TXZFB','TXZWX','SC') and b.note in ('mIncome','商城收益')
+        </if>
         <if test=" startTime !=null and startTime!='' ">
             <![CDATA[ and	DATE_FORMAT(b.CREATE_TIME, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT(#{startTime}, '%Y-%m-%d %H:%i:%s')]]>
         </if>
