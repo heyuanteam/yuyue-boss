@@ -56,17 +56,15 @@ public class ChangeMoneyController extends BaseController {
             List<ChangeMoney> changeMoneyList = changeMoneyService.getChangeMoneyList("",parameterMap.get("changeNo"),parameterMap.get("sourceName"),
                     parameterMap.get("tradeType"), parameterMap.get("mobile"),parameterMap.get("status"),parameterMap.get("note"),
                     parameterMap.get("yiName"),parameterMap.get("startTime"),parameterMap.get("endTime"));
-            List<ChangeMoney> list = new ArrayList<>();
+            PageUtil pageUtil = new PageUtil(changeMoneyList);
             if (CollectionUtils.isNotEmpty(changeMoneyList)) {
                 for (ChangeMoney changeMoney: changeMoneyList) {
                     AppUser appUserMsg = appUserService.getAppUserMsg(changeMoney.getSourceId(),"");
-                    if (StringUtils.isNotEmpty(appUserMsg.getRealName())) {
+                    if (StringUtils.isNotNull(appUserMsg) && StringUtils.isNotEmpty(appUserMsg.getRealName())) {
                         changeMoney.setSourceName(appUserMsg.getRealName());
-                        list.add(changeMoney);
                     }
                 }
             }
-            PageUtil pageUtil = new PageUtil(list);
             return new ResponseData(pageUtil);
         } catch (Exception e) {
             log.info("===========>>>>>>获取账户流水记录失败！");
