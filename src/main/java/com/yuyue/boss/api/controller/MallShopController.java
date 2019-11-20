@@ -180,14 +180,22 @@ public class MallShopController extends BaseController {
                                              HttpServletResponse response){
         log.info("修改商铺状态------------->>/mallShop/updateMallShopStatus");
         getParameterMap(request, response);
+        ResponseData responseData = new ResponseData();
         String shopId = request.getParameter("shopId");
         String status = request.getParameter("status");
-        ResponseData responseData = new ResponseData();
+        String isRevise = request.getParameter("isRevise");
+
+
         if(StringUtils.isEmpty(shopId)) {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"爆款Id为空r！！");
         }
         //获取商铺信息
         MallShop mallShopByShopId = mallShopService.mallShopByShopId(shopId);
+        if(StringUtils.isNotEmpty(isRevise)){
+            mallShopByShopId.setIsRevise(isRevise);
+            mallShopService.updateMyMallShopInfo(mallShopByShopId);
+            return  responseData;
+        }
         System.out.println(mallShopByShopId);
         if (StringUtils.isNull(mallShopByShopId)){
             return new ResponseData("未查询该数据a！！");

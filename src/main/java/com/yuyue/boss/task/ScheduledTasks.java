@@ -199,7 +199,7 @@ public class ScheduledTasks {
 
         }
     }
-/*            01:00      02:00-07:00  open            16           */
+/*            01:00      02:00-07:00  open     02   23  22:00-10:11    16           */
     @Scheduled(cron = "0 */1 * * * ?")
     private void updateShopBusinessStatusIsRest(){
         log.info("执行商城定时任务：---------->打烊状态000000");
@@ -210,6 +210,8 @@ public class ScheduledTasks {
         ) {
             String[] split = mallShop.getBusinessTime().split("-");
             if (format.compareTo(split[0]) >= 0 && format.compareTo(split[1]) < 0){
+                mallShopService.updateMyMallShopStatus("open",mallShop.getShopId());
+            }else if (format.compareTo(split[1]) <= 0 && format.compareTo(split[0]) < 0){
                 mallShopService.updateMyMallShopStatus("open",mallShop.getShopId());
             }
 
