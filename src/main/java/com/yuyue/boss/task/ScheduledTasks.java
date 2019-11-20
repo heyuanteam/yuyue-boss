@@ -182,14 +182,13 @@ public class ScheduledTasks {
         }
     }
 
-    @Scheduled(cron = "0 */1 * * * ?")
+    @Scheduled(cron = "0 */10 * * * ?")
     private void updateShopBusinessStatusIsOpen(){
         log.info("执行商城定时任务：---------->营业状态111111");
         List<MallShop> open = mallShopService.getShopByBusinessStatus("open");
         String format = new SimpleDateFormat("hh:mm").format(new Date());
         if (StringUtils.isEmpty(open))return;
-        for (MallShop mallShop:open
-             ) {
+        for (MallShop mallShop:open) {
             String[] split = mallShop.getBusinessTime().split("-");
             if (format.compareTo(split[0]) >= 0 && format.compareTo(split[1]) < 0){
                 continue;
@@ -206,8 +205,7 @@ public class ScheduledTasks {
         List<MallShop> rest = mallShopService.getShopByBusinessStatus("rest");
         String format = new SimpleDateFormat("HH:mm").format(new Date());
         if (StringUtils.isEmpty(rest))return;
-        for (MallShop mallShop:rest
-        ) {
+        for (MallShop mallShop:rest) {
             String[] split = mallShop.getBusinessTime().split("-");
             if (format.compareTo(split[0]) >= 0 && format.compareTo(split[1]) < 0){
                 mallShopService.updateMyMallShopStatus("open",mallShop.getShopId());
