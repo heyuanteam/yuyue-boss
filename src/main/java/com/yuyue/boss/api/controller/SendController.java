@@ -467,14 +467,13 @@ public class SendController extends BaseController {
     public ResponseData sendClotheSold(String orderId){
         JPush jPush = new JPush();
         try {
-            log.info("极光商家卖出商品通知开始-------------->>start");
+            log.info("极光商家卖出商品通知开始-------------->>orderId"+orderId);
             Order order = orderService.getOrderById(orderId);
             List<OrderItem> list = sendService.findOrderItemId(orderId);
             if (CollectionUtils.isNotEmpty(list) && StringUtils.isNotNull(order) && "10B".equals(order.getStatus())){
                 Map<String, String> map = Maps.newHashMap();
                 map.put("type","8");
                 map.put("notice","极光商家卖出商品通知");
-                map.put("orderId",orderId);
                 jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
                 jPush.setNotificationTitle("您好！娱悦APP提醒您！有商品已卖出！请及时查看！");
                 jPush.setMsgTitle("极光商家卖出商品通知");
