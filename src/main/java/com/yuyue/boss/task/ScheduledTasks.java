@@ -200,7 +200,7 @@ public class ScheduledTasks {
         }
     }
 /*            01:00      02:00-07:00  open            16           */
-    @Scheduled(cron = "0 */1 * * * ?")
+    @Scheduled(cron = "0 */30 * * * ?")
     private void updateShopBusinessStatusIsRest(){
         log.info("执行商城定时任务：---------->打烊状态000000");
         List<MallShop> rest = mallShopService.getShopByBusinessStatus("rest");
