@@ -23,9 +23,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> getOrderList(String orderNo, String realName, String mobile,
                                     String tradeType, String status, String startTime,
-                                    String endTime, String type) {
+                                    String endTime, String type,String userType) {
         return orderMapper.getOrderList(orderNo, realName, mobile, tradeType,
-                status, startTime, endTime, type);
+                status, startTime, endTime, type, userType);
     }
 
     @Override

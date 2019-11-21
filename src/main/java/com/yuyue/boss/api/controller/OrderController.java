@@ -11,6 +11,7 @@ import com.yuyue.boss.api.service.AppUserService;
 import com.yuyue.boss.api.service.OrderService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
+import com.yuyue.boss.utils.PageUtil;
 import com.yuyue.boss.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -55,29 +56,11 @@ public class OrderController extends BaseController {
        }
         else {
            PageHelper.startPage(Integer.parseInt(page), 10);
-//           List<String> typeList = new ArrayList<>();
-//           StringBuffer sb = new StringBuffer();
-//           if (StringUtils.isNotEmpty(order.getType())) {
-//               String[] split = order.getType().split(",");
-//               for (int i = 0; i < split.length; i++) {
-//                   if (i == split.length-1) {
-//                       sb.append(split[i]);
-//                   } else {
-//                       sb.append(split[i]).append(",");
-//                   }
-//               }
-//           }
-//           if (CollectionUtils.isNotEmpty(typeList)) {
-//               order.setTypeList(typeList);
-//           }
            List<Order> orderList = orderService.getOrderList(parameterMap.get("orderNo"),parameterMap.get("realName"),
                    parameterMap.get("mobile"),parameterMap.get("tradeType"),parameterMap.get("status"),
-                   parameterMap.get("startTime"),parameterMap.get("endTime"),parameterMap.get("type"));
-           PageInfo<Order> pageInfo=new PageInfo<>(orderList);
-           long total = pageInfo.getTotal();
-           int pages = pageInfo.getPages();
-           int currentPage = Integer.parseInt(page);
-           return new ResponseData(orderList, currentPage,(int) total,pages);
+                   parameterMap.get("startTime"),parameterMap.get("endTime"),parameterMap.get("type"),parameterMap.get("userType"));
+           PageUtil pageUtil = new PageUtil(orderList);
+           return new ResponseData(pageUtil);
        }
 
     }

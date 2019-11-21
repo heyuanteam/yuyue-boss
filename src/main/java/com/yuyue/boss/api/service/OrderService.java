@@ -13,5 +13,5 @@ public interface OrderService {
 
     List<Order> getOrderList(String orderNo, String realName, String mobile,
                              String tradeType, String status, String startTime,
-                             String endTime, String type);
+                             String endTime, String type,String userType);
 }

@@ -7,7 +7,7 @@
         DATE_FORMAT(o.CREATE_TIME,'%Y-%m-%d %H:%i:%s') createTime,
         DATE_FORMAT(o.COMPLETE_TIME,'%Y-%m-%d %H:%i:%s') completeTime,
         o.id,o.orderNo,o.tradeType,o.money,o.mobile,o.status,o.statusCode,o.note,o.responseCode,o.responseMessage,o.merchantId,o.sourceId,
-        u.USER_REAL_NAME realName
+        u.USER_REAL_NAME realName,u.USER_TYPE userType
 
         from yuyue_order o,yuyue_merchant u
         WHERE  1=1 and o.merchantId = u.ID
@@ -15,19 +15,16 @@
         <if test="orderNo != null and orderNo != ''"> and o.orderNo = #{orderNo} </if>
         <if test="tradeType != null and tradeType != ''"> and CONCAT(o.tradeType) like concat('%', #{tradeType}, '%') </if>
 
-        <if test="type == 'XN'">
+        <if test="type == 'XF'">
             <!--<foreach collection="typeList" item="item" index="index"  open="and o.tradeType in (" separator=","  close=")" >
                 #{item}
             </foreach>-->
-            and o.tradeType in ('CZWX','XF','CZIOS','SMWX','SMZFB','CZZFB')
+            and o.tradeType in ('XFZFB','XFWX')
         </if>
-        <if test="type == 'GG'">
-            and o.tradeType in ('GGWX','GGZFB')
-        </if>
-        <if test="type == '' ">
-            and o.tradeType in ('GGWX','GGZFB','CZWX','XF','CZIOS','SMWX','SMZFB','CZZFB')
-        </if>
-
+        <if test="type == 'GG'"> and o.tradeType in ('GGWX','GGZFB') </if>
+        <if test="type == 'APP'"> and o.tradeType in ('SCZFB','SCWX') </if>
+        <if test="type == 'WAP'"> and o.tradeType in ('SMWX','SMZFB','WAPWX','WAPZFB') </if>
+        <if test="userType != null and userType != ''"> and CONCAT(u.USER_TYPE) like concat('%', #{userType}, '%') </if>
         <if test="realName != null and realName != ''"> and CONCAT(u.USER_REAL_NAME) like concat('%', #{realName}, '%') </if>
         <if test="mobile != null and mobile != ''"> and   CONCAT(o.mobile) like concat('%', #{mobile}, '%')  </if>
         <if test="status != null and status != ''"> and   o.status = #{status} </if>

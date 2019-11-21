@@ -48,6 +48,8 @@ public class Order implements Serializable {
     private String endTime;
     //用户信息
     private String realName;
+    //用户类型
+    private String userType;
     //订单类型
 //    private List<String> typeList;
     //订单类型
