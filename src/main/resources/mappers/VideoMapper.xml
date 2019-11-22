@@ -160,6 +160,9 @@
             <if test="status != null and status != ''">
                 status= #{status},
             </if>
+            <if test="categoryId != null and categoryId != ''">
+                categoryId= #{categoryId},
+            </if>
         </set>
         WHERE 1=1
         <if test="id != null and id != ''">

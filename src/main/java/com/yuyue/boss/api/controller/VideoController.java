@@ -10,6 +10,7 @@ import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.*;
 
+import com.yuyue.boss.api.service.AppService;
 import com.yuyue.boss.api.service.VideoService;
 
 import com.yuyue.boss.enums.CodeEnum;
@@ -47,6 +48,8 @@ public class VideoController extends BaseController {
     private SendController sendController;
     @Autowired
     private FastFileStorageClient storageClient;
+    @Autowired
+    private AppService appService;
 
     /**
      * 视频审核 -获取视频列表
@@ -155,9 +158,45 @@ public class VideoController extends BaseController {
 
             sendController.sendVideoJPush(id,authorId,status);
             sendController.sendFollowJPush(authorId,id);
-            videoService.updateVideo(id,authorId,status);
+            videoService.updateVideo(id,authorId,"",status);
         } else {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"现场状态类型错误！！");
+        }
+        return new ResponseData(CodeEnum.SUCCESS);
+
+    }
+
+
+    /**
+     * 视频审核 - 修改视频状态
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/updateVideoCategory")
+    @ResponseBody
+    @RequiresPermissions("video:save")//具有 user:detail 权限的用户才能访问此方法
+    @LoginRequired
+    public ResponseData updateVideoCategory(HttpServletRequest request, HttpServletResponse response){
+        getParameterMap(request,response);
+        log.info("视频审核 - 修改视频分类----------------->/video/updateVideoCategory");
+        String id = request.getParameter("id");
+        String authorId = request.getParameter("authorId");
+        String categoryId = request.getParameter("categoryId");
+        if (StringUtils.isEmpty(id))
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"视频id为空！！");
+        else if (StringUtils.isEmpty(authorId))
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"作者id为空！！");
+        else if (StringUtils.isEmpty(categoryId))
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"视频分类为空！！");
+        List<UploadFile> videoInfoList = videoService.searchVideoInfo(id,"","","","","","");
+        if (StringUtils.isEmpty(videoInfoList))return new ResponseData(CodeEnum.SUCCESS.getCode(),"未查询该视频！！");
+        List<VideoCategory> appMenuList = appService.getAPPMenuList("", "", "", 0);
+
+        if (StringUtils.isNotEmpty(appMenuList)){
+            videoService.updateVideo(id,authorId,categoryId,"");
+        } else {
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"未查到该分类！！");
         }
         return new ResponseData(CodeEnum.SUCCESS);
 
