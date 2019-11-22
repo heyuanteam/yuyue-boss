@@ -141,7 +141,7 @@ public class ShiroConfiguration {
         redisManager.setPort(port);
         redisManager.setPassword(password);
         // 配置过期时间
-        redisManager.setExpire(1800);
+        redisManager.setExpire(14400);
         return redisManager;
     }
 
