@@ -164,7 +164,7 @@
         <if  test="userType!=null and userType!='' "> and USER_TYPE=#{userType} </if>
         <if test="fatherPhone!=null and fatherPhone!='' "> and fatherPhone=#{fatherPhone} </if>
         <if test="addrDetail!=null and addrDetail!='' ">
-            and #{addrDetail}  LIKE  concat('%', IFNULL(ADDR_DETAIL,''),IFNULL(city,''), '%')
+            and #{addrDetail}  LIKE  concat('%',ADDR_DETAIL, '%')
         </if>
         <if  test="startTime != null and startTime != '' ">
             <![CDATA[ and DATE_FORMAT(CREATE_TIME, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT( #{startTime}, '%Y-%m-%d %H:%i:%s') ]]>
