@@ -5,7 +5,10 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yuyue.boss.api.domain.*;
+import com.yuyue.boss.api.mapper.ArtistReviewMapper;
 import com.yuyue.boss.api.mapper.LoginMapper;
+import com.yuyue.boss.api.mapper.MallShopMapper;
+import com.yuyue.boss.api.mapper.VideoMapper;
 import com.yuyue.boss.api.service.LoginService;
 import com.yuyue.boss.utils.BeanUtil;
 import com.yuyue.boss.utils.StringUtils;
@@ -19,7 +22,9 @@ import org.springframework.util.DigestUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author ly
@@ -30,6 +35,24 @@ public class LoginServiceImpl implements LoginService {
 
     @Autowired
     private LoginMapper loginMapper;
+    @Autowired
+    private ArtistReviewMapper artistReviewMapper;
+    @Autowired
+    private MallShopMapper mallShopMapper;
+    @Autowired
+    private VideoMapper videoMapper;
+    @Override
+    public Map<String,Integer> getReviewNum() {
+        int artistReviewNum = artistReviewMapper.getArtistReviewNum();
+        int shopReviewNum = mallShopMapper.getShopReviewNum();
+        int videoReviewNum = videoMapper.getVideoReviewNum();
+        Map<String,Integer> map =  new HashMap<>();
+        map.put("artistReviewNum",artistReviewNum);
+        map.put("shopReviewNum",shopReviewNum);
+        map.put("videoReviewNum",videoReviewNum);
+        return map;
+    }
+
 
     @Override
     public List<SystemUser> getSystemUserMsg(String loginName,String password,String id,String phone) { return loginMapper.getSystemUserMsg(loginName,password,id,phone); }

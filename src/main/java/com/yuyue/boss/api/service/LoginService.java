@@ -4,9 +4,12 @@ import com.github.pagehelper.PageInfo;
 import com.yuyue.boss.api.domain.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface LoginService {
+
+    Map<String,Integer> getReviewNum();
 
     //获取系统用户个人信息以及权限
     UserVO getUser(String loginName, String password);

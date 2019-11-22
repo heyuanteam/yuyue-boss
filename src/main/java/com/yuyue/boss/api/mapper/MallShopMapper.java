@@ -46,4 +46,7 @@ public interface MallShopMapper extends MyBaseMapper<MallShop> {
     @Transactional
     @Update("update yuyue_mall_shop set `business_status` = #{businessStatus} where shop_id = #{shopId} ")
     void updateMyMallShopStatus(@Param(value = "businessStatus") String businessStatus, @Param(value = "shopId") String shopId);
+
+    @Select("SELECT COUNT(*) FROM yuyue_mall_shop WHERE `status` = '10B'")
+    int getShopReviewNum();
 }

@@ -4,6 +4,7 @@ package com.yuyue.boss.api.mapper;
 import com.yuyue.boss.api.domain.ArtistReview;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,10 @@ public interface ArtistReviewMapper extends MyBaseMapper<ArtistReview> {
     @Transactional
     @Delete("DELETE FROM yuyue_show_name WHERE id = #{id}")
     void deleteArtistReviewById(@Param(value = "id") String id);
+
+
+    @Select("SELECT count(*) FROM yuyue_show_name where `status` = '10A' ")
+    int getArtistReviewNum();
 
 
 }

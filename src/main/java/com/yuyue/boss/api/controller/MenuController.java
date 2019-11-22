@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,16 @@ public class MenuController extends BaseController {
 
     @Autowired
     private LoginService loginService;
+
+    @RequestMapping(value = "/getReviewNum")
+    @ResponseBody
+    @RequiresPermissions("MenuManager:menu")
+    public ResponseData getReviewNum( HttpServletRequest request, HttpServletResponse response) {
+        log.info("获取审核数------------>>/menu/getReviewNum");
+        getParameterMap(request, response);
+
+        return new ResponseData(loginService.getReviewNum());
+    }
 
     /**
      * 获取系统菜单
