@@ -38,7 +38,6 @@ public class MenuController extends BaseController {
 
     @RequestMapping(value = "/getReviewNum")
     @ResponseBody
-    @RequiresPermissions("MenuManager:menu")
     public ResponseData getReviewNum( HttpServletRequest request, HttpServletResponse response) {
         log.info("获取审核数------------>>/menu/getReviewNum");
         getParameterMap(request, response);
