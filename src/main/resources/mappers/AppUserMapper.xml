@@ -156,26 +156,15 @@
         zfbNumber,zfbRealName
         FROM yuyue_merchant
         where 1=1
-        <if  test="id!=null and id!='' ">
-            and id = #{id}
-        </if>
-        <if  test="nickName!=null and nickName!='' ">
-            and CONCAT(user_nick_name) like concat('%', #{nickName}, '%')
-        </if>
-        <if  test="realName!=null and realName!='' ">
-            and CONCAT(user_real_name) like concat('%', #{realName}, '%')
-        </if>
-        <if  test="phone!=null and phone!='' ">
-            and phone=#{phone}
-        </if>
-        <if  test="userStatus!=null and userStatus!='' ">
-            and user_status=#{userStatus}
-        </if>
-        <if  test="userType!=null and userType!='' ">
-            and USER_TYPE=#{userType}
-        </if>
-        <if test="fatherPhone!=null and fatherPhone!='' ">
-            and fatherPhone=#{fatherPhone}
+        <if  test="id!=null and id!='' "> and id = #{id} </if>
+        <if  test="nickName!=null and nickName!='' "> and CONCAT(user_nick_name) like concat('%', #{nickName}, '%') </if>
+        <if  test="realName!=null and realName!='' "> and CONCAT(user_real_name) like concat('%', #{realName}, '%') </if>
+        <if  test="phone!=null and phone!='' "> and phone=#{phone} </if>
+        <if  test="userStatus!=null and userStatus!='' "> and user_status=#{userStatus} </if>
+        <if  test="userType!=null and userType!='' "> and USER_TYPE=#{userType} </if>
+        <if test="fatherPhone!=null and fatherPhone!='' "> and fatherPhone=#{fatherPhone} </if>
+        <if test="addrDetail!=null and addrDetail!='' ">
+            and #{addrDetail}  LIKE  concat('%',ADDR_DETAIL, '%')
         </if>
         <if  test="startTime != null and startTime != '' ">
             <![CDATA[ and DATE_FORMAT(CREATE_TIME, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT( #{startTime}, '%Y-%m-%d %H:%i:%s') ]]>
