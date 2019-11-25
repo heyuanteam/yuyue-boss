@@ -165,7 +165,7 @@ public class MallShopController extends BaseController {
     }
 
     /**
-     * 修改商铺状态
+     * 修改商铺状态（商铺审核）
      * @param
      * @param request
      * @param response
@@ -239,7 +239,7 @@ public class MallShopController extends BaseController {
         String end = simpleDateFormat.format(instance.getTime());
         mallShop.setEndTime(end);
         //插入到视频中
-        List<UploadFile> videoInfoList = videoService.getVideoInfoList();
+        List<UploadFile> videoInfoList = videoService.getVideoListPlayAmount();
 
         for (UploadFile uploadFile:videoInfoList
         ) {
