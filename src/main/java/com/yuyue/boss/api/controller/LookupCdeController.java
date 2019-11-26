@@ -42,15 +42,13 @@ public class LookupCdeController extends BaseController {
 
     /**
      * 获取全部字典
-     * @param systemUser
      * @param request
      * @param response
      * @return
      */
     @RequestMapping(value = "/getSystemList")
     @ResponseBody
-    @LoginRequired
-    public ResponseData getSystemList(@CurrentUser SystemUser systemUser, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseData getSystemList(HttpServletRequest request, HttpServletResponse response) {
         log.info("获取全部字典----------->>/lookupCde/getSystemList");
         getParameterMap(request, response);
         try {
