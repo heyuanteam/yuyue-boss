@@ -183,7 +183,7 @@ public class MallShopController extends BaseController {
         ResponseData responseData = new ResponseData();
         String shopId = request.getParameter("shopId");
         String status = request.getParameter("status");
-        String isRevise = request.getParameter("isRevise");
+        //String isRevise = request.getParameter("isRevise");
 
 
         if(StringUtils.isEmpty(shopId)) {
@@ -191,11 +191,11 @@ public class MallShopController extends BaseController {
         }
         //获取商铺信息
         MallShop mallShopByShopId = mallShopService.mallShopByShopId(shopId);
-        if(StringUtils.isNotEmpty(isRevise)){
-            mallShopByShopId.setIsRevise(isRevise);
-            mallShopService.updateMyMallShopInfo(mallShopByShopId);
-            return  responseData;
-        }
+//        if(StringUtils.isNotEmpty(isRevise)){
+//            mallShopByShopId.setIsRevise(isRevise);
+//            mallShopService.updateMyMallShopInfo(mallShopByShopId);
+//            return  responseData;
+//        }
         System.out.println(mallShopByShopId);
         if (StringUtils.isNull(mallShopByShopId)){
             return new ResponseData("未查询该数据a！！");
@@ -211,8 +211,10 @@ public class MallShopController extends BaseController {
         if (StringUtils.isNotEmpty(status)){
             if ("10A".equals(status)   || "10B".equals(status)   || "10C".equals(status)
                     || "10D".equals(status)   || "10E".equals(status ) ){
-                if ("10C".equals(status)){
-                    mallShopByShopId = spreadToVideo(mallShopByShopId);
+                if ("10C".equals(status) ){
+                    if (StringUtils.isEmpty(mallShopByShopId.getVideoId())){
+                        mallShopByShopId = spreadToVideo(mallShopByShopId);
+                    }
                     sendController.sendMallShopInfoJPush(mallShopByShopId,mallShopByShopId.getStatus());
                 }
             }
@@ -220,6 +222,7 @@ public class MallShopController extends BaseController {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"状态输入错误！d");
         }
         mallShopByShopId.setStatus(status);
+        mallShopByShopId.setIsRevise("N");
         mallShopService.updateMyMallShopInfo(mallShopByShopId);
         return responseData;
     }
