@@ -54,18 +54,18 @@ import java.util.List;
     }
 
     // 为null处理
-    @Bean
-    public HttpMessageConverters fastJsonConverters() {
-        FastJsonHttpMessageConverter4 fastConverter = new FastJsonHttpMessageConverter4();
-        FastJsonConfig fastJsonConfig = new FastJsonConfig();
-        fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat, SerializerFeature.IgnoreNonFieldGetter,
-                SerializerFeature.WriteMapNullValue, SerializerFeature.WriteNullStringAsEmpty);
-        fastConverter.setFastJsonConfig(fastJsonConfig);
-        List supportedMediaTypes = new ArrayList();
-        supportedMediaTypes.add(new MediaType("text", "json", Charset.forName("utf8")));
-        supportedMediaTypes.add(new MediaType("application", "json", Charset.forName("utf8")));
-        fastConverter.setSupportedMediaTypes(supportedMediaTypes);
-        HttpMessageConverter<?> converter = fastConverter;
-        return new HttpMessageConverters(converter);
-    }
+//    @Bean
+//    public HttpMessageConverters fastJsonConverters() {
+//        FastJsonHttpMessageConverter4 fastConverter = new FastJsonHttpMessageConverter4();
+//        FastJsonConfig fastJsonConfig = new FastJsonConfig();
+//        fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat, SerializerFeature.IgnoreNonFieldGetter,
+//                SerializerFeature.WriteMapNullValue, SerializerFeature.WriteNullStringAsEmpty);
+//        fastConverter.setFastJsonConfig(fastJsonConfig);
+//        List supportedMediaTypes = new ArrayList();
+//        supportedMediaTypes.add(new MediaType("text", "json", Charset.forName("utf8")));
+//        supportedMediaTypes.add(new MediaType("application", "json", Charset.forName("utf8")));
+//        fastConverter.setSupportedMediaTypes(supportedMediaTypes);
+//        HttpMessageConverter<?> converter = fastConverter;
+//        return new HttpMessageConverters(converter);
+//    }
 }
