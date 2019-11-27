@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 
 import java.math.BigDecimal;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,11 +62,12 @@ public class ScheduledTasks {
     }
 
     /**
-     * 业务员推广奖励,30分钟
+     * 业务员推广奖励,3分钟
      */
-    @Scheduled(cron = "0 0/30 * * * *")
+    @Scheduled(cron = "0 0/3 * * * *")
     public void toExtension() {
         log.info("业务员推广奖励开始==================================>>>>>>>>>>>");
+//        商户奖励
         Calendar c = Calendar.getInstance();//可以对每个时间域单独修改
         c.add(Calendar.MINUTE,-35);
         String startTime = dateFormat.format(c.getTime());
@@ -76,30 +78,53 @@ public class ScheduledTasks {
                 AppUser appUserMsg = appUserService.getAppUserMsg( mallShop.getMerchantId(),"");
                 if (StringUtils.isNotNull(appUserMsg) && "10A".equals(appUserMsg.getRewardStatus())
                         && StringUtils.isNotEmpty(appUserMsg.getFatherPhone())) {
-                    AppUser appUser = appUserService.getAppUserMsg("", appUserMsg.getFatherPhone());
-                    if (StringUtils.isNotNull(appUser)) {
-                        log.info(appUser.getRealName()+"推荐的"+appUserMsg.getRealName()+"=====成功发布商品啦！奖励后"+appUser.getIncome());
-                        appUser.setIncome(ResultJSONUtils.updateTotalMoney(appUser, new BigDecimal(3), "+"));
-                        appUserService.updateAppUser(appUser);
-                        appUserMsg.setRewardStatus("10B");
-                        appUserService.updateAppUser(appUserMsg);
 
-                        ChangeMoney tGMoney = new ChangeMoney();
-                        tGMoney.setChangeNo("YYTG" + RandomSaltUtil.randomNumber(14));
-                        tGMoney.setId(RandomSaltUtil.generetRandomSaltCode(32));
-                        tGMoney.setStatus("10B");
-                        tGMoney.setMobile(appUser.getPhone());
-                        tGMoney.setMerchantId(appUser.getId());
-                        tGMoney.setSourceId(appUserMsg.getId());
-                        tGMoney.setNote("推广收益");
-                        tGMoney.setTradeType("TG");
-                        tGMoney.setMoney(new BigDecimal(3));
-                        payService.createShouMoney(tGMoney);
-                    }
+                    addMoney(appUserMsg,new BigDecimal(3));
+                    appUserMsg.setRewardStatus("10B");
+                    appUserService.updateAppUser(appUserMsg);
+                }
+            }
+        }
+//-----------------------------------------------------------------------------------------------
+        List<AppUser> list = appUserService.getAppUserFatherPhoneList();
+        for (AppUser appUser: list) {
+//            实名
+            if ("10A".equals(appUser.getExtensionStatus()) && "10B".equals(appUser.getUserStatus())) {
+                log.info("实名奖励==========>>>>>>>>");
+                addMoney(appUser,new BigDecimal(1));
+                appUser.setExtensionStatus("10B");
+                appUserService.updateAppUser(appUser);
+//            艺人奖励
+                if ("10A".equals(appUser.getYiStatus()) && "2".equals(appUser.getUserType())) {
+                    log.info("艺人奖励==========>>>>>>>>");
+                    addMoney(appUser,new BigDecimal(1));
+                    appUser.setYiStatus("10B");
+                    appUserService.updateAppUser(appUser);
                 }
             }
         }
         log.info("业务员推广奖励结束==================================>>>>>>>>>>>");
+    }
+
+    public void addMoney(AppUser user,BigDecimal bigDecimal){
+        AppUser appUser = appUserService.getAppUserMsg("", user.getFatherPhone());
+        if (StringUtils.isNotNull(appUser)) {
+            log.info(appUser.getRealName()+"推荐的"+user.getRealName()+"=====成功！奖励前"+appUser.getIncome());
+            appUser.setIncome(ResultJSONUtils.updateTotalMoney(appUser, bigDecimal, "+"));
+            appUserService.updateAppUser(appUser);
+
+            ChangeMoney tGMoney = new ChangeMoney();
+            tGMoney.setChangeNo("YYTG" + RandomSaltUtil.randomNumber(14));
+            tGMoney.setId(RandomSaltUtil.generetRandomSaltCode(32));
+            tGMoney.setStatus("10B");
+            tGMoney.setMobile(appUser.getPhone());
+            tGMoney.setMerchantId(appUser.getId());
+            tGMoney.setSourceId(user.getId());
+            tGMoney.setNote("推广收益");
+            tGMoney.setTradeType("TG");
+            tGMoney.setMoney(bigDecimal);
+            payService.createShouMoney(tGMoney);
+        }
     }
 
     /**

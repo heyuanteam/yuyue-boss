@@ -32,5 +32,10 @@ public class AppUserServiceImpl implements AppUserService {
     public void delAppUser(String id) { appUserMapper.delAppUser(id); }
 
     @Override
+    public List<AppUser> getAppUserFatherPhoneList() {
+        return appUserMapper.getAppUserFatherPhoneList();
+    }
+
+    @Override
     public void insertAppUser(AppUser appUser) { appUserMapper.insertAppUser(appUser); }
 }

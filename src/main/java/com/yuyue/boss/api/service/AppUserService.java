@@ -16,4 +16,6 @@ public interface AppUserService {
     List<AppUser> getAppUserMsgList(AppUser appUser);
 
     void delAppUser(String id);
+
+    List<AppUser> getAppUserFatherPhoneList();
 }
