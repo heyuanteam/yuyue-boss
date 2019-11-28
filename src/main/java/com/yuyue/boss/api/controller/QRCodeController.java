@@ -60,7 +60,7 @@ public class QRCodeController extends BaseController{
         String qrCodeName = yuYueSite.get(0).getStartTime().split(" ")[0]+yuYueSite.get(0).getTitle();
         //获取logo路径
         QRCodeUtil.zxingCodeCreate(content, qrCodeName, size, System.getProperty("user.dir").replace("bin", "webapps")+"/qrcode_image/logo.png");
-        qrCodePath="http://101.37.252.177:8088/qrcode_image/"+qrCodeName+".jpg";
+        qrCodePath="http://101.37.252.177:28088/qrcode_image/"+qrCodeName+".jpg";
         yuYueSiteService.insertQRCodePath(content,qrCodePath);
         }catch (Exception e){
             return new ResponseData(CodeEnum.PARAM_ERROR);
