@@ -96,9 +96,9 @@ public class ShiroConfiguration {
         logger.info("=======================shirio=======================");
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         // 自定义缓存实现 使用redis
-        securityManager.setCacheManager(cacheManager());
+//        securityManager.setCacheManager(cacheManager());
         // 自定义session管理 使用redis
-        securityManager.setSessionManager(SessionManager());
+//        securityManager.setSessionManager(SessionManager());
         securityManager.setRealm(userRealm());
         return securityManager;
     }
