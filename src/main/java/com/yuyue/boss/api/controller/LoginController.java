@@ -84,7 +84,7 @@ public class LoginController extends BaseController{
             UserVO user = (UserVO) SecurityUtils.getSubject().getPrincipal();
             user.setToken(loginService.getToken(user));
             redisUtil.setString(Constants.REDIS_KEY_PREFIX_SHIRO_TOKEN + user.getToken(),
-                    user.getPermissions(), Constants.REDIS_SHIRO_TOKEN_EXPIRES);
+                    user.getPermissions());
 //            获取菜单
             List<SystemMenuVo> menuList = loginService.getMenuList(user.getLoginName(), user.getPassword());
             Iterator<SystemMenuVo> iterator = menuList.iterator();
@@ -135,7 +135,7 @@ public class LoginController extends BaseController{
             UserVO user = (UserVO) SecurityUtils.getSubject().getPrincipal();
             user.setToken(loginService.getToken(user));
             redisUtil.setString(Constants.REDIS_KEY_PREFIX_SHIRO_TOKEN + user.getToken(),
-                    user.getPermissions(), Constants.REDIS_SHIRO_TOKEN_EXPIRES);
+                    user.getPermissions());
 
 //            获取菜单
             List<SystemMenuVo> menuList = loginService.getMenuList(user.getLoginName(), user.getPassword());
