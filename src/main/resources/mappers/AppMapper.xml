@@ -12,7 +12,7 @@
         <if test="versionNo!=null and versionNo!=''">and b.version_no like concat('%', #{versionNo}, '%') </if>
         <if test="systemType!=null and systemType!='' ">  and b.`system_type` = #{systemType}  </if>
         <if test="appVersionId!=null and appVersionId!='' ">  and b.id = #{appVersionId}  </if>
-        order by b.number
+        order by b.CREATE_TIME
     </select>
 
     <!-- 修改版本 -->
