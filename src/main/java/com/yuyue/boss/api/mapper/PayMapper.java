@@ -21,8 +21,8 @@ public interface PayMapper extends MyBaseMapper<Order> {
     List<Order> findOrderList(@Param(value = "startTime") String startTime);
 
     @Transactional
-    @Insert("INSERT into yuyue_change_money (id,changeNo,tradeType,money,merchantId,mobile,note,sourceId)  values  " +
-            " (#{id},#{changeNo},#{tradeType},#{money},#{merchantId},#{mobile},#{note},#{sourceId})")
+    @Insert("INSERT into yuyue_change_money (id,changeNo,tradeType,money,merchantId,mobile,note,sourceId,historyMoney)  values  " +
+            " (#{id},#{changeNo},#{tradeType},#{money},#{merchantId},#{mobile},#{note},#{sourceId},#{historyMoney})")
     @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
     void createShouMoney(ChangeMoney tGMoney);
 }

@@ -123,6 +123,7 @@ public class ScheduledTasks {
             tGMoney.setNote("推广收益");
             tGMoney.setTradeType("TG");
             tGMoney.setMoney(bigDecimal);
+            tGMoney.setHistoryMoney(appUser.getIncome().subtract(bigDecimal));
             payService.createShouMoney(tGMoney);
         }
     }
