@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 广告推广表
@@ -59,6 +60,8 @@ public class Advertisement implements Serializable {
     private String status;
     //商家信息
     private AppUser appUser;
+    //买家的店面
+    private List<MallShop> mallShops;
 
 
 }

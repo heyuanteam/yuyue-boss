@@ -10,7 +10,6 @@ public class ResponseData<T> {
     private String message;
 
 
-
     private int total;
 
     private int pages;

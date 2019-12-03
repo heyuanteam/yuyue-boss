@@ -1,14 +1,8 @@
 package com.yuyue.boss.api.service.impl;
 
 
-import com.yuyue.boss.api.domain.AdPrice;
-import com.yuyue.boss.api.domain.MallShop;
-import com.yuyue.boss.api.domain.ShopImage;
-import com.yuyue.boss.api.domain.Specification;
-import com.yuyue.boss.api.mapper.AdPriceMapper;
-import com.yuyue.boss.api.mapper.MallShopMapper;
-import com.yuyue.boss.api.mapper.ShopImageMapper;
-import com.yuyue.boss.api.mapper.SpecificationMapper;
+import com.yuyue.boss.api.domain.*;
+import com.yuyue.boss.api.mapper.*;
 import com.yuyue.boss.api.service.MallShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,11 +20,12 @@ public class MallShopServiceImpl implements MallShopService {
     private SpecificationMapper specificationMapper;
     @Autowired
     private AdPriceMapper adPriceMapper;
-
-   /* @Autowired
+    @Autowired
     private MallOrderItemMapper mallOrderItemMapper;
     @Autowired
     private MallAddressMapper mallAddressMapper;
+   /*
+
     @Autowired
     private LoginMapper loginMapper;
     @Autowired
@@ -134,12 +129,12 @@ public class MallShopServiceImpl implements MallShopService {
 
 
 
-    /*@Override
+   @Override
     public List<OrderItem> getMallOrderItem(String orderId, String shopId, String status) {
         return mallOrderItemMapper.getMallOrderItem(orderId,shopId,status);
     }
 
-    @Override
+     /*@Override
     public List<String> getOrderToItem(String shopId,String consumerId,String status) {
         return mallOrderItemMapper.getOrderToItem(shopId,consumerId,status);
     }
@@ -184,5 +179,8 @@ public class MallShopServiceImpl implements MallShopService {
 //
 //    }
 
-
+    @Override
+    public MallAddress getMallAddress(String addressId) {
+        return mallAddressMapper.getMallAddress(addressId);
+    }
 }

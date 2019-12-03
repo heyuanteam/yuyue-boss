@@ -28,6 +28,18 @@
             <result column="HEADP_URL" property="headpUrl"/>
         </association>
     </resultMap>
+    <select id="getAdReview" resultType="com.yuyue.boss.api.domain.Advertisement" parameterType="String">
+        select
+        DATE_FORMAT(a.APPLICATION_TIME,'%Y-%m-%d %H:%i:%s') APPLICATION_TIME,
+        a.id,a.userId,a.merchantAddr,a.businessLicense,a.idCardZM,a.idCardFM,a.agencyCode,
+        a.merchantName,a.phone,a.produceAddr,a.fixedPhone,a.email,a.wx,a.qqNum,a.merchandiseUrl,a.telephone,a.status
+        from yuyue_advertisement_info a
+         WHERE  1=1
+        <if test="merchantId != null and merchantId != ''">
+            and   a.userId = #{merchantId}
+        </if>
+        limit 1
+    </select>
 
     <select id="getAdReviewList" resultMap="myAdvertisement" parameterType="String">
         select

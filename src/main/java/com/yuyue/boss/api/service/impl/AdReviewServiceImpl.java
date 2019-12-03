@@ -26,4 +26,11 @@ public class AdReviewServiceImpl implements AdReviewService {
     public void updateAdReviewStatus(String id, String status) {
         adReviewMapper.updateAdReviewStatus(id,status);
     }
+
+    @Override
+    public Advertisement getAdReview(String merchantId) {
+        return adReviewMapper.getAdReview(merchantId);
+    }
+
+
 }

@@ -27,6 +27,8 @@ public class OrderItem implements Serializable {
     private String commodityId;
     //      消费者id
     private String consumerId;
+    //      商户id
+    private String merchantId;
 
     //      运费
     private BigDecimal fare;

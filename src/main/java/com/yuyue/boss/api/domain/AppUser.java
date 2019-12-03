@@ -103,6 +103,9 @@ public class AppUser implements Serializable {
 
     private String endTime;
 
+    //
+    private List<Advertisement> advertisements;
+
 
 
 //    用户id			id            	  string

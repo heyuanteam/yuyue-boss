@@ -2,15 +2,10 @@ package com.yuyue.boss.api.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
-import com.yuyue.boss.api.domain.AdPrice;
-import com.yuyue.boss.api.domain.MallShop;
-import com.yuyue.boss.api.domain.Specification;
-import com.yuyue.boss.api.domain.UploadFile;
-import com.yuyue.boss.api.service.LoginService;
-import com.yuyue.boss.api.service.MallShopService;
-import com.yuyue.boss.api.service.PayService;
-import com.yuyue.boss.api.service.VideoService;
+import com.yuyue.boss.api.domain.*;
+import com.yuyue.boss.api.service.*;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.StringUtils;
@@ -23,11 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -50,6 +44,12 @@ public class MallShopController extends BaseController {
 
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private AppUserService appUserService;
+    @Autowired
+    private AdReviewService adReviewService;
 
 
 
@@ -257,6 +257,103 @@ public class MallShopController extends BaseController {
 
         return mallShop;
     }
+
+    /**
+     * 查询订单
+     * @param appUser
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "getOrderDetail")
+    @ResponseBody
+    @LoginRequired
+    @RequiresPermissions("OrderPayment:menu")//具有 user:detail 权限的用户才能访问此方法
+    public ResponseData getOrderDetail(@CurrentUser AppUser appUser,
+                                             HttpServletRequest request, HttpServletResponse response) {
+
+        ResponseData responseData = new ResponseData();
+        log.info("查询订单------------->>/mallShop/getOrderDetail");
+        getParameterMap(request, response);
+
+        String orderId = request.getParameter("orderId");
+
+        //获取商城中我的订单列表
+
+        Order order = orderService.getOrderById(orderId);
+        List<ReturnOrderDetail> returnOrderDetailList = new ArrayList<>();
+        if (StringUtils.isNull(order)) {
+            responseData.setMessage("未查到该订单");
+            return responseData;
+        }
+        //订单
+
+//        String createTime = order.getCreateTime();
+//        if (StringUtils.isNotNull(createTime)) {
+//            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//            Date date = null;
+//            try {
+//                date = formatter.parse(createTime);
+//                returnOrderDetail.setCreateTime(date);
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//        }
+        //获取订单中每个订单项
+        ReturnOrderDetail returnOrderDetail = new ReturnOrderDetail();
+        AppUser appUserMsg = appUserService.getAppUserMsg(order.getMerchantId(), "");
+
+
+
+        List<OrderItem> orderItems = mallShopService.getMallOrderItem(orderId, "", "");
+        String addressId = "";
+        List<Advertisement> advertisements = new ArrayList<>();
+        List<MallShop> mallShops = new ArrayList<>();
+        Map<String,List<OrderItem>> map = orderItems.stream().collect(Collectors.groupingBy(OrderItem::getShopId));
+        for (String key: map.keySet()
+             ) {
+            MallShop myMallShop = mallShopService.getMyMallShop(key);
+            List<Specification> commodities = new ArrayList<>();
+            for (OrderItem orderItem : map.get(key)
+            ) {
+                Specification specificationById = mallShopService.getSpecificationById(orderItem.getCommodityId());
+
+                //设置规格购买数量
+                specificationById.setCommodityNum(orderItem.getCommodityNum());
+                //设置规格价格
+                specificationById.setCommodityPrice(orderItem.getCommodityPrice());
+                //设置订单的状态
+                specificationById.setStatus(order.getStatus());
+                commodities.add(specificationById);
+                addressId = orderItem.getAddressId();
+            }
+            myMallShop.setSpecifications(commodities);
+            mallShops.add(myMallShop);
+        }
+
+        Map<String,List<MallShop>> mallShopsMap = mallShops.stream().collect(Collectors.groupingBy(MallShop::getMerchantId));
+        for (String key:mallShopsMap.keySet()
+        ) {
+            System.out.println(key+":"+mallShopsMap.get(key));
+        }
+        for (String key:mallShopsMap.keySet()
+             ) {
+            Advertisement adReview = adReviewService.getAdReview(key);
+
+            adReview.setMallShops(mallShopsMap.get(key));
+            System.out.println("adReview:"+adReview);
+            advertisements.add(adReview);
+        }
+        appUserMsg.setAdvertisements(advertisements);
+        returnOrderDetail.setAppUser(appUserMsg);
+        returnOrderDetail.setMallAddress(mallShopService.getMallAddress(addressId));
+
+        responseData.setMessage("查询成功！");
+        responseData.setData(returnOrderDetail);
+        return responseData;
+    }
+
+
 
     /**
      * 获取爆款

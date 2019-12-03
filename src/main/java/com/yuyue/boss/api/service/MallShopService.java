@@ -1,10 +1,7 @@
 package com.yuyue.boss.api.service;
 
 
-import com.yuyue.boss.api.domain.AdPrice;
-import com.yuyue.boss.api.domain.MallShop;
-import com.yuyue.boss.api.domain.ShopImage;
-import com.yuyue.boss.api.domain.Specification;
+import com.yuyue.boss.api.domain.*;
 
 import java.util.List;
 
@@ -56,7 +53,7 @@ public interface MallShopService {
 /*---------------------------------订单---------------------------------*/
 
 
-//    List<OrderItem> getMallOrderItem(String orderId, String shopId, String status);
+    List<OrderItem> getMallOrderItem(String orderId, String shopId, String status);
 //
 //
 //    List<String> getOrderToItem(String shopId, String consumerId, String status);
@@ -70,6 +67,6 @@ public interface MallShopService {
 //    //减库存及给商家们加钱的方法
 //    void mallPaySuccess(String orderId);
 
-
+    MallAddress getMallAddress(String addressId);
 
 }

@@ -23,4 +23,9 @@ public interface AdReviewMapper extends MyBaseMapper<Advertisement> {
     void updateAdReviewStatus(@Param(value = "id")String id,@Param(value = "status")String status);
 
 
+
+    Advertisement getAdReview(@Param(value = "merchantId")String merchantId);
+
+
+
 }
