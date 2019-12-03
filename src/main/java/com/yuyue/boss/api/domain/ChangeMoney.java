@@ -46,5 +46,7 @@ public class ChangeMoney implements Serializable {
     private String sourceName;
     //    艺人名称
     private String yiName;
+    //    历史金额
+    private BigDecimal historyMoney;
 
 }
