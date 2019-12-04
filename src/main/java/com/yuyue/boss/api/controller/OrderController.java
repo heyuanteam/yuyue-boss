@@ -5,9 +5,11 @@ import com.github.pagehelper.PageInfo;
 import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.Advertisement;
 import com.yuyue.boss.api.domain.AppUser;
+import com.yuyue.boss.api.domain.MallAddress;
 import com.yuyue.boss.api.domain.Order;
 import com.yuyue.boss.api.service.AdReviewService;
 import com.yuyue.boss.api.service.AppUserService;
+import com.yuyue.boss.api.service.MallShopService;
 import com.yuyue.boss.api.service.OrderService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
@@ -32,6 +34,8 @@ public class OrderController extends BaseController {
 
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private MallShopService mallShopService;
 
 
     /**
@@ -59,6 +63,15 @@ public class OrderController extends BaseController {
            List<Order> orderList = orderService.getOrderList(parameterMap.get("orderNo"),parameterMap.get("realName"),
                    parameterMap.get("mobile"),parameterMap.get("tradeType"),parameterMap.get("status"),
                    parameterMap.get("startTime"),parameterMap.get("endTime"),parameterMap.get("type"),parameterMap.get("userType"));
+           for (Order o:orderList
+                ) {
+               if (o.getTradeType().contains("SC")){
+                   String mallAddressId = orderService.getMallAddress(o.getId());
+                   MallAddress mallAddress = mallShopService.getMallAddress(mallAddressId);
+                   o.setMallAddress(mallAddress);
+               }
+           }
+
            PageUtil pageUtil = new PageUtil(orderList);
            return new ResponseData(pageUtil);
        }

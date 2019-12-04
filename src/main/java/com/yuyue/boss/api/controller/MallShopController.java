@@ -281,7 +281,7 @@ public class MallShopController extends BaseController {
         //获取商城中我的订单列表
 
         Order order = orderService.getOrderById(orderId);
-        List<ReturnOrderDetail> returnOrderDetailList = new ArrayList<>();
+        //List<ReturnOrderDetail> returnOrderDetailList = new ArrayList<>();
         if (StringUtils.isNull(order)) {
             responseData.setMessage("未查到该订单");
             return responseData;

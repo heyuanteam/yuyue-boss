@@ -38,5 +38,10 @@ public class OrderServiceImpl implements OrderService {
         orderMapper.updateOrder(order);
     }
 
+    @Override
+    public String getMallAddress(String orderId) {
+        return orderMapper.getMallAddress(orderId);
+    }
+
 
 }

@@ -54,5 +54,7 @@ public class Order implements Serializable {
 //    private List<String> typeList;
     //订单类型
     private String type;
+    //订单收货地址
+    private MallAddress mallAddress;
 
 }

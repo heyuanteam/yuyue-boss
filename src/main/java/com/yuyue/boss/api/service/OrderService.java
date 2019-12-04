@@ -10,6 +10,7 @@ public interface OrderService {
     void  deleteOrderById(String id);
 
     void updateOrder(Order order);
+    String getMallAddress(String orderId);
 
     List<Order> getOrderList(String orderNo, String realName, String mobile,
                              String tradeType, String status, String startTime,
