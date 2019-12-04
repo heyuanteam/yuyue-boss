@@ -17,7 +17,7 @@ public interface AppService {
     void insertAppVersion(AppVersion appVersion);
 
     //修改版本
-    void updateAppVersion(String appVersionId, String versionNo, String systemType, String programDescription, String status);
+    void updateAppVersion(String appVersionId, String versionNo, String systemType, String programDescription, String status,String number);
 
     //删除版本
     void delVersion(String appVersionId);

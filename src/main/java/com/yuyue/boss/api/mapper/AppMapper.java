@@ -25,7 +25,7 @@ public interface AppMapper extends MyBaseMapper<AppVersion> {
     @Transactional
     void updateAppVersion(@Param("appVersionId") String appVersionId, @Param("versionNo") String versionNo,
                           @Param("systemType") String systemType, @Param("programDescription") String programDescription,
-                          @Param("status") String status);
+                          @Param("status") String status,@Param("number") String number);
 
     @Transactional
     @Delete("DELETE FROM yuyue_app_version WHERE id =#{appVersionId} ")

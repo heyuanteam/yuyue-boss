@@ -143,7 +143,8 @@ public class AppController extends BaseController {
         }
         try {
             appService.updateAppVersion(parameterMap.get("appVersionId"),parameterMap.get("versionNo"),
-                    parameterMap.get("systemType"),parameterMap.get("programDescription"),parameterMap.get("status"));
+                    parameterMap.get("systemType"),parameterMap.get("programDescription"),parameterMap.get("status")
+                    ,parameterMap.get("number"));
             return new ResponseData(CodeEnum.SUCCESS.getCode(), "修改版本成功！");
         } catch (Exception e) {
             log.info("===========>>>>>>修改版本失败！");

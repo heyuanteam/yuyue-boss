@@ -37,8 +37,8 @@ public class AppServiceImpl implements AppService {
         appMapper.insertAppVersion(appVersion); }
 
     @Override
-    public void updateAppVersion(String appVersionId, String versionNo, String systemType, String programDescription, String status) {
-        appMapper.updateAppVersion(appVersionId,versionNo,systemType,programDescription,status); }
+    public void updateAppVersion(String appVersionId, String versionNo, String systemType, String programDescription, String status,String number) {
+        appMapper.updateAppVersion(appVersionId,versionNo,systemType,programDescription,status,number); }
 
     @Override
     public void delVersion(String appVersionId) {
