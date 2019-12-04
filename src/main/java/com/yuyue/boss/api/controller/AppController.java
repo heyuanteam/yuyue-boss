@@ -134,8 +134,8 @@ public class AppController extends BaseController {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "版本appVersionId不可以为空！");
         }
         List<AppVersion> appVersionList = appService.getVersionList(parameterMap.get("systemType"), parameterMap.get("versionNo"),"");
-        if (!parameterMap.get("versionNo").equals(appVersionList.get(0).getVersionNo())) {
-            if (CollectionUtils.isNotEmpty(appVersionList)){
+        if (CollectionUtils.isNotEmpty(appVersionList)){
+            if (!parameterMap.get("versionNo").equals(appVersionList.get(0).getVersionNo())) {
                 for (AppVersion appVersion:appVersionList) {
                     if (parameterMap.get("versionNo").equals(appVersion.getVersionNo())){
                         return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "版本号已经存在！");
