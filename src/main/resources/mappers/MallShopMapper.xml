@@ -27,6 +27,9 @@
         <result column="status" property="status"/>
         <result column="start_time" property="startTime"/>
         <result column="end_time" property="endTime"/>
+        <result column="gdLon" property="gdLon"/>
+        <result column="gdLat" property="gdLat"/>
+        <result column="distance_id" property="distanceId"/>
         <collection property="images" ofType="com.yuyue.boss.api.domain.ShopImage" >
             <id column="image_id" property="imageId"/>
             <result column="image_path" property="imagePath"/>

@@ -74,6 +74,12 @@ public class MallShop implements Serializable {
     private AdPrice adPrice;
     //支付的广告费id
     private String priceId;
+    //
+    private String gdLon;
+    //
+    private String gdLat;
+    //
+    private String distanceId;
 
 
 
