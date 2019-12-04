@@ -20,6 +20,8 @@ public interface OrderMapper extends MyBaseMapper<Order> {
     @Transactional
     void updateOrder(Order order);
 
+    String getMallAddress(@Param(value = "orderId") String orderId);
+
 
     List<Order> getOrderList(@Param("orderNo") String orderNo,@Param("realName") String realName,@Param("mobile") String mobile,
                              @Param("tradeType") String tradeType,@Param("status") String status,

@@ -36,7 +36,11 @@
         </if>
         ORDER BY o.CREATE_TIME DESC
     </select>
-
+    <select id="getMallAddress" resultType="String" parameterType="String">
+        SELECT DISTINCT(address_id)
+            FROM yuyue_mall_order_item
+             WHERE order_id =  #{orderId} LIMIT 1
+    </select>
 
     <delete id="deleteOrderById" parameterType="String">
         DELETE FROM yuyue_order WHERE ID = #{id}
