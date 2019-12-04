@@ -61,6 +61,7 @@ public class SendController extends BaseController {
         sendMap.put("6","广告审核通知");//不需要参数
         sendMap.put("7","库存通知");//需要参数
         sendMap.put("8","商家卖出商品通知");//需要参数
+        sendMap.put("9","极光商家退款通知");//需要参数
     }
 
     /**
@@ -487,6 +488,49 @@ public class SendController extends BaseController {
                         log.info("极光别名==========" + appUserMsg.getJpushName());
                         stringList.add(appUserMsg.getJpushName());
                     }
+                }
+                if (CollectionUtils.isNotEmpty(stringList)) {
+                    return getJPush(jPush, stringList, map, 0);
+                }
+            }
+        } catch (Exception e) {
+            log.info("极光商家卖出商品通知失败！");
+            sendService.updateValid("10C",jPush.getId());
+            return new ResponseData(CodeEnum.E_400.getCode(),"极光商家卖出商品通知失败！");
+        }
+        return new ResponseData(CodeEnum.SUCCESS);
+    }
+
+    /**
+     * 极光商家退款通知 : 9 (jpushName,sourceId)
+     * @param id
+     * @param sourceId
+     * @return
+     */
+    @RequestMapping("/sendRefund")
+    @ResponseBody
+    public ResponseData sendRefund(String id,String sourceId){
+        JPush jPush = new JPush();
+        try {
+            log.info("极光商家退款通知开始-------------->>id"+id+"=====>>>sourceId"+sourceId);
+            AppUser oldAppUser = appUserService.getAppUserMsg(id,"");
+            AppUser appUser = appUserService.getAppUserMsg(sourceId,"");
+            if (StringUtils.isNotNull(oldAppUser) && StringUtils.isNotNull(appUser)){
+                Map<String, String> map = Maps.newHashMap();
+                map.put("type","9");
+                map.put("notice","极光商家退款通知");
+                jPush.setId(RandomSaltUtil.generetRandomSaltCode(32));
+                jPush.setNotificationTitle("您好！娱悦APP提醒您！有商品已退款成功！请及时查看！");
+                jPush.setMsgTitle("极光商家退款通知");
+                jPush.setMsgContent("您好！娱悦APP提醒您！有商品已退款成功！请及时查看！");
+                jPush.setExtras("9");
+
+                List<String> stringList = new ArrayList<>();
+                if (StringUtils.isNotEmpty(oldAppUser.getJpushName()) || StringUtils.isNotEmpty(appUser.getJpushName())) {
+                    log.info("极光别名==========oldAppUser==>>>>>" + oldAppUser.getJpushName());
+                    log.info("极光别名==========appUser==>>>>>" + appUser.getJpushName());
+                    stringList.add(oldAppUser.getJpushName());
+                    stringList.add(appUser.getJpushName());
                 }
                 if (CollectionUtils.isNotEmpty(stringList)) {
                     return getJPush(jPush, stringList, map, 0);
