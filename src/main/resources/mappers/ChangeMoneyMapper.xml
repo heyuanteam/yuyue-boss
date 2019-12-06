@@ -18,7 +18,7 @@
             and b.tradeType in ('TXZFB','TXZWX','SY','TG') and b.note in ('income','用户收益','推广收益')
         </if>
         <if test="note != null and note != ''and note=='mIncome'">
-            and b.tradeType in ('TXZFB','TXZWX','SC') and b.note in ('mIncome','商城收益')
+            and b.tradeType in ('TXZFB','TXZWX','SC','TKWX','TKZFB') and b.note in ('mIncome','商城收益')
         </if>
         <if test="startTime !=null and startTime!=''">
             <![CDATA[ and	DATE_FORMAT(b.CREATE_TIME, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT(#{startTime}, '%Y-%m-%d %H:%i:%s')]]>
