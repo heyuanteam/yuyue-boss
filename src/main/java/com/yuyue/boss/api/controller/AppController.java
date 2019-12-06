@@ -80,6 +80,8 @@ public class AppController extends BaseController {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "版本类型不可以为空！");
         } else if (StringUtils.isEmpty(parameterMap.get("programDescription"))){
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "版本介绍不可以为空！");
+        } else if (StringUtils.isEmpty(parameterMap.get("sort"))){
+            return new ResponseData(CodeEnum.PARAM_ERROR.getCode(), "版本排序不可以为空！");
         }
         List<AppVersion> appVersionList = appService.getVersionList(parameterMap.get("systemType"), parameterMap.get("versionNo"),"");
         if (CollectionUtils.isNotEmpty(appVersionList)){
@@ -90,16 +92,13 @@ public class AppController extends BaseController {
             }
         }
         try {
-            List<AppVersion> list = appService.getVersionList(parameterMap.get("systemType"), "","");
-            int sort = list.get(list.size()-1).getNumber();
-            sort += 1;
             AppVersion appVersion = new AppVersion();
             appVersion.setAppVersionId(RandomSaltUtil.generetRandomSaltCode(32));
             appVersion.setSystemType(parameterMap.get("systemType"));
             appVersion.setVersionNo(parameterMap.get("versionNo"));
             appVersion.setUpdateUser(systemUser.getLoginName());
             appVersion.setProgramDescription(parameterMap.get("programDescription"));
-            appVersion.setNumber(sort);
+            appVersion.setNumber(Integer.valueOf(parameterMap.get("sort")));
             appService.insertAppVersion(appVersion);
             return new ResponseData(CodeEnum.SUCCESS.getCode(), "添加版本成功！");
         } catch (Exception e) {
