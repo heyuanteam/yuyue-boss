@@ -36,6 +36,12 @@ public class MenuController extends BaseController {
     @Autowired
     private LoginService loginService;
 
+    /**
+     * 红点显示
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping(value = "/getReviewNum")
     @ResponseBody
     public ResponseData getReviewNum( HttpServletRequest request, HttpServletResponse response) {

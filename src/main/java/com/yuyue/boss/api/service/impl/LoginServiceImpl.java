@@ -41,6 +41,7 @@ public class LoginServiceImpl implements LoginService {
     private MallShopMapper mallShopMapper;
     @Autowired
     private VideoMapper videoMapper;
+
     @Override
     public Map<String,Integer> getReviewNum() {
         int artistReviewNum = artistReviewMapper.getArtistReviewNum();
