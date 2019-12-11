@@ -44,6 +44,21 @@ public class AdReviewController extends BaseController {
     @Autowired
     private SendController sendController;
 
+
+    @RequestMapping("/getAdReview")
+    @ResponseBody
+    @RequiresPermissions("advertisement:menu")//具有 user:detail 权限的用户才能访问此方法
+    @LoginRequired
+    public ResponseData getAdReview(HttpServletRequest request, HttpServletResponse response){
+        getParameterMap(request,response);
+        log.info("广告商详情-------------->>/adReview/getAdReview");
+        String userId=request.getParameter("userId");
+        if (StringUtils.isEmpty(userId)){
+            return new ResponseData(CodeEnum.E_90003.getCode(),"用户id不可为空！");
+        }
+        Advertisement adReview = adReviewService.getAdReview(userId);
+        return new ResponseData(adReview);
+    }
     /**
      * 广告商审核列表
      * @param request
