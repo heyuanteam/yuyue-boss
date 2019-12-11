@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yuyue.boss.api.mapper.ReportVideoMapper">
+
+    <!-- 查询单条记录 -->
+    <select id="getReportVideos"  parameterType="String" resultType="com.yuyue.boss.api.domain.ReportVideo">
+        SELECT * FROM yuyue_video_report
+        WHERE 1=1
+                <if test="status != null and status != ''">
+                    and `status` = #{status}
+                </if>
+                <if test="authorId != null and authorId != ''">
+                    and author_id =#{authorId}
+                </if>
+                <if test="videoId != null and videoId != ''">
+                    and video_id = #{videoId}
+                </if>
+        ORDER BY create_time desc
+    </select>
+
+
+</mapper>

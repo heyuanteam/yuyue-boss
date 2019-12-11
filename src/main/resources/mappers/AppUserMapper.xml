@@ -176,4 +176,15 @@
         order  by  CREATE_TIME DESC
     </select>
 
+
+    <select id="getAuthorList" parameterType="String" resultMap="AppUser">
+        SELECT *
+            FROM yuyue_merchant
+            where 1=1  and (USER_TYPE = '2' or USER_TYPE = '4' or USER_TYPE = '5')
+            <if  test="nickName != null and nickName != '' ">
+                and CONCAT(user_nick_name) like concat('%', #{nickName}, '%')
+            </if>
+
+    </select>
+
 </mapper>

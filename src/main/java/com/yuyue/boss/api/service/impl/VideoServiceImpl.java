@@ -50,8 +50,10 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public void deleteVideoById(String tableName,String id) {
         System.out.println(tableName);
-        videoMapper.deleteVideoById(tableName,id);
+       /* videoMapper.deleteVideoById(tableName,id);
         videoMapper.deleteBarrage(id);
-        videoMapper.deleteComment(id);
+        videoMapper.deleteComment(id);*/
+        videoMapper.updateVideo(id, tableName,"","10C");
+
     }
 }

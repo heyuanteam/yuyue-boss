@@ -38,4 +38,8 @@ public interface AppUserMapper extends MyBaseMapper<AppUser> {
 //            "                   -- where fatherPhone is Null or fatherPhone is null or fatherPhone = '' order  by  CREATE_TIME DESC\n" +
 //            "                   where 1=1 order  by  CREATE_TIME DESC " )
     List<AppUser> getAppUserFatherPhoneList();
+
+
+    List<AppUser> getAuthorList(@Param(value = "nickName") String nickName);
+
 }

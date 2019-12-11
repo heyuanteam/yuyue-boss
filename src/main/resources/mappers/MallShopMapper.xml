@@ -70,6 +70,9 @@
         </if>
         <if test = "isRevise != null and isRevise != '' ">
             and ss.is_revise = #{isRevise}
+            <if test = "status == null and status == '' ">
+                and ss.status  = '10C'
+            </if>
         </if>
         order by ss.create_time desc
     </select>

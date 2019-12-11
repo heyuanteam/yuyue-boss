@@ -18,4 +18,7 @@ public interface AppUserService {
     void delAppUser(String id);
 
     List<AppUser> getAppUserFatherPhoneList();
+
+    //通过艺名模糊查询查出所有艺人
+    List<AppUser> getAuthorList(String nickName);
 }

@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,6 +51,34 @@ public class VideoController extends BaseController {
     private FastFileStorageClient storageClient;
     @Autowired
     private AppService appService;
+
+
+
+    @RequestMapping("/getVideoByTitle")
+    @ResponseBody
+    @RequiresPermissions("video:menu")//具有 user:detail 权限的用户才能访问此方法
+    @LoginRequired
+    public ResponseData getVideoByTitle(HttpServletRequest request, HttpServletResponse response){
+        getParameterMap(request,response);
+        //交集参数
+        log.info("视频审核 -获取视频列表-------------->>/video/getVideoByTitle");
+        String title=request.getParameter("title");
+        if (StringUtils.isEmpty(title)){
+            return new ResponseData(CodeEnum.E_90003.getCode(),"标题不可为空！");
+        }
+        List<ReturnValue> list = new ArrayList<>();
+        List<UploadFile> uploadFiles = videoService.searchVideoInfo("", "", "", "", title, "10B", "");
+        if (StringUtils.isNotEmpty(uploadFiles)){
+            for (UploadFile uploadFile:uploadFiles
+                 ) {
+                ReturnValue returnValue =new ReturnValue();
+                returnValue.setId(uploadFile.getId());
+                returnValue.setValue(uploadFile.getTitle());
+                list.add(returnValue);
+            }
+        }
+        return new ResponseData(list);
+    }
 
     /**
      * 视频审核 -获取视频列表

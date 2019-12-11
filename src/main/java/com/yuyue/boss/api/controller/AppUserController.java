@@ -5,7 +5,9 @@ import com.github.pagehelper.PageInfo;
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.AppUser;
+import com.yuyue.boss.api.domain.ReturnValue;
 import com.yuyue.boss.api.domain.SystemUser;
+import com.yuyue.boss.api.domain.UploadFile;
 import com.yuyue.boss.api.service.AppUserService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,8 +33,30 @@ public class AppUserController extends BaseController {
     private AppUserService appUserService;
 
 
-
-
+    @RequestMapping(value = "/getAuthorList" )
+    @ResponseBody
+    @RequiresPermissions("UserManager:menu")//具有 user:detail 权限的用户才能访问此方法
+    @LoginRequired
+    public ResponseData getAuthorList(HttpServletRequest request, HttpServletResponse response) {
+        getParameterMap(request,response);
+        log.info("获取用户信息-------------->>/userManager/getAuthorList");
+        String nickName=request.getParameter("nickName");
+        if (StringUtils.isEmpty(nickName)){
+            return new ResponseData(CodeEnum.E_90003.getCode(),"艺名不可为空！");
+        }
+        List<ReturnValue> list = new ArrayList<>();
+        List<AppUser> authorList = appUserService.getAuthorList(nickName);
+        if (StringUtils.isNotEmpty(authorList)){
+            for (AppUser appUser:authorList
+            ) {
+                ReturnValue returnValue =new ReturnValue();
+                returnValue.setId(appUser.getId());
+                returnValue.setValue(appUser.getNickName());
+                list.add(returnValue);
+            }
+        }
+        return new ResponseData(list);
+    }
 
     /**
      * 获取用户信息

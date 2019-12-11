@@ -37,5 +37,10 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
+    public List<AppUser> getAuthorList(String nickName) {
+        return appUserMapper.getAuthorList(nickName);
+    }
+
+    @Override
     public void insertAppUser(AppUser appUser) { appUserMapper.insertAppUser(appUser); }
 }

@@ -76,7 +76,7 @@
                 left join yuyue_merchant m on b.authorId = m.ID
 
         WHERE
-              1=1 and b.filesType = 'video'
+              1=1 and b.filesType = 'video' and b.status = '10B'
 
         UNION
         SELECT
@@ -88,7 +88,7 @@
                 left join yuyue_merchant  m1 on b1.authorId = m1.ID
 
         WHERE
-             1=1 and b1.filesType = 'video'  ) total
+             1=1 and b1.filesType = 'video' and b1.status = '10B' ) total
 
         WHERE 1=1
          ORDER BY total.playAmount DESC
