@@ -53,6 +53,8 @@ public class UploadFile implements Serializable {
    private String duration;
     //状态
     private String status;
+    //举报状态
+    private String reportStatus;
     //用户后台人员上传视频（勿删）
     private String tableName;
     //用户信息

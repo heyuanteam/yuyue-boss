@@ -11,6 +11,7 @@ import com.yuyue.boss.annotation.LoginRequired;
 import com.yuyue.boss.api.domain.*;
 
 import com.yuyue.boss.api.service.AppService;
+import com.yuyue.boss.api.service.ReportVideoService;
 import com.yuyue.boss.api.service.VideoService;
 
 import com.yuyue.boss.enums.CodeEnum;
@@ -35,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -51,9 +53,16 @@ public class VideoController extends BaseController {
     private FastFileStorageClient storageClient;
     @Autowired
     private AppService appService;
+    @Autowired
+    private ReportVideoService reportVideoService;
 
 
-
+    /**
+     * 获取举报视频的视频标题
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping("/getVideoByTitle")
     @ResponseBody
     @RequiresPermissions("video:menu")//具有 user:detail 权限的用户才能访问此方法
@@ -62,14 +71,17 @@ public class VideoController extends BaseController {
         getParameterMap(request,response);
         //交集参数
         log.info("视频审核 -获取视频列表-------------->>/video/getVideoByTitle");
-        String title=request.getParameter("title");
+        //String title=request.getParameter("title");
         List<ReturnValue> list = new ArrayList<>();
-        List<UploadFile> uploadFiles = videoService.searchVideoInfo("", "", "", "", title, "10B", "");
-        if (StringUtils.isNotEmpty(uploadFiles)){
-            for (UploadFile uploadFile:uploadFiles
+        //List<UploadFile> uploadFiles = videoService.searchVideoInfo("", "", "", "", title, "10B", "");
+        List<ReportVideo> videoIds = reportVideoService.getVideoIds();
+        if (StringUtils.isNotEmpty(videoIds)){
+
+            for (ReportVideo reportVideo:videoIds
                  ) {
                 ReturnValue returnValue =new ReturnValue();
-                returnValue.setId(uploadFile.getId());
+                returnValue.setId(reportVideo.getVideoId());
+                UploadFile uploadFile = videoService.selectById(ResultJSONUtils.getHashValue("yuyue_upload_file_", reportVideo.getAuthorId()), reportVideo.getVideoId());
                 returnValue.setValue(uploadFile.getTitle());
                 list.add(returnValue);
             }

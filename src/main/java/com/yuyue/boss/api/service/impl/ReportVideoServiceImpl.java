@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service(value = "ReportVideoService")
 public class ReportVideoServiceImpl implements ReportVideoService {
@@ -19,7 +20,17 @@ public class ReportVideoServiceImpl implements ReportVideoService {
     }
 
     @Override
-    public void updateReportStatus(String id, String status) {
-        reportVideoMapper.updateReportStatus(id,status);
+    public void updateReportStatus(String videoId, String status) {
+        reportVideoMapper.updateReportStatus(videoId,status);
+    }
+
+    @Override
+    public List<String> getAuthorIds() {
+        return reportVideoMapper.getAuthorIds();
+    }
+
+    @Override
+    public List<ReportVideo>getVideoIds() {
+        return reportVideoMapper.getVideoIds();
     }
 }

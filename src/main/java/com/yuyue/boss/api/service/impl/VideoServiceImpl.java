@@ -17,9 +17,24 @@ public class VideoServiceImpl implements VideoService {
 
 
     @Override
+    public UploadFile selectById(String tableName, String id) {
+        return videoMapper.selectById(tableName,id);
+    }
+
+    @Override
+    public void updateReportStatus(String authorId,String videoId, String reportStatus,String status) {
+        videoMapper.updateReportStatus(ResultJSONUtils.getHashValue("yuyue_upload_file_",authorId),videoId,reportStatus,status);
+    }
+
+    @Override
     public List<UploadFile> getVideoInfoList() {
 
             return  videoMapper.getVideoInfoList();
+    }
+
+    @Override
+    public List<UploadFile> getVideoByVideoIds(List list) {
+        return videoMapper.getVideoByVideoIds(list);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.yuyue.boss.api.domain.UploadFile;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,7 +14,18 @@ import java.util.List;
 @Repository
 public interface VideoMapper extends MyBaseMapper<UploadFile> {
 
+    /**
+     * 获取视频详情
+     * @param tableName
+     * @param id
+     * @return
+     */
+    @Select("select *,DATE_FORMAT(UPLOAD_TIME,'%Y-%m-%d %H:%i:%s') uploadTime from ${tableName} where id = #{id} ")
+    UploadFile selectById(@Param("tableName")String tableName,@Param("id")String id);
+
     List<UploadFile> getVideoInfoList();
+
+    List<UploadFile> getVideoByVideoIds(List list);
 
     List<UploadFile> getVideoListPlayAmount();
 
@@ -21,6 +33,17 @@ public interface VideoMapper extends MyBaseMapper<UploadFile> {
                                      @Param(value = "startTime") String startTime, @Param(value = "endTime") String endTime,
                                      @Param(value = "title") String title, @Param(value = "status") String status,
                                      @Param(value = "nickName") String nickName);
+
+
+
+    /**
+     * 修改举报状态
+     * @param tableName
+     * @param id
+     */
+    @Transactional
+    void updateReportStatus(@Param("tableName")String tableName,@Param("id")String id,
+                            @Param("reportStatus")String reportStatus,@Param("status")String status);
 
     @Transactional
     void insertVideo(UploadFile uploadFile);

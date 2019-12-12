@@ -4,11 +4,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yuyue.boss.annotation.CurrentUser;
 import com.yuyue.boss.annotation.LoginRequired;
-import com.yuyue.boss.api.domain.AppUser;
-import com.yuyue.boss.api.domain.ReturnValue;
-import com.yuyue.boss.api.domain.SystemUser;
-import com.yuyue.boss.api.domain.UploadFile;
+import com.yuyue.boss.api.domain.*;
 import com.yuyue.boss.api.service.AppUserService;
+import com.yuyue.boss.api.service.ReportVideoService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
 import com.yuyue.boss.utils.StringUtils;
@@ -31,8 +29,15 @@ import java.util.Map;
 public class AppUserController extends BaseController {
     @Autowired
     private AppUserService appUserService;
+    @Autowired
+    private ReportVideoService reportVideoService;
 
-
+    /**
+     * 获取获取举报视频的艺名
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping(value = "/getAuthorList" )
     @ResponseBody
     @RequiresPermissions("UserManager:menu")//具有 user:detail 权限的用户才能访问此方法
@@ -40,15 +45,17 @@ public class AppUserController extends BaseController {
     public ResponseData getAuthorList(HttpServletRequest request, HttpServletResponse response) {
         getParameterMap(request,response);
         log.info("获取用户信息-------------->>/userManager/getAuthorList");
-        String nickName=request.getParameter("nickName");
+        //String nickName=request.getParameter("nickName");
         List<ReturnValue> list = new ArrayList<>();
-        List<AppUser> authorList = appUserService.getAuthorList(nickName);
-        if (StringUtils.isNotEmpty(authorList)){
-            for (AppUser appUser:authorList
+        //List<AppUser> authorList = appUserService.getAuthorList(nickName);
+        List<String> authorIds = reportVideoService.getAuthorIds();
+        if (StringUtils.isNotEmpty(authorIds)){
+            for (String authorId:authorIds
             ) {
                 ReturnValue returnValue =new ReturnValue();
-                returnValue.setId(appUser.getId());
-                returnValue.setValue(appUser.getNickName());
+                returnValue.setId(authorId);
+                AppUser appUserMsg = appUserService.getAppUserMsg(authorId, "");
+                returnValue.setValue(appUserMsg.getNickName());
                 list.add(returnValue);
             }
         }

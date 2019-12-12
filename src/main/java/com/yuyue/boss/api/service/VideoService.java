@@ -5,7 +5,16 @@ import com.yuyue.boss.api.domain.UploadFile;
 import java.util.List;
 
 public interface VideoService {
+
+
+    UploadFile selectById(String tableName,String id);
+
     List<UploadFile> getVideoInfoList();
+
+    List<UploadFile> getVideoByVideoIds(List list);
+
+    /*修改视频表中的状态及举报状态*/
+    void updateReportStatus(String authorId,String videoId, String reportStatus,String status);
 
     List<UploadFile> getVideoListPlayAmount();
 
