@@ -15,6 +15,8 @@ public interface ReportVideoService {
     //获取举报列表
     void updateReportStatus(String videoId ,String status);
 
+    List<String> getUserIds(String videoId);
+
     List<String> getAuthorIds();
 
     List<ReportVideo> getVideoIds();

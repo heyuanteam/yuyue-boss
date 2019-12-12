@@ -25,6 +25,11 @@ public class ReportVideoServiceImpl implements ReportVideoService {
     }
 
     @Override
+    public List<String> getUserIds(String videoId) {
+        return reportVideoMapper.getUserIds(videoId);
+    }
+
+    @Override
     public List<String> getAuthorIds() {
         return reportVideoMapper.getAuthorIds();
     }

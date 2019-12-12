@@ -122,6 +122,7 @@ public class ReportVideoController  extends BaseController {
             if (StringUtils.isNull(reportVideos)){
                 return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"未查询数据！");
             }else {
+                List<String> userIds = reportVideoService.getUserIds(videoId);
                 //修改举报列表状态
                 reportVideoService.updateReportStatus(videoId,status);
                 //修改视频状态及举报状态   封禁   第三个参数:举报状态   第四个：视频状态
@@ -134,13 +135,26 @@ public class ReportVideoController  extends BaseController {
                 //给作者发推送
                 if ("10B".equals(status)){
                     sendController.sendReportByAuthorId(authorId,uploadFile.getTitle());
-
                 }
                 //给举报人发推送
-                for (ReportVideo reportVideo : reportVideos
-                        ) {
+                List<String> appUserList = new ArrayList<>();
 
+
+                System.out.println(userIds);
+                for (String userId: userIds
+                     ) {
+                    AppUser appUserMsg = appUserService.getAppUserMsg(userId, "");
+                    if (StringUtils.isNotEmpty(appUserMsg.getJpushName())){
+                        appUserList.add(appUserMsg.getJpushName());
+                    }
                 }
+
+                System.out.println("---------------");
+                System.out.println(appUserList);
+                if (StringUtils.isNotEmpty(appUserList)){
+                    sendController.sendReportByUserId(appUserList,uploadFile,status);
+                }
+
             }
         }else {
             return new ResponseData(CodeEnum.PARAM_ERROR.getCode(),"参数错误！");

@@ -25,6 +25,10 @@ public interface ReportVideoMapper extends MyBaseMapper<ReportVideo> {
     @Update("update yuyue_video_report set status = #{status} where video_id = #{videoId}")
     void updateReportStatus(@Param(value = "videoId") String videoId ,@Param(value = "status") String status);
 
+
+    @Select("SELECT DISTINCT(user_id) FROM yuyue_video_report where  video_id = #{videoId}  and status = '10A' ")
+    List<String> getUserIds(String videoId);
+
     @Select("SELECT DISTINCT(author_id) FROM yuyue_video_report ")
     List<String> getAuthorIds();
 
