@@ -70,7 +70,7 @@ public class ReportVideoController  extends BaseController {
         Map<String,List<ReportVideo>> map = reportVideos.stream().collect(Collectors.groupingBy(ReportVideo::getVideoId));
         for (String key:map.keySet()
              ) {
-            List<UploadFile> uploadFiles = videoService.searchVideoInfo(key, "", "", "", "", "10B", "");
+            List<UploadFile> uploadFiles = videoService.searchVideoInfo(key, "", "", "", "", "", "");
             UploadFile uploadFile = uploadFiles.get(0);
             uploadFile.setStatus(status);
             AppUser appUserMsg = appUserService.getAppUserMsg(key, "");
