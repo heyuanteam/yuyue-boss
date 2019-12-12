@@ -1,6 +1,7 @@
 package com.yuyue.boss.api.domain;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.alipay.api.domain.Video;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,5 +31,8 @@ public class ReportVideo implements Serializable {
     private Date createTime;
     //添加状态
     private String status;
+    //
+    private AppUser appUser;
+
 
 }

@@ -41,9 +41,6 @@ public class AppUserController extends BaseController {
         getParameterMap(request,response);
         log.info("获取用户信息-------------->>/userManager/getAuthorList");
         String nickName=request.getParameter("nickName");
-        if (StringUtils.isEmpty(nickName)){
-            return new ResponseData(CodeEnum.E_90003.getCode(),"艺名不可为空！");
-        }
         List<ReturnValue> list = new ArrayList<>();
         List<AppUser> authorList = appUserService.getAuthorList(nickName);
         if (StringUtils.isNotEmpty(authorList)){

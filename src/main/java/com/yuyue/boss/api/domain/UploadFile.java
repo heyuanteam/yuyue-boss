@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author: Lucifer
@@ -56,4 +57,6 @@ public class UploadFile implements Serializable {
     private String tableName;
     //用户信息
     private AppUser appUser;
+    //
+    private List<ReportVideo> reportVideoList;
 }

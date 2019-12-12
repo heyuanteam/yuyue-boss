@@ -63,9 +63,6 @@ public class VideoController extends BaseController {
         //交集参数
         log.info("视频审核 -获取视频列表-------------->>/video/getVideoByTitle");
         String title=request.getParameter("title");
-        if (StringUtils.isEmpty(title)){
-            return new ResponseData(CodeEnum.E_90003.getCode(),"标题不可为空！");
-        }
         List<ReturnValue> list = new ArrayList<>();
         List<UploadFile> uploadFiles = videoService.searchVideoInfo("", "", "", "", title, "10B", "");
         if (StringUtils.isNotEmpty(uploadFiles)){
