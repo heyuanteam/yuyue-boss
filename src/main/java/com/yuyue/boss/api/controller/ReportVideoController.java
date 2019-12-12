@@ -64,6 +64,9 @@ public class ReportVideoController  extends BaseController {
             page = "1";
         List<UploadFile> list  =  new ArrayList<>();
         List<ReportVideo> reportVideos =  reportVideoService.getReportVideos(status,authorId,videoId);
+        if (StringUtils.isEmpty(reportVideos)){
+            return new ResponseData(list);
+        }
         Map<String,List<ReportVideo>> map = reportVideos.stream().collect(Collectors.groupingBy(ReportVideo::getVideoId));
         for (String key:map.keySet()
              ) {

@@ -5,10 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yuyue.boss.api.domain.*;
-import com.yuyue.boss.api.mapper.ArtistReviewMapper;
-import com.yuyue.boss.api.mapper.LoginMapper;
-import com.yuyue.boss.api.mapper.MallShopMapper;
-import com.yuyue.boss.api.mapper.VideoMapper;
+import com.yuyue.boss.api.mapper.*;
 import com.yuyue.boss.api.service.LoginService;
 import com.yuyue.boss.utils.BeanUtil;
 import com.yuyue.boss.utils.StringUtils;
@@ -41,16 +38,20 @@ public class LoginServiceImpl implements LoginService {
     private MallShopMapper mallShopMapper;
     @Autowired
     private VideoMapper videoMapper;
+    @Autowired
+    private ReportVideoMapper reportVideoMapper;
 
     @Override
     public Map<String,Integer> getReviewNum() {
         int artistReviewNum = artistReviewMapper.getArtistReviewNum();
         int shopReviewNum = mallShopMapper.getShopReviewNum();
         int videoReviewNum = videoMapper.getVideoReviewNum();
+        int reportVideosNum = reportVideoMapper.getReportVideosNum();
         Map<String,Integer> map =  new HashMap<>();
         map.put("artistReviewNum",artistReviewNum);
         map.put("shopReviewNum",shopReviewNum);
         map.put("videoReviewNum",videoReviewNum);
+        map.put("reportVideosNum",reportVideosNum);
         return map;
     }
 

@@ -13,6 +13,9 @@ import java.util.Map;
 @Repository
 public interface ReportVideoMapper extends MyBaseMapper<ReportVideo> {
 
+    @Select("SELECT COUNT(*) FROM(SELECT DISTINCT(video_id) from yuyue_video_report where `status` = '10A')s")
+    int getReportVideosNum();
+
 
     //获取举报列表
     List<ReportVideo> getReportVideos(@Param(value = "status") String status,
