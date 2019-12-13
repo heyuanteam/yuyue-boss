@@ -1,11 +1,14 @@
 package com.yuyue.boss.test;
 
 import com.yuyue.boss.api.domain.Commodity;
+import com.yuyue.boss.utils.PageBean;
 import com.yuyue.boss.utils.ResultJSONUtils;
+import com.yuyue.boss.utils.StringUtils;
 
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -193,7 +196,7 @@ public class SimpleTest {
 //        System.out.println(ResultJSONUtils.getHashValue("yuyue_upload_file_", "3778AC96E77C45C28B9DA9044D32E70A"));
 //
 
-        System.out.println("------06:00-23:59----");
+//        System.out.println("------06:00-23:59----");
         //Calendar calendar = new
 //        Date startDate = null;
 //        Date endDate = null;
@@ -203,15 +206,42 @@ public class SimpleTest {
 //        } catch (ParseException e) {
 //            e.printStackTrace();
 //        }
-        String startDate = "06:00";
-        String endDate = "20:59";
-        String format = new SimpleDateFormat("HH:mm").format(new Date());
-        System.out.println(format);
-        if (format.compareTo(startDate) >= 0 && format.compareTo(endDate) < 0 ){
-            System.out.println("开业 yes");
+//        String startDate = "06:00";
+//        String endDate = "20:59";
+//        String format = new SimpleDateFormat("HH:mm").format(new Date());
+//        System.out.println(format);
+//        if (format.compareTo(startDate) >= 0 && format.compareTo(endDate) < 0 ){
+//            System.out.println("开业 yes");
+//        }else {
+//            System.out.println("打烊no");
+//        }
+
+        List<String> list = new ArrayList<>();
+        list.add("1");
+        list.add("2");
+        list.add("3");
+        list.add("4");
+        list.add("5");
+        list.add("6");
+        list.add("7");
+        list.add("8");
+        list.add("9");
+        list.add("10");
+        list.add("11");
+        System.out.println(list.size());
+
+        PageBean pageBean = new PageBean(list,3);
+        System.out.println(pageBean.getStartIndex()+ "-" +pageBean.getEndIndex());
+        List<String> finalList = pageBean.getItems();
+        if (StringUtils.isEmpty(finalList)){
+            System.out.println("--------");
         }else {
-            System.out.println("打烊no");
+            for (String s1:finalList
+            ) {
+                System.out.println(s1);
+            }
         }
+
 
 
 

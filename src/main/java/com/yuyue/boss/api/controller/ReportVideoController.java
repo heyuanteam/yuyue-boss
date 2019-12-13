@@ -14,6 +14,7 @@ import com.yuyue.boss.api.service.ReportVideoService;
 import com.yuyue.boss.api.service.VideoService;
 import com.yuyue.boss.enums.CodeEnum;
 import com.yuyue.boss.enums.ResponseData;
+import com.yuyue.boss.utils.PageBean;
 import com.yuyue.boss.utils.ResultJSONUtils;
 import com.yuyue.boss.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -53,15 +54,15 @@ public class ReportVideoController  extends BaseController {
         getParameterMap(request,response);
         log.info("获取视频反馈-------------->>/reportVideo/reportVideoMenu");
         String page=request.getParameter("page");
-       /* String startDate = request.getParameter("startDate");
-        String endDate = request.getParameter("endDate");*/
+        String pageSize=request.getParameter("pageSize");
         String status = request.getParameter("status");
-        //String nickName = request.getParameter("nickName");
         String authorId = request.getParameter("authorId");
         String videoId = request.getParameter("videoId");
 
         if (StringUtils.isEmpty(page) || !page.matches("[0-9]+"))
             page = "1";
+        if (StringUtils.isEmpty(pageSize) || !pageSize.matches("[0-9]+"))
+            pageSize = "10";
         List<UploadFile> list  =  new ArrayList<>();
         List<ReportVideo> reportVideos =  reportVideoService.getReportVideos(status,authorId,videoId);
         if (StringUtils.isEmpty(reportVideos)){
@@ -73,13 +74,13 @@ public class ReportVideoController  extends BaseController {
             List<UploadFile> uploadFiles = videoService.searchVideoInfo(key, "", "", "", "", "", "");
             UploadFile uploadFile = uploadFiles.get(0);
             uploadFile.setStatus(status);
-            AppUser appUserMsg = appUserService.getAppUserMsg(key, "");
-            System.out.println(uploadFile.getAppUser());
-            System.out.println("----------------------");
-            System.out.println(appUserMsg);
-            if (StringUtils.isNotNull(appUserMsg)){
-                uploadFile.setAppUser(appUserMsg);
-            }
+//            AppUser appUserMsg = appUserService.getAppUserMsg(key, "");
+//            System.out.println(uploadFile.getAppUser());
+//            System.out.println("----------------------");
+//            System.out.println(appUserMsg);
+//            if (StringUtils.isNotNull(appUserMsg)){
+//                uploadFile.setAppUser(appUserMsg);
+//            }
             for (ReportVideo reportVideo:map.get(key)
                  ) {
                 reportVideo.setAppUser(appUserService.getAppUserMsg(reportVideo.getUserId(),""));
@@ -95,7 +96,11 @@ public class ReportVideoController  extends BaseController {
 //        int pages = pageInfo.getPages();
 //        int currentPage = Integer.parseInt(page);
 //        return new ResponseData(list, currentPage,(int) total,pages);
-        return new ResponseData(list);
+
+        int currentPage = Integer.parseInt(page);
+        PageBean<UploadFile> pageBean = new PageBean<>(list,currentPage);
+
+        return new ResponseData(pageBean.getItems(),pageBean.getCurrentPage(),pageBean.getEndIndex(),pageBean.getTotalPage());
     }
 
 
